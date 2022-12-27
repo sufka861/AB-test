@@ -1,0 +1,16 @@
+[
+  {
+    "experiment_id" : 1,
+    "att_success_count" : {
+      "ON" : 20,
+      "OFF" : 10
+    }
+  },
+  {
+    "experiment_id" : 2,
+    "att_success_count" : {
+      "ON" : 15,
+      "OFF" : 27
+    }
+  }
+]

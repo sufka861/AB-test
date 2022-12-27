@@ -1,0 +1,18 @@
+[
+  {
+    "experiment_id": 1,
+    "location": "IL",
+    "device": "desktop",
+    "browser": "Chrome",
+    "traffic": 0.8,
+    "status": "Active"
+  } ,
+  {
+    "experiment_id": 2,
+    "location": "US",
+    "device": "mobile",
+    "browser": "FireFox",
+    "traffic": 0.5,
+    "status": "Ended"
+  }
+]

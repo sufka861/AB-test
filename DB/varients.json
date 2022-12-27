@@ -1,0 +1,14 @@
+[
+  {
+    "experiment_id": 1,
+    "A":"Variant A",
+    "B": "Variant B",
+    "C": "Default Variant"
+  },
+  {
+    "experiment_id": 2,
+    "A":"Variant A",
+    "B": "Variant B",
+    "C": "Default Variant"
+  }
+]
