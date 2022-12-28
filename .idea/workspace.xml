@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="66017dd2-5dd8-49fc-997a-6fecbd43aa41" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Growth_Tema_POC/.idea/jsLibraryMappings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Growth_Tema_POC/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Growth_Tema_POC/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Growth_Tema_POC/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Growth_Tema_POC/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Growth_Tema_POC/GrowthPOC.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Growth_Tema_POC/package-lock.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Mail_Service/Mail_Service.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../ten_bis/Client-ten-bis/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../ten_bis/Client-ten-bis/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../ten_bis/Client-ten-bis/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../ten_bis/Client-ten-bis/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../ten_bis/Client-ten-bis/Client-ten-bis.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../ten_bis/Client-ten-bis/hello.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../ten_bis/Client-ten-bis/package.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../ten_bis/ten_bis/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../ten_bis/ten_bis/package.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../ten_bis/ten_bis/ten_bis.iml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="package.json" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2JUVl7LAYyfJu5kcz6UpC2wS6lH" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\peerf\OneDrive - Shenkar College\Documents\שנקר הנדסת תוכנה\שנה ג\שירותי מארג האינטרנט - דויד אביגד\ABtest" />
+    </key>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="66017dd2-5dd8-49fc-997a-6fecbd43aa41" name="Changes" comment="" />
+      <created>1672132798859</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1672132798859</updated>
+      <workItem from="1672132800705" duration="1171000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
