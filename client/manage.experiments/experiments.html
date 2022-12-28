@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta
+            name="viewport"
+            content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" href="experiments.style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <title>Experiments</title>
+</head>
+<body>
+    <div class="sidebar">
+        <header><a id="left-logo">Horizon</a><a id="right-logo">Free</a></header>
+        <ul>
+            <li><a href="#"><img src="../../images/home_page.png">Home Page</a></li>
+            <li><a href="#"><img src="../../images/sign_in.png">Sign In</a></li>
+            <li><a href="#"><img src="../../images/otp.png">OTP</a></li>
+            <li><a href="#"><img src="../../images/organization.png">Organization</a></li>
+            <li><a href="#">My Profile</a></li>
+        </ul>
+        <button id="get-pro"><img src="../../images/get_pro.png"></button>
+    </div>
+    <div class="main">
+        <a id="breadcrumbs">Pages / Manage experiments</a>
+        <h1>Experiments</h1>
+        <div id="personalbar">
+            <form action="">
+                <button type="submit"><img src="../../images/search.png"></button>
+                <input type="text" placeholder="Search" name="search">
+            </form>
+            <div class="personal-attributes">
+                <button id="notification"><img src="../../images/notifications.png"></button>
+                <button id="dark-mode"><img src="../../images/dark_mode1.png"></button>
+                <button id="information"><img src="../../images/info.png"></button>
+                <button id="user"><img src="../../images/user1.png"></button>
+            </div>
+        </div>
+        <div class="content">
+            <h4>Reading articles experiment</h4>
+            <div class="container-AB">
+
+                <section><span class="experiment-attributes-labels">Test ID</span><span class="experiment-attributes-labels">Type</span><span class="experiment-attributes-labels">Status</span><br></section></bt>
+                <section><span class="experiment-attributes-values">123456789</span><span class="experiment-attributes-values">A/B testing</span><span class="experiment-attributes-values">Active</span></section>
+
+                <div class="results">
+                    <label for="A">A</label>
+                    <progress id="A" value="55" max="100">55%</progress><br>
+                    <label for="B">B</label>
+                    <progress id="B" value="70" max="100">70%</progress><br>
+                    <label for="C">C</label>
+                    <progress id="C" value="29" max="100">29%   </progress><br>
+                </div>
+                <span><button class="experiment-edit">Edit</button><button class="experiment-terminate">Terminate</button></span>
+
+            </div>
+
+            <h4>Reading articles experiment</h4>
+            <div class="container-FF">
+
+                <section><span class="experiment-attributes-labels">Test ID</span><span class="experiment-attributes-labels">Type</span><span class="experiment-attributes-labels">Status</span><br></section></bt>
+                <section><span class="experiment-attributes-values">09123456</span><span class="experiment-attributes-values">Feature-Flag</span><span class="experiment-attributes-values">Ended</span></section>
+
+                <div class="results">
+                    <label for="ON">ON</label>
+                    <progress id="ON" value="30" max="100">30%</progress><br>
+                    <label for="OFF">OFF</label>
+                    <progress id="OFF" value="70" max="100">70%</progress><br>
+                </div>
+                <span><button class="experiment-edit">Edit</button><button class="experiment-terminate">Terminate</button></span>
+                <div></div>
+            </div>
+        </div>
+    </div>
+<footer>
+
+</footer>
+
+</body>
+</html>

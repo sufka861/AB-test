@@ -188,11 +188,187 @@ button {
     color: #111C44;
 }
 
-.container {
+.container-AB {
     width: 864px;
-    height: 360px;
+    height: 390px;
     background: #868CFF;
     border-radius: 40px;
     margin-top: 6px;
     margin-bottom: 26px;
 }
+
+#get-pro {
+    margin-top: 30%;
+}
+
+.experiment-attributes-labels {
+    width: 97px;
+    height: 43px;
+    font-weight: 400;
+    font-size: 30px;
+    line-height: 32px;
+    text-align: center;
+    letter-spacing: -0.02em;
+    color: #FFFFFF;
+    padding-left: 30%;
+}
+
+.experiment-attributes-labels:first-child {
+    padding-left: 7%;
+}
+
+.container-AB section:first-child {
+    padding-top: 34px;
+}
+
+.experiment-attributes-values {
+    width: 147px;
+    height: 40px;
+    font-weight: 400;
+    font-size: 30px;
+    line-height: 32px;
+    text-align: center;
+    letter-spacing: -0.02em;
+    color: #090808;
+    padding-left: 21%;
+}
+
+.experiment-attributes-values:first-child{
+    padding-left: 43px;
+}
+
+.container-AB section {
+    padding-top: 13px;
+}
+
+.container-AB section:nth-child(2) .experiment-attributes-values:last-child {
+    padding-left: 36px;
+    padding-right: 36px;
+    padding-bottom: 6px;
+    padding-top: 6px;
+    margin-left: 22%;
+    width: 183px;
+    height: 58px;
+
+    background: #28F29D;
+    border-radius: 30px;
+}
+
+.container-AB label {
+    padding-left: 106px;
+    padding-top: 22px;
+    padding-right: 21px;
+    font-weight: 400;
+    font-size: 30px;
+    line-height: 32px;
+    text-align: center;
+    letter-spacing: -0.02em;
+    color: #FFFFFF;
+}
+
+.container-AB progress {
+    width: 466px;
+    height: 50px;
+}
+.results {
+    padding-top: 22px;
+}
+
+progress {
+    text-align: center;
+    padding-top: 7px;
+
+
+}
+progress:after {
+    content: attr(value)'%';
+    font-size: 17px;
+    color: black;
+}
+
+.experiment-edit {
+    background: #D9D9D9;
+    border: none;
+    width: 160px;
+    height: 49px;
+    margin-top: 36px;
+    margin-left: 22%;
+    font-weight: 400;
+    font-size: 30px;
+    line-height: 32px;
+    text-align: center;
+    letter-spacing: -0.02em;
+    color: #000000;
+}
+
+.experiment-terminate {
+    background: #D9D9D9;
+    border: none;
+    width: 160px;
+    height: 49px;
+    margin-top: 36px;
+    margin-left: 105px;
+    font-weight: 400;
+    font-size: 30px;
+    line-height: 32px;
+    text-align: center;
+    letter-spacing: -0.02em;
+    color: #000000;
+}
+
+.container-FF {
+    width: 864px;
+    height: 390px;
+    background: #4318FF;
+    border-radius: 40px;
+    margin-top: 6px;
+    margin-bottom: 26px;
+}
+
+.container-FF section:first-child {
+    padding-top: 34px;
+}
+
+.container-FF section {
+    padding-top: 13px;
+}
+
+.container-FF section:nth-child(2) .experiment-attributes-values:last-child {
+    padding-left: 36px;
+    padding-right: 36px;
+    padding-bottom: 6px;
+    padding-top: 6px;
+    margin-left: 20%;
+    width: 183px;
+    height: 58px;
+
+    background: #F22859;
+    border-radius: 30px;
+}
+
+.container-FF label {
+    padding-left: 106px;
+    padding-top: 22px;
+    padding-right: 21px;
+    font-weight: 400;
+    font-size: 30px;
+    line-height: 32px;
+    text-align: center;
+    letter-spacing: -0.02em;
+    color: #FFFFFF;
+}
+
+.container-FF progress {
+    width: 466px;
+    height: 50px;
+}
+
+.container-FF label:first-child {
+    margin-right: 16px;
+}
+
+.content div:last-child {
+    height: 400px;
+}
+
+
