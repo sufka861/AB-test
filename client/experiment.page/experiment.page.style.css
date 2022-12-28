@@ -194,7 +194,7 @@ button {
 
 #edit-experiment {
     width: 100%;
-    height: 1360px;
+    height: 900px;
     background: rgba(217, 217, 217, 0.34);
     border-radius: 30px;
 }
@@ -217,6 +217,9 @@ button {
     background: #FFFFFF;
     border-radius: 30px;
     height: 26px;
+    border: none;
+    background: rgba(255, 255, 255, 0.52);
+    color: rgba(0, 0, 0, 0.77);
 }
 
 #edit-experiment select {
@@ -243,7 +246,7 @@ button {
 }
 
 .duration {
-    margin-top: 76px;
+    margin-top: 30px;
     margin-bottom: 62px;
 }
 
@@ -268,17 +271,6 @@ button {
     margin-bottom: 21px;
 }
 
-#add-attribute {
-    margin-left: 50%;
-    margin-top: 22px;
-    margin-bottom: 26px;
-    font-weight: 700;
-    font-size: 19px;
-    line-height: 42px;
-    letter-spacing: -0.02em;
-    color: #000000;
-}
-
 #traffic {
     text-align: center;
     position: absolute;
@@ -293,7 +285,7 @@ button {
 #percent-sign {
     bottom: 6px;
     left: 106px;
-    color: #000000;
+    color: rgba(0, 0, 0, 0.77);
     position: relative;
     z-index: 1;
     font-weight: 700;
@@ -330,14 +322,29 @@ button {
     color: #000000;
 }
 
-#editExperiment {
-    width: 430px;
+#editRelocation {
+    margin-top: 60px;
+    width: 260px;
     height: 77px;
-    margin-left: 16%;
-    background: #7551FF;
+    background: rgba(117, 81, 255, 0.86);
     border-radius: 40px;
     font-weight: 700;
-    font-size: 50px;
+    font-size: 26px;
+    line-height: 42px;
+    letter-spacing: -0.02em;
+    color: #FFFFFF;
+    margin-left: 6%;
+    margin-right: 6%;
+}
+
+#TerminateExperiment {
+    margin-top: 100px;
+    width: 260px;
+    height: 77px;
+    background: rgba(117, 81, 255, 0.86);
+    border-radius: 40px;
+    font-weight: 700;
+    font-size: 26px;
     line-height: 42px;
     letter-spacing: -0.02em;
     color: #FFFFFF;

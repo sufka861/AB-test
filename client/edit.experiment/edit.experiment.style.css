@@ -194,7 +194,7 @@ button {
 
 #edit-experiment {
     width: 100%;
-    height: 1360px;
+    height: 1000px;
     background: rgba(217, 217, 217, 0.34);
     border-radius: 30px;
 }
@@ -243,7 +243,7 @@ button {
 }
 
 .duration {
-    margin-top: 76px;
+    margin-top: 30px;
     margin-bottom: 62px;
 }
 
@@ -334,6 +334,7 @@ button {
     width: 430px;
     height: 77px;
     margin-left: 16%;
+    margin-top: 112px;
     background: #7551FF;
     border-radius: 40px;
     font-weight: 700;
