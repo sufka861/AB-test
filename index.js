@@ -11,6 +11,9 @@ const { errorHandler } = require("./middleware/errorHandler.mw");
 const logPath = path.join(__dirname, "logs", "http.log");
 const port = process.env.PORT || 3000;
 
+const {experimentRouter} = require('./testRouter/experimentRouter');
+
+
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -26,7 +29,7 @@ app.use(cors());
 
 // Error middleware
 app.use(errorHandler);
-
+app.use("*", experimentRouter);
 // Connection
 app.listen(port, () => {
   console.log(`Server is listening on port ${port}...`);
