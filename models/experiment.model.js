@@ -1,6 +1,8 @@
 const {Schema, model, ObjectId} = require('mongoose');
 const iso = require('iso-3166-1'); // used to validate country code
 const goalModel = require('./goal.model');
+
+
 const devicesSet = new Set(["console", "mobile", "tablet", "smarttv", "wearable", "embedded", "desktop"]);
 
 
@@ -33,9 +35,10 @@ const experimentSchema = new Schema({
             C: {type: Number, default: 0, min: 0},
         },
         traffic_percentage: {type: Number, min: 0, max: 100, required: true},
+
         goal_id: {
             type: ObjectId, required: function () {
-                return this.type === "f-f"
+                return this.type === "a-b";
             }
         },
         call_count: {type: Number, default: 0, min: 0, required: true},
@@ -95,7 +98,7 @@ function countryValidator(countries) {
     return countries.every((country) => !!iso.whereAlpha2(country));
 }
 experimentSchema.pre('validate', async function (next)  {
-        if (this.type === "f-f") {
+        if (this.type === "a-b") {
             const newGoal = new goalModel({
                 experiment_id: this._id
             });

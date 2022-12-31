@@ -1,10 +1,10 @@
-const DB = require('./DAL');
 const geoip = require('geoip-lite');
 const parser = require('ua-parser-js');
+const MongoStorage = require('../db/MongoStorage');
 
+const experimentDB= new MongoStorage("experiment");
 
 function getLocation(req) {
-    // return  geoip.lookup(`${req.clientIp}`);
     return  geoip.lookup(req.clientIp);
 }
 
@@ -20,10 +20,10 @@ const shouldAllow = (ratio) => ratio >= 1 - Math.random();
 
 function checkAttributes(req, experimentID) {
 
-    const experiment =  DB.getExperimentByID(experimentID)[0];
-    const {A, B, C} =  DB.getVariantsByExpID(experimentID)[0];
+    const experiment = experimentDB.retrieve(experimentID)
+    const {A, B, C} = experiment.variants;
 
-    if(shouldAllow(experiment.traffic)) {
+    if(shouldAllow(experiment.traffic_percentage / 100)) {
 
         const geo = getLocation(req);
         const {browser, device} = getBrowserDevice(req);

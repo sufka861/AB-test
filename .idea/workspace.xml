@@ -4,8 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="66017dd2-5dd8-49fc-997a-6fecbd43aa41" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+    <list default="true" id="66017dd2-5dd8-49fc-997a-6fecbd43aa41" name="Changes" comment="merging ABtest">
       <change afterPath="$PROJECT_DIR$/../Growth_Tema_POC/.idea/jsLibraryMappings.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../Growth_Tema_POC/.idea/misc.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../Growth_Tema_POC/.idea/modules.xml" afterDir="false" />
@@ -101,5 +100,9 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="merging ABtest" />
+    <option name="LAST_COMMIT_MESSAGE" value="merging ABtest" />
   </component>
 </project>
