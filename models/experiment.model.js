@@ -1,7 +1,6 @@
 const {Schema, model, ObjectId} = require('mongoose');
-const iso = require('iso-3166-1');
-const {stringify} = require("nodemon/lib/utils"); // used to validate country code
-
+const iso = require('iso-3166-1'); // used to validate country code
+const goalModel = require('./goal.model');
 const devicesSet = new Set(["console", "mobile", "tablet", "smarttv", "wearable", "embedded", "desktop"]);
 
 
@@ -34,7 +33,11 @@ const experimentSchema = new Schema({
             C: {type: Number, default: 0, min: 0},
         },
         traffic_percentage: {type: Number, min: 0, max: 100, required: true},
-        goal_id: {type: ObjectId, required: function (){return this.type === "f-f"}},
+        goal_id: {
+            type: ObjectId, required: function () {
+                return this.type === "f-f"
+            }
+        },
         call_count: {type: Number, default: 0, min: 0, required: true},
         status: {
             type: String, required: true,
@@ -45,8 +48,8 @@ const experimentSchema = new Schema({
         },
         start_time: {
             type: Date, required: true,
-            validate:{
-                validator: function (startTime){
+            validate: {
+                validator: function (startTime) {
                     return new Date(startTime) < new Date(this.end_time);
                 },
                 message: "Start time should be prior to end time"
@@ -55,8 +58,8 @@ const experimentSchema = new Schema({
         },
         end_time: {
             type: Date, required: true,
-            validate:{
-                validator: function (endTime){
+            validate: {
+                validator: function (endTime) {
                     return new Date(endTime) > new Date(this.start_time);
                 },
                 message: "End time should be after start time"
@@ -70,7 +73,9 @@ const experimentSchema = new Schema({
                 B: String,
                 C: String
             },
-            required: function (){ return this.type === "a-b"}
+            required: function () {
+                return this.type === "a-b"
+            }
         },
     }, {collection: "experiments"}
 )
@@ -83,12 +88,23 @@ function experimentTypeValidator(type) {
 
 
 function deviceValidator(devices) {
-return devices.every((device) => devicesSet.has(device.toLowerCase()));
+    return devices.every((device) => devicesSet.has(device.toLowerCase()));
 }
 
 function countryValidator(countries) {
-    return countries.every((country)=> !!iso.whereAlpha2(country));
+    return countries.every((country) => !!iso.whereAlpha2(country));
 }
+experimentSchema.pre('validate', async function (next)  {
+        if (this.type === "f-f") {
+            const newGoal = new goalModel({
+                experiment_id: this._id
+            });
+            const savedGoal = await newGoal.save();
+            this.goal_id = savedGoal._id;
+        }
+        next();
+    }
+);
 
 module.exports = model("Experiment", experimentSchema);
 
