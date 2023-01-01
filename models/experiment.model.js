@@ -23,7 +23,7 @@ const experimentSchema = new Schema({
             },
             device: {
                 type: [String],
-                validate: {validator: deviceValidator, message: device => `Invalid device`},
+                validate: {validator: deviceValidator, message: () => `Invalid device`},
                 lowercase: true,
                 trim: true
             },
@@ -37,8 +37,8 @@ const experimentSchema = new Schema({
         traffic_percentage: {type: Number, min: 0, max: 100, required: true},
 
         goal_id: {
-            type: ObjectId, required: function () {
-                return this.type === "a-b";
+            type: ObjectId, required:  () => {
+                return experimentSchema.type === "a-b";
             }
         },
         call_count: {type: Number, default: 0, min: 0, required: true},
