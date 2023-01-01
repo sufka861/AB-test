@@ -13,7 +13,7 @@ module.exports = class MongoStorage {
   }
 
   connect() {
-    const connectionUrl = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.kts52kd.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
+    const connectionUrl = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_CLUSTER}.${process.env.DB_KEY}.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
     mongoose
       .connect(connectionUrl)
       .then(() => console.log(`connected to ${this.entityName} collection`))
@@ -26,10 +26,6 @@ module.exports = class MongoStorage {
 
   retrieve(id) {
     return this.Model.findById(id);
-  }
-
-  retrieveEmail(email) {
-    return this.Model.findOne({ email: email });
   }
 
   create(data) {

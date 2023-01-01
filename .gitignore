@@ -3,3 +3,5 @@ error.log
 http.log
 .env
 .idea
+testRouter
+goal.model.js

@@ -1,0 +1,63 @@
+[{
+  "name": "experiment test name",
+  "type": "a-b",
+  "test_attributes": {
+    "location": [
+      "IL"
+    ],
+    "device": [
+      "mobile"
+    ],
+    "browser": [
+      "Chrome"
+    ]
+  },
+  "variant_success_count": {
+    "A": 0,
+    "B": 0,
+    "C": 0
+  },
+  "traffic_percentage": 50,
+  "goal_id": null,
+  "call_count": 0,
+  "status": "active",
+  "start_time":"2022-12-31T13:35:30.301Z",
+  "end_time": "2023-12-31T13:35:30.301Z",
+  "variants": {
+    "A": "Alternative1",
+    "B": "Alternative2",
+    "C": "Default"
+  }
+},
+{
+  "name": "experiment test name country validation",
+  "type": "a-b",
+  "test_attributes": {
+    "location": [
+      "XXX", "XXXR"
+    ],
+    "device": [
+      "mobile"
+    ],
+    "browser": [
+      "Chrome"
+    ]
+  },
+  "variant_success_count": {
+    "A": 0,
+    "B": 0,
+    "C": 0
+  },
+  "traffic_percentage": 50,
+  "goal_id": null,
+  "call_count": 0,
+  "status": "active",
+  "start_time":"2022-12-31T13:35:30.301Z",
+  "end_time": "2023-12-31T13:35:30.301Z",
+  "variants": {
+    "A": "Alternative1",
+    "B": "Alternative2",
+    "C": "Default"
+  }
+}
+  ]

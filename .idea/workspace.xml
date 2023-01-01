@@ -4,11 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="66017dd2-5dd8-49fc-997a-6fecbd43aa41" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="66017dd2-5dd8-49fc-997a-6fecbd43aa41" name="Changes" comment="merging ABtest">
       <change afterPath="$PROJECT_DIR$/../Growth_Tema_POC/.idea/jsLibraryMappings.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../Growth_Tema_POC/.idea/misc.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../Growth_Tema_POC/.idea/modules.xml" afterDir="false" />
@@ -37,6 +33,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="package.json" />
+        <option value="JavaScript File" />
       </list>
     </option>
   </component>
@@ -52,18 +49,19 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.ide.settings.file-colors&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\peerf\OneDrive - Shenkar College\Documents\שנקר הנדסת תוכנה\שנה ג\שירותי מארג האינטרנט - דויד אביגד\ABtest" />
@@ -78,6 +76,14 @@
       <option name="presentableId" value="Default" />
       <updated>1672132798859</updated>
       <workItem from="1672132800705" duration="1171000" />
+      <workItem from="1672233764439" duration="532000" />
+      <workItem from="1672234311086" duration="106000" />
+      <workItem from="1672234420399" duration="85000" />
+      <workItem from="1672234508209" duration="994000" />
+      <workItem from="1672248994515" duration="1056000" />
+      <workItem from="1672252343403" duration="91000" />
+      <workItem from="1672301310793" duration="5000" />
+      <workItem from="1672400213653" duration="26985000" />
     </task>
     <servers />
   </component>
@@ -94,5 +100,9 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="merging ABtest" />
+    <option name="LAST_COMMIT_MESSAGE" value="merging ABtest" />
   </component>
 </project>
