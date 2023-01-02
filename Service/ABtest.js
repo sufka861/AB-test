@@ -18,7 +18,7 @@ function getBrowserDevice(req) {
 
 const shouldAllow = (ratio) => ratio >= 1 - Math.random();
 
-function checkAttributes(req, experimentID) {
+function checkAttributesAndReturnVariant(req, experimentID) {
 
     const experiment = experimentDB.retrieve(experimentID)
     const {A, B, C} = experiment.variants;
@@ -30,14 +30,13 @@ function checkAttributes(req, experimentID) {
         if (geo && browser && device) {
 
 
-            if (geo.country == experiment.location && browser == experiment.browser && device == experiment.device) {
+            if (geo.country === experiment.location && browser === experiment.browser && device === experiment.device) {
                 return 0.5 < Math.random() ? A : B;
             }
         }
     }
     return C;
 }
-
 module.exports = {
-    checkAttributes
+    checkAttributesAndReturnVariant
 }
