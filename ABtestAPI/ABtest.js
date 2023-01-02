@@ -1,11 +1,14 @@
 const geoip = require('geoip-lite');
 const parser = require('ua-parser-js');
-const MongoStorage = require('../db/MongoStorage');
+const {ExperimentStorage} = require ('../db/ExperimentStorage');
+const requestIp = require("request-ip");
 
-const experimentDB= new MongoStorage("experiment");
+function getClientIP(endUserReq){
+    return requestIp.getClientIp(endUserReq);
 
-function getLocation(req) {
-    return  geoip.lookup(req.clientIp);
+}
+function getLocation(ip) {
+    return  geoip.lookup(ip);
 }
 
 function getBrowserDevice(req) {
@@ -18,18 +21,18 @@ function getBrowserDevice(req) {
 
 const shouldAllow = (ratio) => ratio >= 1 - Math.random();
 
-function checkAttributesAndReturnVariant(req, experimentID) {
+async function checkAttributesAndReturnVariant(endUserReq, experimentID) {
 
-    const experiment = experimentDB.retrieve(experimentID)
+    const experiment = await ExperimentStorage.retrieve(experimentID)
+
     const {A, B, C} = experiment.variants;
 
     if(shouldAllow(experiment.traffic_percentage / 100)) {
 
-        const geo = getLocation(req);
-        const {browser, device} = getBrowserDevice(req);
+        const geo = getLocation(getClientIP(endUserReq));
+        const {browser, device} = getBrowserDevice(endUserReq);
+
         if (geo && browser && device) {
-
-
             if (geo.country === experiment.location && browser === experiment.browser && device === experiment.device) {
                 return 0.5 < Math.random() ? A : B;
             }
