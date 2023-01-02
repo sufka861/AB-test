@@ -5,7 +5,8 @@
     "device": "desktop",
     "browser": "Chrome",
     "traffic": 0.8,
-    "status": "Active"
+    "status": "Active",
+    "type": "f-f"
   } ,
   {
     "experiment_id": 2,
@@ -13,6 +14,7 @@
     "device": "mobile",
     "browser": "FireFox",
     "traffic": 0.5,
-    "status": "Ended"
+    "status": "Ended",
+    "type": "AB"
   }
 ]

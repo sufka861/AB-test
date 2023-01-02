@@ -1,4 +1,5 @@
 const fs = require('fs');
+const experiments = require("../DB/experiments.json");
 
 function getExperiments() {
     return require('../DB/experiments.json');
@@ -12,6 +13,12 @@ function getExperimentByID(expID) {
 function getGoals() {
     return require('../DB/goal.json');
 }
+function getGoalsByID(GoalID) {
+    const experiments = require('../DB/goal.json');
+    return experiments.filter((exp) => exp.experiment_id == expID);
+
+}
+
 
 function writeExperiments(experiments) {
 
@@ -32,5 +39,6 @@ module.exports = {
     getGoals,
     writeExperiments,
     getVariantsByExpID,
-    getExperimentByID
+    getExperimentByID,
+    getGoalsByID
 }
