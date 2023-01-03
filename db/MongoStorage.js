@@ -24,8 +24,8 @@ module.exports = class MongoStorage {
         return this.Model.find({});
     }
 
-    findGroup(x, value) {
-        return this.Model.find({ x : value });
+    findGroup(field, value) {
+        return this.Model.find({field: value}).exec();
     }
 
     retrieve(id) {
