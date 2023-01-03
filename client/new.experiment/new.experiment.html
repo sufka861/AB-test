@@ -73,19 +73,20 @@
                 <span id="percent-sign">%</span>
                 <input type="number" required name="traffic" id="traffic" min="0" max="100"><br>
 
-                <p class="variants-title">Variants:</p>
-                    <div class="AB-labels">
-                        <label for="A">A:</label>
-                            <input type="text" required name="A" id="A" /><br>
-                        <label for="B">B:</label>
-                            <input type="text" required name="B" id="B" /><br>
-                    </div>
-                <button type="button" class="add-attribute-AB">+ Add</button><br>
-                <p class="variants-title">Goals:</p>
-                    <label for="goal"></label>
-                        <input type="text" required name="goal" id="goal" /><br>
-                <button type="button" class="add-attribute-AB">+ Add</button><br>
-
+                <div id="ab-test-attributes">
+                    <p class="variants-title">Variants:</p>
+                        <div class="AB-labels">
+                            <label for="A">A:</label>
+                                <input type="text" required name="A" id="A" /><br>
+                            <label for="B">B:</label>
+                                <input type="text" required name="B" id="B" /><br>
+                        </div>
+                    <button type="button" class="add-attribute-AB">+ Add</button><br>
+                    <p class="variants-title">Goals:</p>
+                        <label for="goal"></label>
+                            <input type="text" required name="goal" id="goal" /><br>
+                    <button type="button" class="add-attribute-AB">+ Add</button><br>
+                </div>
                 <button type="submit" id="addExperiment">Create</button>
             </form>
         </div>
