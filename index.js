@@ -11,7 +11,7 @@ const { errorHandler } = require("./middleware/errorHandler.mw");
 const logPath = path.join(__dirname, "logs", "http.log");
 const port = process.env.PORT || 3000;
 
-const { experimentRouter } = require("./testRouter/experimentRouter");
+// const { experimentRouter } = require("./testRouter/experimentRouter");
 const { ipMiddleware } = require("./middleware/ip.mw");
 
 // Middleware
@@ -27,13 +27,11 @@ app.use(
 );
 app.use(cors());
 
-// Routes goes here!
-// app.use()...
+const { experimentRouter } = require('./router/experimentRouter')
+app.use("/experiments", experimentRouter);
 
-// Error middleware
 app.use(errorHandler);
 
-// Connection
 app.listen(port, () => {
   console.log(`Server is listening on port ${port}...`);
 });
