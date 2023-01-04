@@ -5,6 +5,7 @@ const logger = require("morgan");
 const cors = require("cors");
 const fs = require("fs");
 const path = require("path");
+const cookieParser = require("cookie-parser");
 const app = express();
 const requestIp = require("request-ip");
 const { errorHandler } = require("./middleware/errorHandler.mw");
@@ -25,6 +26,7 @@ app.use(
     stream: fs.createWriteStream(logPath, { flags: "a" }),
   })
 );
+app.use(cookieParser());
 app.use(cors());
 
 // Routes goes here!

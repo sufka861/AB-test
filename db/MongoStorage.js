@@ -28,6 +28,12 @@ module.exports = class MongoStorage {
     return this.Model.findById(id);
   }
 
+  retrieveByAttribute(key, value) {
+    const obj = {};
+    obj[key] = value;
+    return this.Model.findOne(obj);
+  }
+
   create(data) {
     const entity = new this.Model(data);
     return entity.save();
