@@ -4,7 +4,7 @@ const experimentRouter = new express.Router();
 
 experimentRouter.get('/', experimentController.getAllExperiments);
 experimentRouter.get('/AB', experimentController.getExperimentsAB);
-experimentRouter.get('/:FF', experimentController.getExperimentsFF);
+experimentRouter.get('/FF', experimentController.getExperimentsFF);
 experimentRouter.get('/:_id', experimentController.getExperimentsByID);
 
 experimentRouter.put('/:_id', experimentController.updateExperimentsByID);

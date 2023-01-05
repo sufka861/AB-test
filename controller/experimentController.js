@@ -18,6 +18,14 @@ async function getExperimentsFF(req, res) {
     res.send(await experimentDB.findGroup("type", "f-f"));
 }
 
+async function getExperimentsByLocation(req, res) {
+    console.log("got here")
+    const locationsJSON = req.body;
+    const locationsList = locationsJSON.body.json.location;
+    console.log(locationsList);
+    res.send(await experimentDB.find({}));
+}
+
 async function createExperiments(req, res) {
     res.send(await experimentDB.create(req.body));
 }
@@ -38,6 +46,7 @@ module.exports = {
     getExperimentsByID,
     getExperimentsAB,
     getExperimentsFF,
+    getExperimentsByLocation,
     updateExperimentsByID,
     deleteExperimentsByID,
     createExperiments,

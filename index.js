@@ -10,8 +10,8 @@ const requestIp = require("request-ip");
 const {errorHandler} = require("./middleware/errorHandler.mw");
 const logPath = path.join(__dirname, "logs", "http.log");
 const port = process.env.PORT || 3000;
+const {experimentRouter} = require('./router/experimentRouter')
 
-// const { experimentRouter } = require("./testRouter/experimentRouter");
 const {ipMiddleware} = require("./middleware/ip.mw");
 
 // Middleware
@@ -27,7 +27,6 @@ app.use(
 );
 app.use(cors());
 
-const {experimentRouter} = require('./router/experimentRouter')
 app.use("/experiments", experimentRouter);
 
 app.use(errorHandler);
