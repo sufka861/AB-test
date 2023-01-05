@@ -2,18 +2,20 @@ const MongoStorage = require('../db/MongoStorage');
 const experimentDB = new MongoStorage("experiment");
 
 async function getAllExperiments(req, res) {
-    if (req.query.experiment_id) {
-        const experiment_id = req.query.experiment_id;
+    res.send(await experimentDB.find());
+}
+
+async function getExperimentById(req, res) {
+    if (req.params.experiment_id) {
+        const experiment_id = req.params.experiment_id;
         res.send(await experimentDB.retrieve(experiment_id));
-    } else {
-        res.send(await experimentDB.find());
     }
 }
 
 async function getExperimentsByAccountId(req, res) {
     if (req.params.account_id) {
         const account_id = req.params.account_id;
-        res.send(await experimentDB.findGroup("account_id", account_id));
+        res.send(await experimentDB.findByAccount("account_id", account_id));
     }
 }
 
@@ -39,13 +41,24 @@ async function deleteExperimentsByID(req, res) {
     res.send(await experimentDB.delete(experimentID));
 }
 
+async function runExperiment(req, res) {
+
+}
+
+async function declareGoal(req, res) {
+
+}
+
 
 module.exports = {
     getAllExperiments,
+    getExperimentById,
     getExperimentsByAccountId,
     getExperimentsAB,
     getExperimentsFF,
     updateExperimentsByID,
     deleteExperimentsByID,
     createExperiments,
+    runExperiment,
+    declareGoal,
 }

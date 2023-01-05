@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { ObjectId } = require('mongodb');
 mongoose.set("strictQuery", false);
 const Path = require("path");
 
@@ -27,6 +28,13 @@ module.exports = class MongoStorage {
     findGroup(key, value) {
         const obj = {};
         obj[key] = value;
+        return this.Model.find({obj});
+    }
+
+    findByAccount(key, value) {
+        const obj = {};
+        const id = new ObjectId(value);
+        obj[key] = id;
         return this.Model.find({obj});
     }
 
