@@ -7,8 +7,8 @@ experimentRouter.get('/AB/:account_id', experimentController.getExperimentsAB);
 experimentRouter.get('/FF/:account_id', experimentController.getExperimentsFF);
 experimentRouter.get('/account/:account_id', experimentController.getExperimentsByAccountId);
 experimentRouter.get('/date', experimentController.getExperimentsByDate);
-experimentRouter.get('/:experiment_id', experimentController.getExperimentById);
-
+experimentRouter.get('/:experiment_id', experimentController.getExperimentById)
+experimentRouter.get('/percentage/:experiment_id', experimentController.getExperimentGoalReach);
 
 experimentRouter.put('/:experiment_id', experimentController.updateExperimentsByID);
 

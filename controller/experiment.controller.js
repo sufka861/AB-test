@@ -78,6 +78,69 @@ const deleteExperimentsByID = async (req, res) => {
     res.status(200).json({result});
 }
 
+const getExperimentGoalReach = async (req, res) => {
+    if (req.params.experiment_id) {
+        const experiment_id = req.params.experiment_id;
+        const experiment = await experimentRepository.retrieve(experiment_id);
+        const calls_number = experiment.call_count;
+        const A_variant_name = experiment.variants.A;
+        const B_variant_name = experiment.variants.B;
+        let A_statistic = 0;
+        let B_statistic = 0;
+        if(calls_number > 0) {
+            const A = experiment.variant_success_count[0];
+            A_statistic = (A / calls_number) * 100;
+            const B = experiment.variant_success_count[1];
+            B_statistic = (B / calls_number) * 100;
+        }
+        const result = {
+            "goals":[
+                {
+                    "variant": `${A_variant_name}`,
+                    "goal_reach": `${A_statistic}%`
+                },
+                {
+                    "variant": `${B_variant_name}`,
+                    "goal_reach": `${B_statistic}%`
+                }
+            ]
+        }
+        res.status(200).json({ result });
+    }
+}
+
+const getExperimentVariantExposure = async (req, res) => {
+    if (req.params.experiment_id) {
+        const experiment_id = req.params.experiment_id;
+        const experiment = await experimentRepository.retrieve(experiment_id);
+        const calls_number = experiment.call_count;
+        const A_variant_name = experiment.variants.A;
+        const B_variant_name = experiment.variants.B;
+        let A_statistic = 0;
+        let B_statistic = 0;
+        if(calls_number > 0) {
+            const A = experiment.variant_success_count[0];
+            A_statistic = (A / calls_number) * 100;
+            const B = experiment.variant_success_count[1];
+            B_statistic = (B / calls_number) * 100;
+        }
+        const result = {
+            "goals":[
+                {
+                    "variant": `${A_variant_name}`,
+                    "goal_reach": `${A_statistic}%`
+                },
+                {
+                    "variant": `${B_variant_name}`,
+                    "goal_reach": `${B_statistic}%`
+                }
+            ]
+        }
+        res.status(200).json({ result });
+    }
+}
+
+
 module.exports = {
     getAllExperiments,
     getExperimentById,
@@ -88,4 +151,5 @@ module.exports = {
     updateExperimentsByID,
     deleteExperimentsByID,
     createExperiments,
+    getExperimentGoalReach,
 }
