@@ -39,7 +39,6 @@ module.exports = class MongoStorage {
     findByAccount(key, value) {
         const obj = {};
         obj[key] = value;
-        console.log(obj);
         return this.Model.find(obj);
     }
 
