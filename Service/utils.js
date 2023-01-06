@@ -37,9 +37,12 @@ function checkIfTerminated(req) {
     return termineated;
 }
 
+const checkIfActive = (experiment) => experiment.status === "active";
 
 
-function checkAttributes(endUserReq, experiment) {
+
+
+const  checkAttributes = (endUserReq, experiment) => {
     const geo = getLocation(getClientIP(endUserReq));
     const {browser, device} = getBrowserDevice(endUserReq);
     if (geo && browser && device)
@@ -52,5 +55,6 @@ function checkAttributes(endUserReq, experiment) {
 module.exports = {
     shouldAllow,
     returnByRatio,
-    checkAttributes
+    checkAttributes,
+    checkIfActive
 }
