@@ -27,23 +27,26 @@ module.exports = class MongoStorage {
         return this.Model.find({});
     }
 
-    findGroup(key, value) {
+    findGroup(key, value, key2, value2) {
         const obj = {};
         obj[key] = value;
-        return this.Model.find({obj});
+        if (key2 && value2) {
+            obj[key2] = value2;
+        }
+        return this.Model.find(obj);
     }
 
     findByAccount(key, value) {
         const obj = {};
-        const id = new ObjectId(value);
-        obj[key] = id;
-        return this.Model.find({obj});
+        obj[key] = value;
+        console.log(obj);
+        return this.Model.find(obj);
     }
 
     findByDate(year, month) {
-        const start = new Date(year, month, 1);
-        const end = new Date(year, month, 31);
-        if (validateDate(start) && validateDate(end)) {
+        if (validateDate(`${month}/01/${year}`)) {
+            const start = new Date(year, month, 1);
+            const end = new Date(year, month, 31);
             return this.Model.countDocuments({
                 end_time: {
                     $gte: start,

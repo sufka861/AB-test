@@ -1,61 +1,74 @@
 const MongoStorage = require('../db/MongoStorage');
+const {json} = require("express");
 const experimentDB = new MongoStorage("experiment");
 
-async function getAllExperiments(req, res) {
-    res.send(await experimentDB.find());
+const getAllExperiments = async (req, res) => {
+    const result = await experimentDB.find();
+    res.status(200).json({ result });
 }
 
-async function getExperimentById(req, res) {
+const getExperimentById = async (req, res) => {
     if (req.params.experiment_id) {
         const experiment_id = req.params.experiment_id;
-        res.send(await experimentDB.retrieve(experiment_id));
+        const result = await experimentDB.retrieve(experiment_id);
+        res.status(200).json({ result });
     }
 }
 
-async function getExperimentsByAccountId(req, res) {
+const getExperimentsByAccountId = async (req, res) => {
     if (req.params.account_id) {
         const account_id = req.params.account_id;
-        res.send(await experimentDB.findByAccount("account_id", account_id));
+        const experiments = await experimentDB.findByAccount("account_id", account_id);
+        res.status(200).json( {experiments});
     }
 }
 
-async function getExperimentsAB(req, res) {
-    res.send(await experimentDB.findGroup("type", "a-b"));
+const getExperimentsAB = async (req, res) => {
+    const account_id = req.params.account_id;
+    const result = await experimentDB.findGroup("type", "a-b", "account_id", account_id);
+    res.status(200).json({ result });
 }
 
-async function getExperimentsFF(req, res) {
-    res.send(await experimentDB.findGroup("type", "f-f"));
+const getExperimentsFF = async (req, res) => {
+    const account_id = req.params.account_id;
+    const result = await experimentDB.findGroup("type", "f-f", "account_id", account_id);
+    res.status(200).json({ result });
 }
 
-async function getVariantByExperimentId(req, res) {
+const getVariantByExperimentId = async (req, res) => {
+    res.sendStatus(200);
     res.send();
 }
 
-async function getExperimentsByDate(req, res) {
+const getExperimentsByDate = async (req, res) => {
     const year = req.query.year;
     const month = req.query.month;
-    res.send(await experimentDB.findByDate(year, month));
+    const result = await experimentDB.findByDate(year, month);
+    res.status(200).json({ result });
 }
 
-async function createExperiments(req, res) {
-    res.send(await experimentDB.create(req.body));
+const createExperiments = async (req, res) => {
+    const result = await experimentDB.create(req.body)
+    res.status(200).json({ result });
 }
 
-async function updateExperimentsByID(req, res) {
+const updateExperimentsByID = async (req, res) => {
     const experimentID = req.params.experiment_id;
-    res.send(await experimentDB.update(experimentID, req.body));
+    const result = await experimentDB.update(experimentID, req.body)
+    res.status(200).json({ result });
 }
 
-async function deleteExperimentsByID(req, res) {
+const deleteExperimentsByID = async (req, res) => {
     const experimentID = req.params.experiment_id;
-    res.send(await experimentDB.delete(experimentID));
+    const result = await experimentDB.delete(experimentID)
+    res.status(200).json({ result });
 }
 
-async function runExperiment(req, res) {
+const runExperiment = async (req, res) => {
 
 }
 
-async function declareGoal(req, res) {
+const declareGoal = async (req, res) => {
 
 }
 
