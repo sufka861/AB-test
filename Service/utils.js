@@ -1,18 +1,19 @@
 const geoip = require('geoip-lite');
 const parser = require('ua-parser-js');
 const cron = require('node-cron');
-const MongoStorage = require ('../db/MongoStorage');
+const MongoStorage = require('../db/MongoStorage');
 const experimentDB = new MongoStorage("experiment");
 const ffLogic = require('./FeatureLogic');
 const abLogic = require('./ABtest');
 const requestIp = require("request-ip");
 
 
-function getClientIP(endUserReq){
+function getClientIP(endUserReq) {
     return requestIp.getClientIp(endUserReq);
 }
+
 function getLocation(req) {
-    return  geoip.lookup(req.clientIp);
+    return geoip.lookup(req.clientIp);
 }
 
 function getBrowserDevice(req) {
@@ -25,55 +26,31 @@ function getBrowserDevice(req) {
 
 const shouldAllow = (ratio) => ratio >= 1 - Math.random();
 
-function returnByRatio( optionA, optionB){
+function returnByRatio(optionA, optionB) {
     return 0.5 < Math.random() ? optionA : optionB;
 }
 
-async function checkType(req, res) {
-    res.status(200);
-    const experimentID = req.params.id;
-    const exp = await experimentDB.retrieve(experimentID);
-
-    const expType = exp.type;
-    const expStatus = exp.status;
-    if (expStatus === 'Active') {
-        if (expType == 'f-f')
-            ffLogic.featureCheckAttributes(req, experimentID);
-        else
-            abLogic.checkAttributes(req, experimentID);
-    } else
-        res.send("Experiment status:" + expStatus);
-}
 
 
-function checkIfTerminated(req){
+function checkIfTerminated(req) {
     const termineated = req.termineated;
     return termineated;
 }
 
-async function cronExperiment(startTime, endTime, ExpID){
-    //startTime&endTime - Time in UTC!
-    const difTime = endTime.getDate() - startTime.getDate();
-    const exp = await experimentDB.retrieve(ExpID);
-    const task = cron.schedule(startTime, () =>  {
-        const intervalObj = setInterval(() => {
-            exp.status = "Active";
-            if(checkIfTerminated() == true){
-                clearInterval(intervalObj);
-            }
-          }, difTime);
 
-        clearInterval(intervalObj);
-      });
-      exp.status = "Ended";
-      task.stop();
+
+function checkAttributes(endUserReq, experiment) {
+    const geo = getLocation(getClientIP(endUserReq));
+    const {browser, device} = getBrowserDevice(endUserReq);
+    if (geo && browser && device)
+        return (geo.country === experiment.location && browser === experiment.browser && device === experiment.device)
+    else
+        return false;
 }
 
+
 module.exports = {
-    getLocation,
-    getBrowserDevice,
     shouldAllow,
-    getClientIP,
     returnByRatio,
-    cronExperiment
+    checkAttributes
 }

@@ -14,12 +14,19 @@ module.exports =  new class ExperimentStorage extends  MongoStorage{
         else
             return null;
     }
+    incCallCount(id){
+        return this.update(id, {$inc : {"call_count": 1}});
+
+    }
     getCallCount(id){
         const experiment = this.retrieve(id);
         if(!! experiment)
             return experiment.call_count;
         else
             return null;
+    }
+    updateExperimentStatus(id, newStatus){
+        return this.update(id, {status : newStatus});
     }
 
 }

@@ -59,7 +59,7 @@ const experimentSchema = new Schema({
                 message: "End time should be after start time"
             }
         },
-        variants: {
+        variants_ab: {
             type: Object,
             properties: {
                 A: String,
@@ -68,7 +68,25 @@ const experimentSchema = new Schema({
             },
             required: function () {
                 return this.type === "a-b"
+            },
+            variants_ff: {
+                type: ObjectId,
+                properties: {
+                    ON: Boolean,
+                    OFF: Boolean
+                },
+                validate :{
+                    validator : (variants) =>{
+                        return variants.ON !== variants.OFF;
+                    },
+                    message: "Feature flag variants must be of different values."
+                },
+                required: function () {
+                    return this.type === "f-f";
+                }
+
             }
+
         },
     }, {collection: "experiments"}
 )
