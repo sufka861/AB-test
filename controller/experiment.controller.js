@@ -1,8 +1,6 @@
 const {json} = require("express");
 const ExperimentRepository = require("../repositories/experiment.repository");
 const {PropertyNotFound} = require("../errors/NotFound.errors");
-const {InvalidProperty} = require("../errors/validation.errors");
-const {bodyValidator} = require("../validators/body.validator");
 const {ServerUnableError} = require("../errors/internal.errors");
 const experimentRepository = new ExperimentRepository();
 
