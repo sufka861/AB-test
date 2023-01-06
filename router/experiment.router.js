@@ -1,5 +1,5 @@
 const express = require('express');
-const experimentController = require('../controller/experimentController');
+const experimentController = require('../controller/experiment.controller');
 const experimentRouter = new express.Router();
 
 experimentRouter.get('/', experimentController.getAllExperiments);
