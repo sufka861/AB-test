@@ -27,6 +27,16 @@ async function getExperimentsFF(req, res) {
     res.send(await experimentDB.findGroup("type", "f-f"));
 }
 
+async function getVariantByExperimentId(req, res) {
+    res.send();
+}
+
+async function getExperimentsByDate(req, res) {
+    const year = req.query.year;
+    const month = req.query.month;
+    res.send(await experimentDB.findByDate(year, month);
+}
+
 async function createExperiments(req, res) {
     res.send(await experimentDB.create(req.body));
 }
@@ -56,6 +66,8 @@ module.exports = {
     getExperimentsByAccountId,
     getExperimentsAB,
     getExperimentsFF,
+    getVariantByExperimentId,
+    getExperimentsByDate,
     updateExperimentsByID,
     deleteExperimentsByID,
     createExperiments,

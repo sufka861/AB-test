@@ -38,6 +38,11 @@ module.exports = class MongoStorage {
         return this.Model.find({obj});
     }
 
+    findByDate(year, month) {
+
+        return this.Model.find();
+    }
+
     retrieve(id) {
         return this.Model.findById(id);
     }
