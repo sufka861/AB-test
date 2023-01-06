@@ -1,7 +1,7 @@
 const { Router } = require("express");
 const testRouter = new Router();
-const { doTest } = require("./../controllers/external.controller");
+const { runTest } = require("./../controllers/external.controller");
 
-testRouter.post("/run", doTest);
+testRouter.post("/run", runTest);
 
 module.exports = { testRouter };

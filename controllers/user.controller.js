@@ -20,14 +20,11 @@ const getUserByUuid = (req, res) => {
   return user;
 };
 
-const addUser = async (req, res) => {
-  // bodyValidator(req.body);
-  const { experiments } = req.body;
+const addUser = async () => {
   const uuid = generateUuid();
   if (!uuidValidator(uuid)) throw new InvalidProperty("uuid");
-  const user = { uuid, experiments };
+  const user = { uuid };
   const newUser = await userRepository.create(user);
-  console.log(newUser);
   if (!newUser) throw new ServerUnableError("create");
   res.status(200).json({ newUser });
   return newUser;
@@ -37,18 +34,16 @@ const insertExperiment = async (uuid, experiment) => {
   if (!experiment.uuid) throw new PropertyNotFound("uuid");
   if (!experiment.variant) throw new PropertyNotFound("variant");
   const user = await userRepository.retrieveByUuid(uuid);
-  if (!user) throw new EntityNotFound("user");
+  if (!user) throw new ServerUnableError("update");
   user.experiments.push(experiment);
   const updatedUser = await userRepository.update(user);
   return updatedUser;
 };
 
-const getUserExperiment = async (uuid, experimentId) => {
-  if (!uuidv4.validate(uuid)) throw new InvalidProperty("uuid");
-  const user = await userRepository.retrieveByUuid(uuid);
+const getUserExperiment = async (user, experimentId) => {
   const { experiments } = user;
   for (const exp of experiments) {
-    if (exp.id === experimentID) return exp;
+    if (exp.id === experimentId) return exp;
   }
   return false;
 };

@@ -3,36 +3,46 @@ const userRepository = new UsersRepository();
 const {
   checkAttributes,
   getUserByUuid,
-  setCookie,
-  getCookie,
   addUser,
   insertExperiment,
   getUserExperiment,
 } = require("./user.controller");
 
-const doTest = async (req, res) => {
+const runTest = async (req, res) => {
   // validate data (validation service?)
-
   const user = await getUserByUuid(req, res);
   console.log(user);
   if (user) {
-    for (const exp of user.experiments) {
-      if (exp.experimantId === req.body.experimentId) {
-        res.status(200).json(exp.variant);
-      }
+    const exp = getUserExperiment(user, req.body.experimentId);
+    if (exp) {
+      res.status(200).json(exp.variant);
     }
+    const existingVariant = doExperiment(req.body.experimentId, user.uuid);
+    res.status(200).json(existingVariant);
   }
-  const isAttributesMatch = checkAttributes();
 
-  // check user attributes (user controller + experiment controller)
-  // if attributes dont match - end
-  // save new user to db (user controller)
-  // set a persistant cookie with the uuid (user controller)
-  // determine if to test by experiment traffic(should allow)
-  // get experiment type (experiment controller)
-  // do the ab/ff test and return a variant (experiment controller/ a-b or f-f service)
-  // update user with the experiment and variant (user controller)
-  // return variant {A/B/C:"" / ON:true/OFF:true}
+  const isAttributesMatch = checkAttributes(req.body.attributes);
+  if (!isAttributesMatch) {
+    res.status(200).json({ message: "attributes does not match" });
+  }
+  const newUser = await addUser();
+  res.setCookie("uuid", newUser.uuid, { maxAge: 900000, httpOnly: true });
+  const variant = doExperiment(req.body.experimentId, newUser.uuid);
+  res.status(200).json(variant);
 };
 
-module.exports = { doTest };
+const doExperiment = async (experimentId, uuid) => {
+  const experiment = await getExperimentById();
+  let variant;
+  if (experiment.type === "f-f") {
+    variant = doFF();
+  }
+  if (experiment.type === "a-b") {
+    variant = doAB();
+  }
+  const userExperiment = { experimentId, variant };
+  const updatedUser = await insertExperiment(uuid, experiment);
+  return variant;
+};
+
+module.exports = { runTest };
