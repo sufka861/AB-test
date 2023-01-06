@@ -34,7 +34,7 @@ async function getVariantByExperimentId(req, res) {
 async function getExperimentsByDate(req, res) {
     const year = req.query.year;
     const month = req.query.month;
-    res.send(await experimentDB.findByDate(year, month);
+    res.send(await experimentDB.findByDate(year, month));
 }
 
 async function createExperiments(req, res) {

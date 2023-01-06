@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { ObjectId } = require('mongodb');
+const {ObjectId} = require('mongodb');
 mongoose.set("strictQuery", false);
 const Path = require("path");
 
@@ -39,8 +39,12 @@ module.exports = class MongoStorage {
     }
 
     findByDate(year, month) {
-
-        return this.Model.find();
+        return this.Model.find({
+            end_time: {
+                $gte: new Date(year, month, 1),
+                $lte: new Date(year, month, 31)
+            }
+        });
     }
 
     retrieve(id) {
