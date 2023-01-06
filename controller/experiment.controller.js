@@ -19,7 +19,7 @@ const getExperimentById = async (req, res) => {
 }
 
 const getExperimentsByAccountId = async (req, res) => {
-    if (req.params.account_id) throw new PropertyNotFound("account_id");
+    if (!req.params.account_id) throw new PropertyNotFound("account_id");
     const account_id = req.params.account_id;
     const result = await experimentRepository.findByAccount("account_id", account_id);
     if (!result) throw new ServerUnableError("getExperimentsByAccountId")
@@ -27,7 +27,7 @@ const getExperimentsByAccountId = async (req, res) => {
 }
 
 const getExperimentsAB = async (req, res) => {
-    if (req.params.account_id) throw new PropertyNotFound("account_id");
+    if (!req.params.account_id) throw new PropertyNotFound("account_id");
     const account_id = req.params.account_id;
     const result = await experimentRepository.findGroup("type", "a-b", "account_id", account_id);
     if (!result) throw new ServerUnableError("getExperimentsAB")
@@ -36,7 +36,7 @@ const getExperimentsAB = async (req, res) => {
 }
 
 const getExperimentsFF = async (req, res) => {
-    if (req.params.account_id) throw new PropertyNotFound("account_id");
+    if (!req.params.account_id) throw new PropertyNotFound("account_id");
     const account_id = req.params.account_id;
     const result = await experimentRepository.findGroup("type", "f-f", "account_id", account_id);
     if (!result) throw new ServerUnableError("getExperimentsFF")
@@ -45,7 +45,7 @@ const getExperimentsFF = async (req, res) => {
 }
 
 const getExperimentsByDate = async (req, res) => {
-    if (req.query.year && req.query.month) throw new PropertyNotFound("year and month");
+    if (!req.query.year && req.query.month) throw new PropertyNotFound("year and month");
     const year = req.query.year;
     const month = req.query.month;
     const result = await experimentRepository.findByDate(year, month);
@@ -60,7 +60,7 @@ const createExperiments = async (req, res) => {
 }
 
 const updateExperimentsByID = async (req, res) => {
-    if (req.params.experiment_id) throw new PropertyNotFound("experiment_id");
+    if (!req.params.experiment_id) throw new PropertyNotFound("experiment_id");
     const experimentID = req.params.experiment_id;
     const result = await experimentRepository.update(experimentID, req.body)
     if (!result) throw new ServerUnableError("updateExperimentsByID")
@@ -68,7 +68,7 @@ const updateExperimentsByID = async (req, res) => {
 }
 
 const deleteExperimentsByID = async (req, res) => {
-    if (req.params.experiment_id) throw new PropertyNotFound("experiment_id");
+    if (!req.params.experiment_id) throw new PropertyNotFound("experiment_id");
     const experimentID = req.params.experiment_id;
     const result = await experimentRepository.delete(experimentID)
     if (!result) throw new ServerUnableError("deleteExperimentsByID")
