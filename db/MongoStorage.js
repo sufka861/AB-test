@@ -1,43 +1,74 @@
 const mongoose = require("mongoose");
+const {ObjectId} = require('mongodb');
 mongoose.set("strictQuery", false);
 const Path = require("path");
+const validateDate = require("validate-date");
+
 
 module.exports = class MongoStorage {
-  constructor(entity) {
-    this.entityName = entity.charAt(0).toUpperCase() + entity.slice(1);
-    this.Model = require(Path.join(
-      __dirname,
-      `../models/${this.entityName}.model.js`
-    ));
-    this.connect();
-  }
+    constructor(entity) {
+        this.entityName = entity.charAt(0).toUpperCase() + entity.slice(1);
+        this.Model = require(Path.join(
+            __dirname,
+            `../models/${this.entityName}.model.js`
+        ));
+        this.connect();
+    }
 
-  connect() {
-    const connectionUrl = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_CLUSTER}.${process.env.DB_KEY}.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
-    mongoose
-      .connect(connectionUrl)
-      .then(() => console.log(`connected to ${this.entityName} collection`))
-      .catch((err) => console.log(`connection error: ${err}`));
-  }
+    connect() {
+        const connectionUrl = `mongodb+srv://dcs_growth:${process.env.DB_PASSWORD}@${process.env.DB_CLUSTER}.x4zjwvd.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
+        mongoose
+            .connect(connectionUrl)
+            .then(() => console.log(`connected to ${this.entityName} collection`))
+            .catch((err) => console.log(`connection error: ${err}`));
+    }
 
-  find() {
-    return this.Model.find({});
-  }
+    find() {
+        return this.Model.find({});
+    }
 
-  retrieve(id) {
-    return this.Model.findById(id);
-  }
+    findByTwoAttributes(key, value, key2, value2) {
+        const obj = {};
+        obj[key] = value;
+        if (key2 && value2) {
+            obj[key2] = value2;
+        }
+        return this.Model.find(obj);
+    }
 
-  create(data) {
-    const entity = new this.Model(data);
-    return entity.save();
-  }
+    findByAttribute(key, value) {
+        const obj = {};
+        obj[key] = value;
+        return this.Model.find(obj);
+    }
 
-  delete(id) {
-    return this.Model.findByIdAndDelete(id);
-  }
+    findByDate(year, month) {
+        if (validateDate(`${month}/01/${year}`)) {
+            const start = new Date(year, month, 1);
+            const end = new Date(year, month, 31);
+            return this.Model.countDocuments({
+                end_time: {
+                    $gte: start,
+                    $lte: end
+                }
+            });
+        }
+    }
 
-  update(id, data) {
-    return this.Model.findByIdAndUpdate(id, data, { new: true });
-  }
+    retrieve(id) {
+        return this.Model.findById(id);
+    }
+
+    create(data) {
+        const entity = new this.Model(data);
+        return entity.save();
+    }
+
+    delete(id) {
+        return this.Model.findByIdAndDelete(id);
+    }
+
+    update(id, data) {
+        return this.Model.findByIdAndUpdate(id, data, {new: true});
+    }
 };
