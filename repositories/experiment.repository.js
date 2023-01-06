@@ -26,12 +26,12 @@ module.exports = class UsersRepository {
         return this.storage.delete(id);
     }
 
-    findGroup(key, value, key2, value2) {
-        return this.storage.findGroup(key, value, key2, value2);
+    findByTwoAttributes(key, value, key2, value2) {
+        return this.storage.findByTwoAttributes(key, value, key2, value2);
     }
 
-    findByAccount(key, value) {
-        return this.storage.findByAccount(key, value);
+    findByAttribute(key, value) {
+        return this.storage.findByAttribute(key, value);
     }
 
     findByDate(year, month) {

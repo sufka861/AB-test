@@ -2,6 +2,8 @@ const {json} = require("express");
 const ExperimentRepository = require("../repositories/experiment.repository");
 const {PropertyNotFound} = require("../errors/NotFound.errors");
 const {ServerUnableError} = require("../errors/internal.errors");
+const { bodyValidator } = require("../validators/body.validator");
+const { BodyNotSent } = require("../errors/BadRequest.errors");
 const experimentRepository = new ExperimentRepository();
 
 const getAllExperiments = async (req, res) => {
@@ -21,7 +23,7 @@ const getExperimentById = async (req, res) => {
 const getExperimentsByAccountId = async (req, res) => {
     if (!req.params.account_id) throw new PropertyNotFound("account_id");
     const account_id = req.params.account_id;
-    const result = await experimentRepository.findByAccount("account_id", account_id);
+    const result = await experimentRepository.findByAttribute("account_id", account_id);
     if (!result) throw new ServerUnableError("getExperimentsByAccountId")
     res.status(200).json({result});
 }
@@ -29,7 +31,7 @@ const getExperimentsByAccountId = async (req, res) => {
 const getExperimentsAB = async (req, res) => {
     if (!req.params.account_id) throw new PropertyNotFound("account_id");
     const account_id = req.params.account_id;
-    const result = await experimentRepository.findGroup("type", "a-b", "account_id", account_id);
+    const result = await experimentRepository.findByTwoAttributes("type", "a-b", "account_id", account_id);
     if (!result) throw new ServerUnableError("getExperimentsAB")
     res.status(200).json({result});
 
@@ -38,7 +40,7 @@ const getExperimentsAB = async (req, res) => {
 const getExperimentsFF = async (req, res) => {
     if (!req.params.account_id) throw new PropertyNotFound("account_id");
     const account_id = req.params.account_id;
-    const result = await experimentRepository.findGroup("type", "f-f", "account_id", account_id);
+    const result = await experimentRepository.findByTwoAttributes("type", "f-f", "account_id", account_id);
     if (!result) throw new ServerUnableError("getExperimentsFF")
     res.status(200).json({result});
 
@@ -54,6 +56,7 @@ const getExperimentsByDate = async (req, res) => {
 }
 
 const createExperiments = async (req, res) => {
+    if(!bodyValidator(req)) throw new BodyNotSent();
     const result = await experimentRepository.create(req.body)
     if (!result) throw new ServerUnableError("createExperiments")
     res.status(200).json({result});

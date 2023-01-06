@@ -27,7 +27,7 @@ module.exports = class MongoStorage {
         return this.Model.find({});
     }
 
-    findGroup(key, value, key2, value2) {
+    findByTwoAttributes(key, value, key2, value2) {
         const obj = {};
         obj[key] = value;
         if (key2 && value2) {
@@ -36,7 +36,7 @@ module.exports = class MongoStorage {
         return this.Model.find(obj);
     }
 
-    findByAccount(key, value) {
+    findByAttribute(key, value) {
         const obj = {};
         obj[key] = value;
         return this.Model.find(obj);
