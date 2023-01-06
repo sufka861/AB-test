@@ -348,6 +348,59 @@ button {
     display: none;
 }
 
+#success-message {
+    position: fixed;
+    width: 560px;
+    height: 400px;
+    background: #FFFFFF;
+    border: 1px solid #000000;
+    border-radius: 110px;
+    margin-left: 14%;
+    z-index: 2;
+    display: none;
+}
+
+#success-message h2{
+    width: 460px;
+    height: 60px;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 36px;
+    line-height: 20px;
+    text-align: center;
+    letter-spacing: -0.02em;
+    color: #000000;
+    margin-left:50px;
+}
+
+#success-message section{
+    margin-top:26px;
+}
+
+#success-message img{
+    width: 160px;
+    height:160px;
+    margin-left: 36%;
+}
+
+#success-message button{
+    width: 260px;
+    height: 60px;
+    background: rgba(67, 24, 255, 0.74);
+    border-radius: 40px;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 26px;
+    line-height: 10px;
+    text-align: center;
+    letter-spacing: -0.02em;
+    color: #000000;
+    margin-left: 26%;
+    margin-top: 11px;
+}
+
+
+
 
 
 
