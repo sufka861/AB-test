@@ -2,6 +2,8 @@ const mongoose = require("mongoose");
 const {ObjectId} = require('mongodb');
 mongoose.set("strictQuery", false);
 const Path = require("path");
+const validateDate = require("validate-date");
+
 
 module.exports = class MongoStorage {
     constructor(entity) {
@@ -39,12 +41,16 @@ module.exports = class MongoStorage {
     }
 
     findByDate(year, month) {
-        return this.Model.find({
-            end_time: {
-                $gte: new Date(year, month, 1),
-                $lte: new Date(year, month, 31)
-            }
-        });
+        const start = new Date(year, month, 1);
+        const end = new Date(year, month, 31);
+        if (validateDate(start) && validateDate(end)) {
+            return this.Model.find({
+                end_time: {
+                    $gte: start,
+                    $lte: end
+                }
+            });
+        }
     }
 
     retrieve(id) {
