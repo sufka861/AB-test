@@ -5,7 +5,12 @@ const MongoStorage = require ('../db/MongoStorage');
 const experimentDB = new MongoStorage("experiment");
 const ffLogic = require('./FeatureLogic');
 const abLogic = require('./ABtest');
+const requestIp = require("request-ip");
 
+
+function getClientIP(endUserReq){
+    return requestIp.getClientIp(endUserReq);
+}
 function getLocation(req) {
     return  geoip.lookup(req.clientIp);
 }
@@ -68,6 +73,7 @@ module.exports = {
     getLocation,
     getBrowserDevice,
     shouldAllow,
+    getClientIP,
     returnByRatio,
     cronExperiment
 }
