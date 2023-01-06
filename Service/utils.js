@@ -6,35 +6,45 @@ const experimentDB = new MongoStorage("experiment");
 const ffLogic = require('./FeatureLogic');
 const abLogic = require('./ABtest');
 const requestIp = require("request-ip");
+const {PropertyNotFound} = require("../errors/NotFound.errors");
+const {ServerUnableError} = require("../errors/internal.errors");
+const { bodyValidator } = require("../validators/body.validator");
+const { BodyNotSent } = require("../errors/BadRequest.errors");
 
 
-function getClientIP(endUserReq) {
-    return requestIp.getClientIp(endUserReq);
+const getClientIP =(endUserReq)=> {
+    const result = requestIp.getClientIp(endUserReq);
+    if (!result) throw new ServerUnableError("getClientIP");
 }
 
-function getLocation(req) {
-    return geoip.lookup(req.clientIp);
+const getLocation = (req)=> {
+    if (!req) throw new PropertyNotFound("getlocation");
+    geoip.lookup(req.clientIp);
+
 }
 
-function getBrowserDevice(req) {
+const getBrowserDevice = (req)=>{
     const userAgentInfo = parser(req.headers['user-agent']);
-    return {
+    const result =  {
         browser: userAgentInfo.browser.name,
         device: userAgentInfo.device.type || 'desktop'
     }
+    if (!result) throw new ServerUnableError("getBrowserDevice");
 }
 
 const shouldAllow = (ratio) => ratio >= 1 - Math.random();
 
-function returnByRatio(optionA, optionB) {
+const returnByRatio = (optionA, optionB) => {
     return 0.5 < Math.random() ? optionA : optionB;
 }
 
 
 
-function checkIfTerminated(req) {
+const checkIfTerminated = (req) => {
+    if (!req) throw new PropertyNotFound("checkIfTerminated");
     const termineated = req.termineated;
     return termineated;
+
 }
 
 const checkIfActive = (experiment) => experiment.status === "active";
@@ -45,8 +55,10 @@ const checkIfActive = (experiment) => experiment.status === "active";
 const  checkAttributes = (endUserReq, experiment) => {
     const geo = getLocation(getClientIP(endUserReq));
     const {browser, device} = getBrowserDevice(endUserReq);
-    if (geo && browser && device)
-        return (geo.country === experiment.location && browser === experiment.browser && device === experiment.device)
+    if (geo && browser && device) {
+        const result =  (geo.country === experiment.location && browser === experiment.browser && device === experiment.device)
+        return result ;
+    }
     else
         return false;
 }

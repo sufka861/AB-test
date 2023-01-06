@@ -3,7 +3,7 @@ const MongoStorage = require('../db/MongoStorage');
 const {ExperimentStorage} = require('../db/ExperimentStorage')
 
 
-function featureCheckAttributes(endUserReq, experiment) {
+const featureCheckAttributes =(endUserReq, experiment) =>{
 
 
     const {ON, OFF} = experiment.variants_ff;
