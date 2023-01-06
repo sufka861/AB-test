@@ -44,7 +44,7 @@ module.exports = class MongoStorage {
         const start = new Date(year, month, 1);
         const end = new Date(year, month, 31);
         if (validateDate(start) && validateDate(end)) {
-            return this.Model.find({
+            return this.Model.countDocuments({
                 end_time: {
                     $gte: start,
                     $lte: end
