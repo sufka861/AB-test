@@ -1,35 +1,77 @@
-const { v4: uuidv4 } = require("uuid");
+const { v4: uuidv4, validate: uuidValidator } = require("uuid");
 const {
   PropertyNotFound,
   EntityNotFound,
 } = require("./../errors/NotFound.errors");
+const { InvalidProperty } = require("./../errors/validation.errors");
+const { bodyValidator } = require("./../validators/body.validator");
+const { ServerUnableError } = require("./../errors/internal.errors");
 
-const UsersRepository = require("./../repositories/user.repository");
+const UsersRepository = require("../repositories/user.repository");
 const userRepository = new UsersRepository();
 
-const generateUuid = () => {
-  return uuidv4();
-};
 const checkAttributes = (req, res) => {};
+
 const getUserByUuid = (req, res) => {
   const uuid = getCookie(req, res);
-  if (!uuid) throw new PropertyNotFound("cookie");
-  const user = userRepository.retrieveByAttribute(uuid);
+  if (!uuid) return false;
+  const user = userRepository.retrieveByUuid(uuid);
   if (!user) throw new EntityNotFound("user");
   return user;
 };
-const setCookie = (uuid) => {
+
+const addUser = async (req, res) => {
+  // bodyValidator(req.body);
+  const { experiments } = req.body;
+  const uuid = generateUuid();
+  if (!uuidValidator(uuid)) throw new InvalidProperty("uuid");
+  const user = { uuid, experiments };
+  const newUser = await userRepository.create(user);
+  console.log(newUser);
+  if (!newUser) throw new ServerUnableError("create");
+  res.status(200).json({ newUser });
+  return newUser;
+};
+
+const insertExperiment = async (uuid, experiment) => {
+  if (!experiment.uuid) throw new PropertyNotFound("uuid");
+  if (!experiment.variant) throw new PropertyNotFound("variant");
+  const user = await userRepository.retrieveByUuid(uuid);
+  if (!user) throw new EntityNotFound("user");
+  user.experiments.push(experiment);
+  const updatedUser = await userRepository.update(user);
+  return updatedUser;
+};
+
+const getUserExperiment = async (uuid, experimentId) => {
+  if (!uuidv4.validate(uuid)) throw new InvalidProperty("uuid");
+  const user = await userRepository.retrieveByUuid(uuid);
+  const { experiments } = user;
+  for (const exp of experiments) {
+    if (exp.id === experimentID) return exp;
+  }
+  return false;
+};
+
+const setCookie = () => {
   const uuid = generateUuid();
   res.cookie("uuid", uuid, { maxAge: 900000, httpOnly: true });
 };
 
 const getCookie = (req, res) => {
-  return res.cookies.uuid;
+  return req.cookies.uuid ? req.cookies.uuid : false;
+};
+
+const generateUuid = () => {
+  return uuidv4();
 };
 
 module.exports = {
-  generateUuid,
   checkAttributes,
   getUserByUuid,
   setCookie,
+  getCookie,
+  addUser,
+  insertExperiment,
+  getUserExperiment,
 };

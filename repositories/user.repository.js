@@ -1,4 +1,4 @@
-const MongoStorage = require("./../db/MongoStorage");
+const MongoStorage = require("../db/MongoStorage");
 
 module.exports = class UsersRepository {
   constructor() {
@@ -13,7 +13,7 @@ module.exports = class UsersRepository {
     return this.storage.retrieve(id);
   }
 
-  retrieveByAttribute(uuid) {
+  retrieveByUuid(uuid) {
     return this.storage.retrieveByAttribute("uuid", uuid);
   }
 
