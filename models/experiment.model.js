@@ -42,24 +42,20 @@ const experimentSchema = new Schema({
                 message: `{VALUE} is not a valid status.`,
             }
         },
-        start_time: {
-            type: Date, required: true,
-            validate: {
-                validator: function (startTime) {
-                    return new Date(startTime) < new Date(this.end_time);
+        duration: {
+            type: Object,
+            properties: {
+                start_time: Date,
+                end_time: Date,
+            },
+            required: true,
+            validate:{
+                validator: (duration) =>{
+                    return duration.end_time > duration.start_time
                 },
-                message: "Start time should be prior to end time"
+                message: "Start time should be prior to end time",
             }
 
-        },
-        end_time: {
-            type: Date, required: true,
-            validate: {
-                validator: function (endTime) {
-                    return new Date(endTime) > new Date(this.start_time);
-                },
-                message: "End time should be after start time"
-            }
         },
         variants_ab: {
             type: Object,
