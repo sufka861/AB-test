@@ -1,40 +1,51 @@
-const MongoStorage = require("../db/MongoStorage");
+const MongoStorage = require("../db/mongo.storage");
+const validateDate = require('validate-date');
 
-module.exports = class UsersRepository {
+module.exports = new class ExperimentsRepository extends MongoStorage {
     constructor() {
-        this.storage = new MongoStorage("experiment");
-    }
-
-    find() {
-        return this.storage.find();
-    }
-
-    retrieve(id) {
-        return this.storage.retrieve(id);
-    }
-
-    create(experiment) {
-        const user = this.storage.create(experiment);
-        return user;
-    }
-
-    update(id, experiment) {
-        return this.storage.update(id, experiment);
-    }
-
-    delete(id) {
-        return this.storage.delete(id);
-    }
-
-    findByTwoAttributes(key, value, key2, value2) {
-        return this.storage.findByTwoAttributes(key, value, key2, value2);
-    }
-
-    findByAttribute(key, value) {
-        return this.storage.findByAttribute(key, value);
+        super("experiment")
     }
 
     findByDate(year, month) {
-        return this.storage.findByDate(year, month);
+        if (validateDate(`${month}/01/${year}`)) {
+            const start = new Date(year, month, 1);
+            const end = new Date(year, month, 31);
+            return this.Model.countDocuments({
+                end_time: {
+                    $gte: start,
+                    $lte: end
+                }
+            });
+        }
     }
+
+    incVariantSuccessCount(id, variant) {
+        return this.update(id, {$inc: {[`variant_success_count.${variant}`]: 1}});
+    }
+
+    getVariantSuccessCount(id) {
+        const experiment = this.retrieve(id);
+        if (!!experiment)
+            return experiment.variant_success_count;
+        else
+            return null;
+    }
+
+    incCallCount(id) {
+        return this.update(id, {$inc: {"call_count": 1}});
+
+    }
+
+    getCallCount(id) {
+        const experiment = this.retrieve(id);
+        if (!!experiment)
+            return experiment.call_count;
+        else
+            return null;
+    }
+
+    updateExperimentStatus(id, newStatus) {
+        return this.update(id, {status: newStatus});
+    }
+
 }
