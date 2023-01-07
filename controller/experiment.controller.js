@@ -8,7 +8,7 @@ const {BodyNotSent} = require("../errors/BadRequest.errors");
 const getAllExperiments = async (req, res) => {
     const result = await ExperimentRepository.find();
     if (!result) throw new ServerUnableError("getAllExperiments")
-    res.status(200).json({result});
+    res.status(200).json(result);
 }
 
 const getExperimentById = async (req, res) => {
@@ -74,7 +74,7 @@ const deleteExperimentsByID = async (req, res) => {
     const experimentID = req.params.experiment_id;
     const result = await ExperimentRepository.delete(experimentID)
     if (!result) throw new ServerUnableError("deleteExperimentsByID")
-    res.status(200).json(resul);
+    res.status(200).json(result);
 }
 
 module.exports = {
