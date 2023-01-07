@@ -34,11 +34,11 @@ const getBrowserDevice = (req) => {
   return result;
 };
 
-const shouldAllow = (ratio) => ratio >= 1 - Math.random();
-
 const returnByRatio = (optionA, optionB) => {
   return 0.5 < Math.random() ? optionA : optionB;
 };
+
+const shouldAllow = (ratio) => ratio >= 1 - Math.random();
 
 const checkIfActive = (experiment) => experiment.status === "active";
 

@@ -63,6 +63,30 @@ const experimentSchema = new Schema(
         message: "Start time should be prior to end time",
       },
     },
+    variants_ff: {
+      type: Object,
+      properties: {
+        ON: {
+          type: Boolean,
+          default: true,
+          validate: {
+            validator: (ON) => ON,
+            message: "Feature flag variant ON must be true",
+          },
+        },
+        OFF: {
+          type: Boolean,
+          default: false,
+          validate: {
+            validator: (OFF) => !OFF,
+            message: "Feature flag variant OFF must be false",
+          },
+        },
+      },
+      required: function () {
+        return this.type === "f-f";
+      },
+    },
     variants_ab: {
       type: Object,
       properties: {
@@ -72,30 +96,6 @@ const experimentSchema = new Schema(
       },
       required: function () {
         return this.type === "a-b";
-      },
-      variants_ff: {
-        type: Object,
-        properties: {
-          ON: {
-            type: Boolean,
-            default: true,
-            validate: {
-              validator: (ON) => ON,
-              message: "Feature flag variant ON must be true",
-            },
-          },
-          OFF: {
-            type: Boolean,
-            default: false,
-            validate: {
-              validator: (OFF) => !OFF,
-              message: "Feature flag variant OFF must be false",
-            },
-          },
-        },
-        required: function () {
-          return this.type === "f-f";
-        },
       },
     },
   },
