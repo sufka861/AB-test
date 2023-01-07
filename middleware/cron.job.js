@@ -2,8 +2,8 @@ const cron = require("node-cron");
 const Util = require("../Service/utils");
 const ExperimentRepository = require("../repositories/experiment.repository");
 
-const experimentStatusUpdate = cron.schedule("0 0 * * *", async () => {
-    const now = new Date();
+const experimentStatusUpdate = cron.schedule("* * * * *", async () => {
+    const now = new Date().toISOString();
     const query = {status: "planned", duration : { start_time: {$gte: now}}}
     const experiments = await ExperimentRepository.findByQuery(query);
     console.log(experiments);

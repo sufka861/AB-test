@@ -10,11 +10,10 @@ const requestIp = require("request-ip");
 const {errorHandler} = require("./middleware/errorHandler.mw");
 const logPath = path.join(__dirname, "logs", "http.log");
 const port = process.env.PORT || 3000;
-const {experimentRouter} = require('./router/experiment.router')
-const {experimentStatusUpdate} = require('./middleware/cron.job');
 const { experimentRouter } = require("./router/experiment.router");
 const { testRouter } = require("./router/external.routes");
 const { userRouter } = require("./router/user.routes");
+const {experimentStatusUpdate} = require("./middleware/cron.job");
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(
