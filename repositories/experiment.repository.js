@@ -19,29 +19,30 @@ module.exports = new (class ExperimentsRepository extends MongoStorage {
     }
   }
 
-  incVariantSuccessCount(id, variant) {
-    return this.update(id, {
+  async incVariantSuccessCount(id, variant) {
+    return await  this.update(id, {
       $inc: { [`variant_success_count.${variant}`]: 1 },
     });
   }
 
-  getVariantSuccessCount(id) {
-    const experiment = this.retrieve(id);
-    if (!!experiment) return experiment.variant_success_count;
+  async getVariantSuccessCount(id) {
+    const experiment = await this.retrieve(id);
+    if (experiment) return  experiment.variant_success_count;
     else return null;
   }
 
-  incCallCount(id) {
-    return this.update(id, { $inc: { call_count: 1 } });
+  async incCallCount(id) {
+    return await this.update(id, { $inc: { call_count: 1 } });
   }
 
-  getCallCount(id) {
-    const experiment = this.retrieve(id);
-    if (!!experiment) return experiment.call_count;
+  async getCallCount(id) {
+    const experiment = await this.retrieve(id);
+
+    if (experiment) return experiment.call_count;
     else return null;
   }
 
-  updateExperimentStatus(id, newStatus) {
-    return this.update(id, { status: newStatus });
+  async updateExperimentStatus(id, newStatus) {
+    return await this.update(id, { status: newStatus });
   }
 })();
