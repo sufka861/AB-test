@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const {ObjectId} = require('mongodb');
 mongoose.set("strictQuery", false);
 const Path = require("path");
 
@@ -56,6 +55,6 @@ module.exports = class MongoStorage {
     }
 
     update(id, data) {
-        return this.Model.findByIdAndUpdate(id, data, {new: true}, {runValidators: true});
+        return this.Model.findByIdAndUpdate(id, data, {new: true, runValidators: true});
     }
 };
