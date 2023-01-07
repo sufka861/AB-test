@@ -34,10 +34,6 @@ const getBrowserDevice = (req) => {
   return result;
 };
 
-const returnByRatio = (optionA, optionB) => {
-  return 0.5 < Math.random() ? optionA : optionB;
-};
-
 const shouldAllow = (ratio) => ratio >= 1 - Math.random();
 
 const checkIfActive = (experiment) => experiment.status === "active";
@@ -60,7 +56,6 @@ const checkAttributes = (endUserReq, experiment, next) => {
 
 module.exports = {
   shouldAllow,
-  returnByRatio,
   checkAttributes,
   checkIfActive,
 };
