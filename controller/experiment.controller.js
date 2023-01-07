@@ -9,7 +9,7 @@ const getAllExperiments = async (req, res) => {
     const result = await ExperimentRepository.find();
     if (!result) throw new ServerUnableError("getAllExperiments")
     res.status(200).json(result);
-}
+};
 
 const getExperimentById = async (req, res) => {
     if (!req.params.experiment_id) throw new PropertyNotFound("experiment_id");
@@ -17,7 +17,7 @@ const getExperimentById = async (req, res) => {
     const result = await ExperimentRepository.retrieve(experiment_id);
     if (!result) throw new ServerUnableError("getExperimentById")
     res.status(200).json(result);
-}
+};
 
 const getExperimentsByAccountId = async (req, res) => {
     if (!req.params.account_id) throw new PropertyNotFound("account_id");

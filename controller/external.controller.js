@@ -5,8 +5,17 @@ const {
   getUserExperiment,
 } = require("./user.controller");
 const { checkAttributes } = require("./../Service/utils");
+const { bodyValidator } = require("./../validators/body.validator");
+const ExperimentRepository = require("../repositories/experiment.repository");
+const { MissingPropertyError } = require("../errors/validation.errors");
+const { EntityNotFound } = require("../errors/NotFound.errors");
+const { ExperimentNotActive } = require("../errors/BadRequest.errors");
 
 const runTest = async (req, res, next) => {
+  bodyValidator(req);
+  if (!req.body.experimentId) throw new MissingPropertyError("experiment id");
+  if (!(await checkIfExperimentIsActive(req.body.experimentId)))
+    throw new ExperimentNotActive(req.body.experimentId);
   const user = await getUserByUuid(req, res);
   if (user) {
     const exp = getUserExperiment(user, req.body.experimentId);
@@ -27,10 +36,17 @@ const runTest = async (req, res, next) => {
 };
 
 const doExperiment = async (experimentId, uuid) => {
+  await ExperimentRepository.incCallCount(experimentId);
   let variant = checkExperimentTypeAndExecExperiment(experimentId, req);
   const userExperiment = { experimentId, variant };
   const updatedUser = await insertExperiment(uuid, userExperiment);
   return variant;
 };
 
+const checkIfExperimentIsActive = async (experimentId) => {
+  const experiment = await ExperimentRepository.retrieve(experimentId);
+  if (!experiment) throw new EntityNotFound("experiment");
+  if (experiment.status !== "active") return false;
+  return true;
+};
 module.exports = { runTest };
