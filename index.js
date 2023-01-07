@@ -14,6 +14,9 @@ const port = process.env.PORT || 3000;
 const { experimentRouter } = require("./router/experiment.router");
 const { testRouter } = require("./router/external.routes");
 const { userRouter } = require("./router/user.routes");
+const statsRouter = require("./router/stats.router");
+const goalRouter = require("./router/goal.router");
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
@@ -28,6 +31,8 @@ app.use(cors());
 app.use("/test", testRouter);
 app.use("/user", userRouter);
 app.use("/experiments", experimentRouter);
+app.use("/goal", goalRouter);
+app.use("/stats", statsRouter);
 
 app.use(errorHandler);
 
