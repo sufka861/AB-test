@@ -4,6 +4,7 @@ const {PropertyNotFound} = require("../errors/NotFound.errors");
 const {ServerUnableError} = require("../errors/internal.errors");
 const {bodyValidator} = require("../validators/body.validator");
 const {BodyNotSent} = require("../errors/BadRequest.errors");
+const {UsersRepository} = require("../repositories/user.repository");
 
 const getAllExperiments = async (req, res) => {
     const result = await ExperimentRepository.find();
@@ -80,64 +81,51 @@ const deleteExperimentsByID = async (req, res) => {
 const getExperimentGoalReach = async (req, res) => {
     if (req.params.experiment_id) {
         const experiment_id = req.params.experiment_id;
-        const experiment = await experimentRepository.retrieve(experiment_id);
+        const experiment = await ExperimentRepository.retrieve(experiment_id);
         const calls_number = experiment.call_count;
-        const A_variant_name = experiment.variants.A;
-        const B_variant_name = experiment.variants.B;
+        // const A_variant_name = experiment.variants.A;
+        // const B_variant_name = experiment.variants.B;
         let A_statistic = 0;
         let B_statistic = 0;
+        let C_statistic = 0;
         if(calls_number > 0) {
             const A = experiment.variant_success_count[0];
             A_statistic = (A / calls_number) * 100;
             const B = experiment.variant_success_count[1];
             B_statistic = (B / calls_number) * 100;
+            const C = experiment.variant_success_count[2];
+            C_statistic = (C / calls_number) * 100;
         }
         const result = {
             "goals":[
                 {
-                    "variant": `${A_variant_name}`,
+                    // "variants": `${A_variant_name}`,
+                    "variants": `A`,
                     "goal_reach": `${A_statistic}%`
                 },
                 {
-                    "variant": `${B_variant_name}`,
+                    // "variants": `${B_variant_name}`,
+                    "variants": `B`,
                     "goal_reach": `${B_statistic}%`
+                },
+                {
+                    // "variants": `${B_variant_name}`,
+                    "variants": `C`,
+                    "goal_reach": `${C_statistic}%`
                 }
             ]
         }
+        console.log(result);
         res.status(200).json({ result });
     }
 }
 
-const getExperimentVariantExposure = async (req, res) => {
-    if (req.params.experiment_id) {
-        const experiment_id = req.params.experiment_id;
-        const experiment = await experimentRepository.retrieve(experiment_id);
-        const calls_number = experiment.call_count;
-        const A_variant_name = experiment.variants.A;
-        const B_variant_name = experiment.variants.B;
-        let A_statistic = 0;
-        let B_statistic = 0;
-        if(calls_number > 0) {
-            const A = experiment.variant_success_count[0];
-            A_statistic = (A / calls_number) * 100;
-            const B = experiment.variant_success_count[1];
-            B_statistic = (B / calls_number) * 100;
-        }
-        const result = {
-            "goals":[
-                {
-                    "variant": `${A_variant_name}`,
-                    "goal_reach": `${A_statistic}%`
-                },
-                {
-                    "variant": `${B_variant_name}`,
-                    "goal_reach": `${B_statistic}%`
-                }
-            ]
-        }
-        res.status(200).json({ result });
-    }
-}
+// const getExperimentVariantExposure = async (req, res) => {
+//     if (req.params.experiment_id) {
+//         users = new UsersRepository;
+//         res.status(200).json({ users });
+//     }
+// }
 
 
 module.exports = {
@@ -151,4 +139,5 @@ module.exports = {
     deleteExperimentsByID,
     createExperiments,
     getExperimentGoalReach,
+    getExperimentVariantExposure,
 }
