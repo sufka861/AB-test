@@ -10,12 +10,11 @@ const experimentStatusUpdate = cron.schedule("* * * * * *", async () => {
         ExperimentRepository.update(experiment._id, {status: "active"})
     });
 
-    query = {status: "active", duration: {end_time:{$gte: now}, start_time: {$lte: now}}};
-    experiments = await ExperimentRepository.findByQuery(query);
-    experiments.forEach((experiment) => {
-        ExperimentRepository.update(experiment._id, {status: "ended"})
-    });
-    console.log(experiments);
+    // query = {status: "active", duration: {end_time:{$gte: now}, start_time: {$lte: now}}};
+    // experiments = await ExperimentRepository.findByQuery(query);
+    // experiments.forEach((experiment) => {
+    //     ExperimentRepository.update(experiment._id, {status: "ended"})
+    // });
 })
 
 module.exports = {
