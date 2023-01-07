@@ -10,7 +10,7 @@ const requestIp = require("request-ip");
 const {errorHandler} = require("./middleware/errorHandler.mw");
 const logPath = path.join(__dirname, "logs", "http.log");
 const port = process.env.PORT || 3000;
-const {experimentRouter} = require('./router/experimentRouter')
+const {experimentRouter} = require('./router/experiment.router')
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(

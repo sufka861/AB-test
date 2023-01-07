@@ -16,7 +16,6 @@
     "express-async-errors": "^3.1.1",
     "iso-3166-1": "^2.1.1",
     "geoip-lite": "^1.4.6",
-    "iso-3166-1": "^2.1.1",
     "linter": "^0.0.7",
     "mongodb": "^4.13.0",
     "mongoose": "^6.8.1",
