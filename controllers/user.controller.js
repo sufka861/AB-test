@@ -20,18 +20,18 @@ const getUserByUuid = (req, res) => {
   return user;
 };
 
-const addUser = async () => {
+const addUser = async (req, res) => {
   const uuid = generateUuid();
   if (!uuidValidator(uuid)) throw new InvalidProperty("uuid");
   const user = { uuid };
   const newUser = await userRepository.create(user);
   if (!newUser) throw new ServerUnableError("create");
-  res.status(200).json({ newUser });
   return newUser;
 };
 
 const insertExperiment = async (uuid, experiment) => {
-  if (!experiment.uuid) throw new PropertyNotFound("uuid");
+  console.log(uuid);
+  if (!uuid) throw new PropertyNotFound("uuid");
   if (!experiment.variant) throw new PropertyNotFound("variant");
   const user = await userRepository.retrieveByUuid(uuid);
   if (!user) throw new ServerUnableError("update");

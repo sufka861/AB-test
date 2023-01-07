@@ -5,7 +5,13 @@ const userSchema = new Schema(
   {
     uuid: { type: String, required: true },
     experiments: [
-      { experimantId: String, variant: { A: String, B: String, C: String } },
+      {
+        experimantId: String,
+        variant: {
+          type: Map,
+          of: String,
+        },
+      },
     ],
   },
   { collection: "users" }

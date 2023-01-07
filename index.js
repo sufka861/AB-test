@@ -13,13 +13,11 @@ const userRouter = require("./routes/user.routes");
 const logPath = path.join(__dirname, "logs", "http.log");
 const port = process.env.PORT || 3000;
 const { testRouter } = require("./routes/external.routes");
-const { experimentRouter } = require("./testRouter/experimentRouter");
 const { ipMiddleware } = require("./middleware/ip.mw");
 
 // Middleware
 app.use(ipMiddleware);
 app.use(requestIp.mw());
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
