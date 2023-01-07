@@ -5,8 +5,8 @@ const ExperimentRepository = require("../repositories/experiment.repository");
 const UserRepository = require("../repositories/user.repository");
 const {mongoose} = require("mongoose");
 
-const userVariantRationByExperiment = async (experimentID, variant) =>{
-    return Use
+const userPercentageVariantByExperiment = async (experimentID, variant) => {
+    return (await UserRepository.numUsersByExperimentIdAndVariant(experimentID, variant) / await UserRepository.numUsersByExperimentId(experimentID)) * 100;
 }
 
 const getStatistics = async (req, res) => {
@@ -14,9 +14,9 @@ const getStatistics = async (req, res) => {
     const experimentID = req.params.id;
     if (!mongoose.isValidObjectId(experimentID)) throw new ValidationError.MissingPropertyError("experiment ID");
 
-    const experiment =  await ExperimentRepository.retrieve(experimentID);
+    const experiment = await ExperimentRepository.retrieve(experimentID);
     if (!experiment) throw new NotFoundError.EntityNotFound(`experiment (${experimentID})`);
-    if(!experiment.call_count) throw new ServerError.ServerUnableError("calculate experiment call count");
+    if (!experiment.call_count) throw new ServerError.ServerUnableError("calculate experiment call count");
     switch (experiment.type) {
         case "a-b" :
             res.status(200).send({
@@ -27,7 +27,7 @@ const getStatistics = async (req, res) => {
             break;
         case "f-f":
             res.status(200).send({
-                ON: (experiment.variant_success_count.ON / experiment.call_count* 100).toFixed(2),
+                ON: (experiment.variant_success_count.ON / experiment.call_count * 100).toFixed(2),
                 OFF: (experiment.variant_success_count.OFF / experiment.call_count * 100).toFixed(2)
             })
             break;
@@ -36,25 +36,25 @@ const getStatistics = async (req, res) => {
     }
 }
 
-const getUsersStats = async (req,res) => {
+const getUsersStats = async (req, res) => {
 
     const experimentID = req.params.id;
     if (!mongoose.isValidObjectId(experimentID)) throw new ValidationError.MissingPropertyError("experiment ID");
-    const experiment =  await ExperimentRepository.retrieve(experimentID);
+    const experiment = await ExperimentRepository.retrieve(experimentID);
     if (!experiment) throw new NotFoundError.EntityNotFound(`experiment (${experimentID})`);
 
     switch (experiment.type) {
         case "a-b" :
             res.status(200).send({
-                A:
-                B:
-                C:
+                A: userPercentageVariantByExperiment(experimentID, "A"),
+                B: userPercentageVariantByExperiment(experimentID, "B"),
+                C: userPercentageVariantByExperiment(experimentID, "C")
             });
             break;
         case "f-f":
             res.status(200).send({
-                ON:
-                OFF:
+                ON: userPercentageVariantByExperiment(experimentID, "ON"),
+                OFF: userPercentageVariantByExperiment(experimentID, "OFF")
             })
             break;
         default:
@@ -63,5 +63,6 @@ const getUsersStats = async (req,res) => {
 }
 
 module.exports = {
-    getStatistics
+    getStatistics,
+    getUsersStats
 }
