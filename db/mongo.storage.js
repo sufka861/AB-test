@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const { ObjectId } = require("mongodb");
 mongoose.set("strictQuery", false);
 const Path = require("path");
 
