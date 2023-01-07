@@ -1,4 +1,4 @@
-const {ExperimentStorage} = require('../db/experiment.storage');
+const {ExperimentStorage} = require('../repositories/experiment.repository');
 
 
 module.exports = {
