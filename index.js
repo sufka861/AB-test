@@ -12,6 +12,9 @@ const logPath = path.join(__dirname, "logs", "http.log");
 const port = process.env.PORT || 3000;
 const {experimentRouter} = require('./router/experiment.router')
 const {experimentStatusUpdate} = require('./middleware/cron.job');
+const { experimentRouter } = require("./router/experiment.router");
+const { testRouter } = require("./router/external.routes");
+const { userRouter } = require("./router/user.routes");
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(
@@ -28,5 +31,3 @@ app.use(errorHandler);
 app.listen(port, () => {
     console.log(`Server is listening on port ${port}...`);
 });
-
-
