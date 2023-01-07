@@ -1,40 +1,47 @@
-const MongoStorage = require("../db/MongoStorage");
+const MongoStorage = require("../db/mongo.storage");
+const validateDate = require("validate-date");
 
-module.exports = class UsersRepository {
-    constructor() {
-        this.storage = new MongoStorage("experiment");
-    }
+module.exports = new (class ExperimentsRepository extends MongoStorage {
+  constructor() {
+    super("experiment");
+  }
 
-    find() {
-        return this.storage.find();
+  findByDate(year, month) {
+    if (validateDate(`${month}/01/${year}`)) {
+      const start = new Date(year, month, 1);
+      const end = new Date(year, month, 31);
+      return this.Model.countDocuments({
+        end_time: {
+          $gte: start,
+          $lte: end,
+        },
+      });
     }
+  }
 
-    retrieve(id) {
-        return this.storage.retrieve(id);
-    }
+  incVariantSuccessCount(id, variant) {
+    return this.update(id, {
+      $inc: { [`variant_success_count.${variant}`]: 1 },
+    });
+  }
 
-    create(experiment) {
-        const user = this.storage.create(experiment);
-        return user;
-    }
+  getVariantSuccessCount(id) {
+    const experiment = this.retrieve(id);
+    if (!!experiment) return experiment.variant_success_count;
+    else return null;
+  }
 
-    update(id, experiment) {
-        return this.storage.update(id, experiment);
-    }
+  incCallCount(id) {
+    return this.update(id, { $inc: { call_count: 1 } });
+  }
 
-    delete(id) {
-        return this.storage.delete(id);
-    }
+  getCallCount(id) {
+    const experiment = this.retrieve(id);
+    if (!!experiment) return experiment.call_count;
+    else return null;
+  }
 
-    findByTwoAttributes(key, value, key2, value2) {
-        return this.storage.findByTwoAttributes(key, value, key2, value2);
-    }
-
-    findByAttribute(key, value) {
-        return this.storage.findByAttribute(key, value);
-    }
-
-    findByDate(year, month) {
-        return this.storage.findByDate(year, month);
-    }
-}
+  updateExperimentStatus(id, newStatus) {
+    return this.update(id, { status: newStatus });
+  }
+})();
