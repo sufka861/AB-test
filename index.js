@@ -9,15 +9,9 @@ const cookieParser = require("cookie-parser");
 const app = express();
 const requestIp = require("request-ip");
 const { errorHandler } = require("./middleware/errorHandler.mw");
-const userRouter = require("./routes/user.routes");
 const logPath = path.join(__dirname, "logs", "http.log");
 const port = process.env.PORT || 3000;
-const { testRouter } = require("./routes/external.routes");
-const { ipMiddleware } = require("./middleware/ip.mw");
-
-// Middleware
-app.use(ipMiddleware);
-app.use(requestIp.mw());
+const { experimentRouter } = require("./router/experiment.router");
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
@@ -31,11 +25,10 @@ app.use(cors());
 // Routes goes here!
 app.use("/user", userRouter);
 app.use("/test", testRouter);
+app.use("/experiments", experimentRouter);
 
-// Error middleware
 app.use(errorHandler);
 
-// Connection
 app.listen(port, () => {
   console.log(`Server is listening on port ${port}...`);
 });
