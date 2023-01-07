@@ -4,7 +4,6 @@ const {PropertyNotFound} = require("../errors/NotFound.errors");
 const {ServerUnableError} = require("../errors/internal.errors");
 const { bodyValidator } = require("../validators/body.validator");
 const { BodyNotSent } = require("../errors/BadRequest.errors");
-// const experimentRepository = new ExperimentRepository();
 
 const getAllExperiments = async (req, res) => {
     const result = await ExperimentRepository.find();
