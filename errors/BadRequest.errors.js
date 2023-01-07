@@ -21,4 +21,11 @@ class BodyNotSent extends BadRequest {
   }
 }
 
-module.exports = { PropertyExist, BodyNotSent };
+class ExperimentNotActive extends BadRequest {
+  constructor(experimentId) {
+    super(`Experiment with id=${experimentId} is not active`);
+    this.name = this.constructor.name;
+  }
+}
+
+module.exports = { PropertyExist, BodyNotSent, ExperimentNotActive };

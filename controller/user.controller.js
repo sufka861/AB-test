@@ -64,12 +64,19 @@ const generateUuid = () => {
   return uuidv4();
 };
 
+const getAllUsers = async (req, res) =>{
+  res.status(200).json(await userRepository.find());
+}
+
+
 module.exports = {
   checkAttributes,
+  getAllUsers,
   getUserByUuid,
   setCookie,
   getCookie,
   addUser,
   insertExperiment,
   getUserExperiment,
+
 };
