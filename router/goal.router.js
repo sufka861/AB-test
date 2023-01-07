@@ -1,5 +1,5 @@
 const { Router} = require ('express');
-const goalController = require('./goalController');
+const goalController = require('../controller/goal.controller');
 const goalRouter = new Router();
 
 goalRouter.get("callCount/:id", goalController.getCallCountByExperimentID);

@@ -1,5 +1,5 @@
 giconst Util = require("./utils");
-const {ExperimentStorage} = require('../db/ExperimentStorage');
+const {ExperimentStorage} = require('../db/experiment.storage');
 
 const ABcheckAttributes = (endUserReq, experiment)=>{
     const {A, B, C} = experiment.variants_ab;

@@ -1,6 +1,6 @@
 const Util = require("./utils");
-const MongoStorage = require('../db/MongoStorage');
-const {ExperimentStorage} = require('../db/ExperimentStorage')
+const MongoStorage = require('../db/mongo.storage');
+const {ExperimentStorage} = require('../db/experiment.storage')
 
 
 const featureCheckAttributes =(endUserReq, experiment) =>{

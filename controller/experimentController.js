@@ -1,4 +1,4 @@
-const MongoStorage = require ('../db/MongoStorage');
+const MongoStorage = require ('../db/mongo.storage');
 const experimentDB = new MongoStorage("experiment");
 
 async function getAllExperiments(req, res) {

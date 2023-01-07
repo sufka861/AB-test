@@ -1,7 +1,7 @@
 const cron = require('node-cron');
-const {ExperimentStorage} = require('../db/ExperimentStorage')
-const ffLogic = require("./FeatureLogic");
-const abLogic = require("./ABtest");
+const {ExperimentStorage} = require('../db/experiment.storage')
+const ffLogic = require("./feature.logic");
+const abLogic = require("./AB.test.logic");
 const Util = require("./utils");
 
 

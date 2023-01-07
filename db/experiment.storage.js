@@ -1,4 +1,4 @@
-const {MongoStorage} = require ('./MongoStorage');
+const {MongoStorage} = require ('./mongo.storage');
 
 module.exports =  new class ExperimentStorage extends  MongoStorage{
     constructor() {
