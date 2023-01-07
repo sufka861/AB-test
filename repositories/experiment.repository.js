@@ -1,4 +1,4 @@
-const { MongoStorage }= require("../db/mongo.storage");
+const MongoStorage = require("../db/mongo.storage");
 const validateDate = require('validate-date');
 
 module.exports = new class ExperimentsRepository extends  MongoStorage {
