@@ -1,5 +1,3 @@
-const { updateUser } = require("../repositories/user.repository");
-const usersRepository = require("../repositories/user.repository");
 const {
   getUserByUuid,
   addUser,
@@ -8,8 +6,7 @@ const {
 } = require("./user.controller");
 const { checkAttributes } = require("./../Service/utils");
 
-const runTest = async (req, res) => {
-  // validate data (validation service?)
+const runTest = async (req, res, next) => {
   const user = await getUserByUuid(req, res);
   if (user) {
     const exp = getUserExperiment(user, req.body.experimentId);
@@ -20,7 +17,7 @@ const runTest = async (req, res) => {
     res.status(200).json(existingVariant);
   }
 
-  if (checkAttributes(req, req.body.experimentId)) {
+  if (checkAttributes(req, req.body.experimentId, next)) {
     const newUser = await addUser(req, res);
     res.cookie("uuid", newUser.uuid, { maxAge: 900000, httpOnly: true });
     const variant = await doExperiment(req.body.experimentId, newUser.uuid);

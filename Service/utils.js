@@ -40,24 +40,22 @@ const returnByRatio = (optionA, optionB) => {
   return 0.5 < Math.random() ? optionA : optionB;
 };
 
-const checkIfTerminated = (req) => {
-  if (!req) throw new PropertyNotFound("checkIfTerminated");
-  const termineated = req.termineated;
-  return termineated;
-};
-
 const checkIfActive = (experiment) => experiment.status === "active";
 
-const checkAttributes = (endUserReq, experiment) => {
-  const geo = getLocation(getClientIP(endUserReq));
-  const { browser, device } = getBrowserDevice(endUserReq);
-  if (geo && browser && device) {
-    const result =
-      geo.country === experiment.location &&
-      browser === experiment.browser &&
-      device === experiment.device;
-    return result;
-  } else return false;
+const checkAttributes = (endUserReq, experiment, next) => {
+  try {
+    const geo = getLocation(getClientIP(endUserReq));
+    const { browser, device } = getBrowserDevice(endUserReq);
+    if (geo && browser && device) {
+      const result =
+        geo.country === experiment.location &&
+        browser === experiment.browser &&
+        device === experiment.device;
+      return result;
+    } else return false;
+  } catch (error) {
+    next(error);
+  }
 };
 
 module.exports = {
