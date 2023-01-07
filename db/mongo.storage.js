@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 const {ObjectId} = require('mongodb');
 mongoose.set("strictQuery", false);
 const Path = require("path");
-const validateDate = require("validate-date");
 
 
 module.exports = class MongoStorage {
@@ -42,18 +41,6 @@ module.exports = class MongoStorage {
         return this.Model.find(obj);
     }
 
-    findByDate(year, month) {
-        if (validateDate(`${month}/01/${year}`)) {
-            const start = new Date(year, month, 1);
-            const end = new Date(year, month, 31);
-            return this.Model.countDocuments({
-                end_time: {
-                    $gte: start,
-                    $lte: end
-                }
-            });
-        }
-    }
 
     retrieve(id) {
         return this.Model.findById(id);
@@ -69,6 +56,6 @@ module.exports = class MongoStorage {
     }
 
     update(id, data) {
-        return this.Model.findByIdAndUpdate(id, data, {new: true});
+        return this.Model.findByIdAndUpdate(id, data, {new: true}, {runValidators: true});
     }
 };
