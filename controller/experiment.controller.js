@@ -1,9 +1,9 @@
 const {json} = require("express");
-const {ExperimentRepository} = require("../repositories/experiment.repository");
+const ExperimentRepository = require("../repositories/experiment.repository");
 const {PropertyNotFound} = require("../errors/NotFound.errors");
 const {ServerUnableError} = require("../errors/internal.errors");
-const { bodyValidator } = require("../validators/body.validator");
-const { BodyNotSent } = require("../errors/BadRequest.errors");
+const {bodyValidator} = require("../validators/body.validator");
+const {BodyNotSent} = require("../errors/BadRequest.errors");
 
 const getAllExperiments = async (req, res) => {
     const result = await ExperimentRepository.find();
@@ -55,7 +55,7 @@ const getExperimentsByDate = async (req, res) => {
 }
 
 const createExperiments = async (req, res) => {
-    if(!bodyValidator(req)) throw new BodyNotSent();
+    if (!bodyValidator(req)) throw new BodyNotSent();
     const result = await ExperimentRepository.create(req.body)
     if (!result) throw new ServerUnableError("createExperiments")
     res.status(200).json({result});

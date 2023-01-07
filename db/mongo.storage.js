@@ -56,6 +56,6 @@ module.exports = class MongoStorage {
     }
 
     update(id, data) {
-        return this.Model.findByIdAndUpdate(id, data, {new: true}, { runValidators: true });
+        return this.Model.findByIdAndUpdate(id, data, {new: true}, {runValidators: true});
     }
 };
