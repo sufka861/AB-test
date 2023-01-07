@@ -5,14 +5,6 @@ module.exports = new (class UsersRepository extends MongoStorage {
     super("user");
   }
 
-  find() {
-    return this.Model.find();
-  }
-
-  retrieve(id) {
-    return this.Model.retrieve(id);
-  }
-
   retrieveByUuid(uuid) {
     return this.findByAttribute("uuid", uuid);
   }
