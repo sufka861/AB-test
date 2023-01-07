@@ -6,7 +6,7 @@ const userSchema = new Schema(
     uuid: { type: String, required: true },
     experiments: [
       {
-        experimantId: String,
+        experimentId: String,
         variant: {
           type: Map,
           of: String,

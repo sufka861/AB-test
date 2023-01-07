@@ -8,7 +8,7 @@ const {
   addUser,
   insertExperiment,
   getUserExperiment,
-} = require("./../controllers/user.controller");
+} = require("../controller/user.controller");
 
 // Get user by uuid
 userRouter.get("/:uuid", getUserByUuid);
@@ -28,4 +28,4 @@ userRouter.post("/", addUser);
 // Add experiment to user
 userRouter.put("/:uuid", insertExperiment);
 
-module.exports = userRouter;
+module.exports = { userRouter };

@@ -12,6 +12,8 @@ const { errorHandler } = require("./middleware/errorHandler.mw");
 const logPath = path.join(__dirname, "logs", "http.log");
 const port = process.env.PORT || 3000;
 const { experimentRouter } = require("./router/experiment.router");
+const { testRouter } = require("./router/external.routes");
+const { userRouter } = require("./router/user.routes");
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
@@ -23,8 +25,8 @@ app.use(cookieParser());
 app.use(cors());
 
 // Routes goes here!
-app.use("/user", userRouter);
 app.use("/test", testRouter);
+app.use("/user", userRouter);
 app.use("/experiments", experimentRouter);
 
 app.use(errorHandler);

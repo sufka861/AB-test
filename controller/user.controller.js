@@ -2,13 +2,12 @@ const { v4: uuidv4, validate: uuidValidator } = require("uuid");
 const {
   PropertyNotFound,
   EntityNotFound,
-} = require("./../errors/NotFound.errors");
-const { InvalidProperty } = require("./../errors/validation.errors");
-const { bodyValidator } = require("./../validators/body.validator");
-const { ServerUnableError } = require("./../errors/internal.errors");
+} = require("../errors/NotFound.errors");
+const { InvalidProperty } = require("../errors/validation.errors");
+const { bodyValidator } = require("../validators/body.validator");
+const { ServerUnableError } = require("../errors/internal.errors");
 
-const UsersRepository = require("../repositories/user.repository");
-const userRepository = new UsersRepository();
+const userRepository = require("../repositories/user.repository");
 
 const checkAttributes = (req, res) => {};
 
@@ -24,19 +23,23 @@ const addUser = async (req, res) => {
   const uuid = generateUuid();
   if (!uuidValidator(uuid)) throw new InvalidProperty("uuid");
   const user = { uuid };
-  const newUser = await userRepository.create(user);
+  const newUser = await userRepository.createUser(user);
   if (!newUser) throw new ServerUnableError("create");
   return newUser;
 };
 
 const insertExperiment = async (uuid, experiment) => {
-  console.log(uuid);
   if (!uuid) throw new PropertyNotFound("uuid");
   if (!experiment.variant) throw new PropertyNotFound("variant");
-  const user = await userRepository.retrieveByUuid(uuid);
+  const response = await userRepository.retrieveByUuid(uuid);
+  const user = response[0];
+  console.log(user);
   if (!user) throw new ServerUnableError("update");
+  if (!user.experiments) {
+    user.experiments = [];
+  }
   user.experiments.push(experiment);
-  const updatedUser = await userRepository.update(user);
+  const updatedUser = await userRepository.updateUser(user._id, user);
   return updatedUser;
 };
 

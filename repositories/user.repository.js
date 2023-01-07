@@ -1,28 +1,28 @@
-const MongoStorage = require("../db/MongoStorage");
+const MongoStorage = require("../db/mongo.storage");
 
-module.exports = class UsersRepository {
+module.exports = new (class UsersRepository extends MongoStorage {
   constructor() {
-    this.storage = new MongoStorage("user");
+    super("user");
   }
 
   find() {
-    return this.storage.find();
+    return this.Model.find();
   }
 
   retrieve(id) {
-    return this.storage.retrieve(id);
+    return this.Model.retrieve(id);
   }
 
   retrieveByUuid(uuid) {
-    return this.storage.retrieveByAttribute("uuid", uuid);
+    return this.findByAttribute("uuid", uuid);
   }
 
-  create(User) {
-    const user = this.storage.create(User);
+  createUser(User) {
+    const user = this.create(User);
     return user;
   }
 
-  update(id, variant) {
-    return this.storage.update(id, variant);
+  updateUser(id, variant) {
+    return this.update(id, variant);
   }
-};
+})();
