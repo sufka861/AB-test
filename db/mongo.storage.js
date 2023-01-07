@@ -40,7 +40,6 @@ module.exports = class MongoStorage {
         return this.Model.find(obj);
     }
 
-
     retrieve(id) {
         return this.Model.findById(id);
     }
