@@ -1,8 +1,8 @@
-const {ExperimentRepository} = require('../repositories/experiment.repository');
+const ExperimentRepository = require('../repositories/experiment.repository');
 const {PropertyNotFound} = require("../errors/NotFound.errors");
 const {ServerUnableError} = require("../errors/internal.errors");
-const { bodyValidator } = require("../validators/body.validator");
-const { BodyNotSent } = require("../errors/BadRequest.errors");
+const {bodyValidator} = require("../validators/body.validator");
+const {BodyNotSent} = require("../errors/BadRequest.errors");
 
 module.exports = {
     incVariantByExperimentID: async (req, res) => {
@@ -17,7 +17,7 @@ module.exports = {
     getCallCountByExperimentID: async (req, res) => {
         const id = req.params.id;
         if (id)
-            res.status(200).send(await ExperimentRepository.getCallCount(id));
+            res.status(200).json({call_count: await ExperimentRepository.getCallCount(id) || 0});
         else
             throw new PropertyNotFound("getCallCountByExperimentID");
     },

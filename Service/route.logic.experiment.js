@@ -1,4 +1,3 @@
-const cron = require("node-cron");
 const ExperimentStorage = require("../repositories/experiment.repository");
 const ffLogic = require("./feature.logic");
 const abLogic = require("./AB.test.logic");

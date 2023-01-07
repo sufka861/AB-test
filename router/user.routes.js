@@ -1,6 +1,7 @@
 const { Router } = require("express");
 const userRouter = new Router();
 const {
+  getAllUsers,
   checkAttributes,
   getUserByUuid,
   setCookie,
@@ -27,5 +28,7 @@ userRouter.post("/", addUser);
 
 // Add experiment to user
 userRouter.put("/:uuid", insertExperiment);
+
+userRouter.get("/", getAllUsers)
 
 module.exports = { userRouter };
