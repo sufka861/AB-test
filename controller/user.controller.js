@@ -13,6 +13,7 @@ const checkAttributes = (req, res) => {};
 
 const getUserByUuid = (req, res) => {
   const uuid = getCookie(req, res);
+  console.log(uuid);
   if (!uuid) return false;
   const user = userRepository.retrieveByUuid(uuid);
   if (!user) throw new EntityNotFound("user");
@@ -58,6 +59,7 @@ const setCookie = () => {
 };
 
 const getCookie = (req, res) => {
+  console.log(req.cookies);
   return req.cookies.uuid ? req.cookies.uuid : false;
 };
 
