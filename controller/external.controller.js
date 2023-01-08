@@ -32,8 +32,9 @@ const runTest = async (req, res, next) => {
     );
     return res.status(200).json(existingVariant);
   }
-
-  if (checkAttributes(req, req.body.experimentId, next)) {
+  const experiment = await ExperimentRepository.retrieve(req.body.experimentId);
+  if (!experiment) throw new EntityNotFound("experiment");
+  if (checkAttributes(req, experiment, next)) {
     const newUser = await addUser(req, res);
     res.cookie("uuid", newUser.uuid, { maxAge: 900000, httpOnly: true });
     const variant = await doExperiment(
@@ -42,8 +43,9 @@ const runTest = async (req, res, next) => {
       req
     );
     res.status(200).json(variant);
+  } else {
+    res.status(200).json({ message: "user does not match attributes" });
   }
-  res.status(200).json({ message: "user does not match attributes" });
 };
 
 const doExperiment = async (experimentId, uuid, req) => {

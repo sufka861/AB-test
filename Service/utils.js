@@ -5,14 +5,15 @@ const { PropertyNotFound } = require("../errors/NotFound.errors");
 const { ServerUnableError } = require("../errors/internal.errors");
 
 const getClientIP = (endUserReq) => {
-  const result = requestIp.getClientIp(endUserReq);
+  const result = "176.12.223.44";
+  // requestIp.getClientIp(endUserReq);
   if (!result) throw new ServerUnableError("getClientIP");
   return result;
 };
 
 const getLocation = (req) => {
   if (!req) throw new PropertyNotFound("getlocation");
-  const result = geoip.lookup(req.clientIp);
+  const result = geoip.lookup(req);
   if (!result) throw new ServerUnableError("getClientIP");
   return result;
 };
@@ -37,9 +38,9 @@ const checkAttributes = (endUserReq, experiment, next) => {
     const { browser, device } = getBrowserDevice(endUserReq);
     if (geo && browser && device) {
       const result =
-        geo.country === experiment.location &&
-        browser === experiment.browser &&
-        device === experiment.device;
+        geo.country === experiment.test_attributes.location[0] &&
+        browser === experiment.test_attributes.browser[0] &&
+        device === experiment.test_attributes.device[0];
       return result;
     } else return false;
   } catch (error) {
