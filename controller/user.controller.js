@@ -47,10 +47,8 @@ const getUserExperiment = (user, experimentId) => {
     return false;
   }
   for (const exp of user[0].experiments) {
-    console.log(exp);
     if (exp.experimentId == experimentId) return exp;
   }
-  console.log("here");
   return false;
 };
 
@@ -67,10 +65,9 @@ const generateUuid = () => {
   return uuidv4();
 };
 
-const getAllUsers = async (req, res) =>{
+const getAllUsers = async (req, res) => {
   res.status(200).json(await userRepository.find());
-}
-
+};
 
 module.exports = {
   checkAttributes,
@@ -81,5 +78,4 @@ module.exports = {
   addUser,
   insertExperiment,
   getUserExperiment,
-
 };
