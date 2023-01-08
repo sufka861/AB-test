@@ -1,4 +1,5 @@
 require("dotenv").config();
+const newrelic = require('newrelic');
 require("express-async-errors");
 const express = require("express");
 const logger = require("morgan");
