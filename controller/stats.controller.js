@@ -6,7 +6,10 @@ const UserRepository = require("../repositories/user.repository");
 const {mongoose} = require("mongoose");
 
 const userPercentageVariantByExperiment = async (experimentID, variant) => {
-    return (await UserRepository.numUsersByExperimentIdAndVariant(experimentID, variant) / await UserRepository.numUsersByExperimentId(experimentID)) * 100;
+    const variantMap = {};
+    variantMap[variant] = `variant ${variant}`;
+    return(await UserRepository.numUsersByExperimentIdAndVariant(experimentID, variantMap) / await UserRepository.numUsersByExperimentId(experimentID) * 100).toFixed(2);
+
 }
 
 const getStatistics = async (req, res) => {
@@ -46,15 +49,15 @@ const getUsersStats = async (req, res) => {
     switch (experiment.type) {
         case "a-b" :
             res.status(200).send({
-                A: userPercentageVariantByExperiment(experimentID, "A"),
-                B: userPercentageVariantByExperiment(experimentID, "B"),
-                C: userPercentageVariantByExperiment(experimentID, "C")
+                A: await userPercentageVariantByExperiment(experimentID, "A"),
+                B: await userPercentageVariantByExperiment(experimentID, "B"),
+                C: await userPercentageVariantByExperiment(experimentID, "C")
             });
             break;
         case "f-f":
             res.status(200).send({
-                ON: userPercentageVariantByExperiment(experimentID, "ON"),
-                OFF: userPercentageVariantByExperiment(experimentID, "OFF")
+                ON: await userPercentageVariantByExperiment(experimentID, "ON"),
+                OFF: await userPercentageVariantByExperiment(experimentID, "OFF")
             })
             break;
         default:

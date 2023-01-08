@@ -9,11 +9,11 @@ module.exports = new (class UsersRepository extends MongoStorage {
   }
 
   numUsersByExperimentIdAndVariant (id, variant){
-    return this.count({experiments : { $contains : {experimentId: id , variant: variant}}});
+    return this.Model.count({experiments : { $elemMatch : {experimentId: id , variant: variant}}});
   }
 
   numUsersByExperimentId (id){
-    return this.count({experiments : { $contains : {experimentId: id }}})
+    return this.Model.count({experiments : { $elemMatch : {experimentId: id }}})
   }
 
   createUser(User) {
