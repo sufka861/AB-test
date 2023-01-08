@@ -33,7 +33,6 @@ const insertExperiment = async (uuid, experiment) => {
   if (!experiment.variant) throw new PropertyNotFound("variant");
   const response = await userRepository.retrieveByUuid(uuid);
   const user = response[0];
-  console.log(user);
   if (!user) throw new ServerUnableError("update");
   if (!user.experiments) {
     user.experiments = [];
@@ -43,10 +42,12 @@ const insertExperiment = async (uuid, experiment) => {
   return updatedUser;
 };
 
-const getUserExperiment = async (user, experimentId) => {
-  const { experiments } = user;
-  for (const exp of experiments) {
-    if (exp.id === experimentId) return exp;
+const getUserExperiment = (user, experimentId) => {
+  if (!user[0].experiments) {
+    return false;
+  }
+  for (const exp of user[0].experiments) {
+    if (exp.experimentId == experimentId) return exp;
   }
   return false;
 };
@@ -64,10 +65,9 @@ const generateUuid = () => {
   return uuidv4();
 };
 
-const getAllUsers = async (req, res) =>{
+const getAllUsers = async (req, res) => {
   res.status(200).json(await userRepository.find());
-}
-
+};
 
 module.exports = {
   checkAttributes,
@@ -78,5 +78,4 @@ module.exports = {
   addUser,
   insertExperiment,
   getUserExperiment,
-
 };

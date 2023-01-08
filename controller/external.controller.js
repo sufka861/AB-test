@@ -10,6 +10,9 @@ const ExperimentRepository = require("../repositories/experiment.repository");
 const { MissingPropertyError } = require("../errors/validation.errors");
 const { EntityNotFound } = require("../errors/NotFound.errors");
 const { ExperimentNotActive } = require("../errors/BadRequest.errors");
+const {
+  checkExperimentTypeAndExecExperiment,
+} = require("./../Service/route.logic.experiment");
 
 const runTest = async (req, res, next) => {
   bodyValidator(req);
@@ -20,24 +23,32 @@ const runTest = async (req, res, next) => {
   if (user) {
     const exp = getUserExperiment(user, req.body.experimentId);
     if (exp) {
-      res.status(200).json(exp.variant);
+      return res.status(200).json(exp.variant);
     }
-    const existingVariant = doExperiment(req.body.experimentId, user.uuid);
-    res.status(200).json(existingVariant);
+    const existingVariant = await doExperiment(
+      req.body.experimentId,
+      user[0].uuid,
+      req
+    );
+    return res.status(200).json(existingVariant);
   }
 
   if (checkAttributes(req, req.body.experimentId, next)) {
     const newUser = await addUser(req, res);
     res.cookie("uuid", newUser.uuid, { maxAge: 900000, httpOnly: true });
-    const variant = await doExperiment(req.body.experimentId, newUser.uuid);
+    const variant = await doExperiment(
+      req.body.experimentId,
+      newUser.uuid,
+      req
+    );
     res.status(200).json(variant);
   }
   res.status(200).json({ message: "user does not match attributes" });
 };
 
-const doExperiment = async (experimentId, uuid) => {
+const doExperiment = async (experimentId, uuid, req) => {
   await ExperimentRepository.incCallCount(experimentId);
-  let variant = checkExperimentTypeAndExecExperiment(experimentId, req);
+  let variant = await checkExperimentTypeAndExecExperiment(experimentId, req);
   const userExperiment = { experimentId, variant };
   const updatedUser = await insertExperiment(uuid, userExperiment);
   return variant;
