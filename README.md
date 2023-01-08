@@ -3,9 +3,9 @@
 
 **Welcome to our part in SAAS-System!**
 
-Here is the crux of the system, you can create AB test experiments and feature flag for each population
-on which you would like to run the experiment and what percentage of the population will participate in the experiment. In addition to each experiment, specific conditions can be defined regarding the participants in the experiment.
-You can perform the experiment, schedule it and view the results of the experiment while running.
+Here is the crux of the system, you can create AB test experiments and feature flag experiments. The population
+on which you would like to run the experiment can be punctured by percentage of users entering the experiment and other attributes such as the user's device (either mobile, desktop, smartTV and such) , browser and user's location by country. In addition to each experiment.
+You can perform the experiment, schedule it and view the results in form of statistics.
 
 > **Before you start**
 
@@ -15,36 +15,35 @@ You can perform the experiment, schedule it and view the results of the experime
    b. Morgan
    c. Node-cron
    d. Node scheduled
-   f. Nodemailer
-   g. Uuid
-   h.geoip-lite
-   i.ua-parser-js
-   j. request-ip
+   f. Uuid
+   g. geoip-lite
+   h.ua-parser-js
+   i. request-ip
 3. [x] Download the code from Git-Hub https://github.com/sufka861/AB-test.git
-4. [x] Cd to the working directory and start the server using the following command in the terminal - $node server.js
-5. [x] Open a browser page and go to https://.onrender.com
+4. [x] Cd to the working directory and start the server using the following command in the terminal - $node index.js
+5. [x] Open a browser page and go to https://ab-test-bvtg.onrender.com/
+6. [x] Full documentation of the API calls can be seen at: https://documenter.getpostman.com/view/24139741/2s8Z711C7C
 
 > **Basic Information**
 
-1. [x] From the homepage you can start create AB test / Feature Flag experiments.
+1. [x] Using the calls to the render website via Postman you can create and start AB test / Feature Flag experiments.
 2. [x] View lists of exist experiments and planned future experiments.
-3. [x] Server.js – http – the entry point of the system
-4. [x]  Router.js – consists of a map of all the API points for both server and client
+3. [x] index.js – http – the entry point of the system
+4. [x] Router folder – consists of a map of all the API points for both server and client
 5. [x] Controllers – direct the functionality of the system6.
-6. [x] Services – contain logic of the functions.
+6. [x] Services – contain the business logic of the system.
 7. [x] Data Base – MongoDB.
-8. [x] Front – HTML/CSS/JS
-9. [x] Checkout Our Api Documentation : 
-10.[x] http calls logger - configured in the middleware directory, writes call logs inside logs folder, filename: http.log
-11. [x] error logs - configured in the middleware directory, writes call logs inside logs folder, filename: error.log. operates from the errorHandler middleware (info will follow)
-12.[x] error handler - consists of 3 parts:
+8.[x] Checkout Our Api Documentation : 
+9.[x] http calls logger - configured in the middleware directory, writes call logs inside logs folder, filename: http.log
+10. [x] error logs - configured in the middleware directory, writes call logs inside logs folder, filename: error.log. operates from the errorHandler middleware (info will follow)
+11.[x] error handler - consists of 3 parts:
    - express-async-errors package - wraps the controllers in try/catch statement automatically (no implementation needed), and calls the next(error) function in the catch block with the error thrown. the next function will "fall" into the errorHandler.
    - errorHandler - a function that is used at the end of the server that catches all the errors thrown in the controllers
    - Custom Errors - in the errors' directory. Classes that extends Error class, with status and message to pass to the error handier at the end. More can be added if we need them.
-13. [x] body-validator- for controllers, when we want to validate if body was sent. if anybody was sent (no property validation at this point) will return true. else, will throw a custom error
+12. [x] body-validator- for controllers, when we want to validate if body was sent. if anybody was sent (no property validation at this point) will return true. else, will throw a custom error
 
 > **How to Use**
-
+* The system front end is done by the core team and will be fully integrated with the system on the next phase. The system can be checked by calls to the API as mentioned in the documentation can be done by the system end user. The following instructions regard the future implemented user interface.
 `Create AB Test Experiment:`
 
 1. Open Homepage.html.
