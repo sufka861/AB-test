@@ -1,5 +1,5 @@
 require("dotenv").config();
-const newrelic = require('newrelic');
+const newrelic = require("newrelic");
 require("express-async-errors");
 const express = require("express");
 const logger = require("morgan");
@@ -17,7 +17,7 @@ const { testRouter } = require("./router/external.routes");
 const { userRouter } = require("./router/user.routes");
 const statsRouter = require("./router/stats.router");
 const goalRouter = require("./router/goal.router");
-const {experimentStatusUpdate} = require("./middleware/cron.job");
+const { experimentStatusUpdate } = require("./middleware/cron.job");
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
@@ -26,7 +26,13 @@ app.use(
   })
 );
 app.use(cookieParser());
-app.use(cors());
+
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
 
 // Routes goes here!
 app.use("/test", testRouter);

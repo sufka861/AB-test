@@ -55,7 +55,7 @@ const getUserExperiment = (user, experimentId) => {
 
 const setCookie = () => {
   const uuid = generateUuid();
-  res.cookie("uuid", uuid, { maxAge: 900000, httpOnly: true });
+  res.cookie("uuid", uuid, { maxAge: 999999, httpOnly: true, path: "/" });
 };
 
 const getCookie = (req, res) => {
