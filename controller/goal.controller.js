@@ -65,6 +65,11 @@ module.exports = {
         const result = await GoalRepository.delete(goalId);
         if (!result) throw new ServerUnableError(`Deleting goal id: ${goalId}`);
         res.status(200).send(result);
+    },
+    geSuccessCountByGoalId : async (req,res) =>{
+        const goalId =  req.params.id;
+        if (!goalId) throw new PropertyNotFound("Goal Id in geSuccessCountByGoalId");
+        res.status(200).send(await GoalRepository.getGoalSuccessCountById(goalId));
     }
 
 
