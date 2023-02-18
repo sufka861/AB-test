@@ -76,6 +76,20 @@ const deleteExperimentsByID = async (req, res) => {
     if (!result) throw new ServerUnableError("deleteExperimentsByID")
     res.status(200).json(result);
 }
+const addGoalToExperiment = async (req,res) =>{
+    if (!req.params.experimentId) throw new PropertyNotFound("experimentId");
+    if (!req.params.goalId) throw new PropertyNotFound("goalId");
+    const result = await ExperimentRepository.addGoal(req.params.experimentId, req.params.goalId)
+    if (!result) throw new ServerUnableError("addGoalToExperiment")
+    res.status(200).json(result);
+}
+const removeGoalToExperiment = async (req,res) =>{
+    if (!req.params.experimentId) throw new PropertyNotFound("experimentId");
+    if (!req.params.goalId) throw new PropertyNotFound("goalId");
+    const result = await ExperimentRepository.removeGoal(req.params.experimentId, req.params.goalId)
+    if (!result) throw new ServerUnableError("removeGoalToExperiment")
+    res.status(200).json(result);
+}
 
 module.exports = {
     getAllExperiments,
@@ -87,4 +101,6 @@ module.exports = {
     updateExperimentsByID,
     deleteExperimentsByID,
     createExperiments,
+    addGoalToExperiment,
+    removeGoalToExperiment
 }

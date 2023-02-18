@@ -45,4 +45,12 @@ module.exports = new (class ExperimentsRepository extends MongoStorage {
   async updateExperimentStatus(id, newStatus) {
     return await this.update(id, { status: newStatus });
   }
+
+  async addGoal(experimentId, goalId){
+    return await this.update(experimentId, {$push: {goals: goalId}});
+  }
+  async removeGoal(experimentId, goalId){
+    return await this.update(experimentId, {$pull: {goals: goalId}});
+  }
+
 })();
