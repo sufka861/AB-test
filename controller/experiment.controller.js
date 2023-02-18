@@ -77,16 +77,16 @@ const deleteExperimentsByID = async (req, res) => {
     res.status(200).json(result);
 }
 const addGoalToExperiment = async (req,res) =>{
-    if (!req.params.experimentId) throw new PropertyNotFound("experimentId");
-    if (!req.params.goalId) throw new PropertyNotFound("goalId");
-    const result = await ExperimentRepository.addGoal(req.params.experimentId, req.params.goalId)
+    if (!req.params.experiment_id) throw new PropertyNotFound("experimentId");
+    if (!req.params.goal_id) throw new PropertyNotFound("goalId");
+    const result = await ExperimentRepository.addGoal(req.params.experiment_id, req.params.goal_id)
     if (!result) throw new ServerUnableError("addGoalToExperiment")
     res.status(200).json(result);
 }
 const removeGoalToExperiment = async (req,res) =>{
-    if (!req.params.experimentId) throw new PropertyNotFound("experimentId");
-    if (!req.params.goalId) throw new PropertyNotFound("goalId");
-    const result = await ExperimentRepository.removeGoal(req.params.experimentId, req.params.goalId)
+    if (!req.params.experiment_id) throw new PropertyNotFound("experimentId");
+    if (!req.params.goal_id) throw new PropertyNotFound("goalId");
+    const result = await ExperimentRepository.removeGoal(req.params.experiment_id, req.params.goal_id)
     if (!result) throw new ServerUnableError("removeGoalToExperiment")
     res.status(200).json(result);
 }
