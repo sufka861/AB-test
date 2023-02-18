@@ -1,4 +1,5 @@
 const ExperimentRepository = require('../repositories/experiment.repository');
+const GoalRepository = require('../repositories/goal.repository')
 const {PropertyNotFound} = require("../errors/NotFound.errors");
 const {ServerUnableError} = require("../errors/internal.errors");
 const {bodyValidator} = require("../validators/body.validator");
@@ -28,5 +29,44 @@ module.exports = {
             res.status(200).send(await ExperimentRepository.getVariantSuccessCount(id));
         else
             throw new PropertyNotFound("getVariantSuccessCountByExperimentID");
+    },
+
+    getAllGoals: async (req, res) => {
+        res.status(200).send(await GoalRepository.find());
+    },
+
+    retrieveGoalById: async (req, res) => {
+        const id = req.params.id;
+        if (id)
+            res.status(200).send(await GoalRepository.retrieve(id));
+        else
+            throw new PropertyNotFound("retrieveGoalById");
+    },
+    createGoal: async (req,res) => {
+        const newGoal = req.body;
+        if(newGoal)
+            res.status(200).send(await GoalRepository.create(newGoal));
+        else
+            throw new BodyNotSent("createGoal");
+    },
+    updateGoal: async (req, res) =>{
+        const goalId = req.params.id;
+        const newGoal = req.body;
+
+        if(goalId && newGoal)
+            res.status(200).send(await GoalRepository.update(goalId, newGoal));
+        else
+            throw new PropertyNotFound("updateGoal");
+    },
+
+    deleteGoal: async (req,res) =>{
+        const goalId =  req.params.id;
+        if (!goalId) throw new PropertyNotFound("Goal Id in deleteGoal")
+        const result = await GoalRepository.delete(goalId);
+        if (!result) throw new ServerUnableError(`Deleting goal id: ${goalId}`);
+        res.status(200).send(result);
     }
+
+
+
 }
