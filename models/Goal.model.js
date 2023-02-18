@@ -14,8 +14,9 @@ const userSchema = new Schema(
         success_count: {
             type : Number,
             default: 0,
+            min: 0,
             validate:{
-                validator: (count) => count >= 0 && count % 1 === 0,
+                validator: (count) => count % 1 === 0,
                 message: "Success count must be a positive whole number"
             },
             required:true
