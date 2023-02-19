@@ -1,5 +1,6 @@
 const cron = require("node-cron");
 const ExperimentRepository = require("../repositories/experiment.repository");
+const Experiment = require("../models/Experiment.model");
 
 const experimentStatusUpdate = cron.schedule("* 0 * * *", async () => {
     const now = new Date();
@@ -15,6 +16,15 @@ const experimentStatusUpdate = cron.schedule("* 0 * * *", async () => {
         ExperimentRepository.update(experiment._id, {status: "ended"})
     });
 })
+
+cron.schedule("0 0 1 * *", async () => {
+  try {
+    await Experiment.updateMany({}, { $set: { call_count: 0 } });
+    console.log("Call count reset successful");
+  } catch (err) {
+    console.error(err);
+  }
+});
 
 module.exports = {
     experimentStatusUpdate,
