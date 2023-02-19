@@ -54,6 +54,30 @@ const experimentSchema = new Schema(
         },
         traffic_percentage: {type: Number, min: 0, max: 100, required: true},
         call_count: {type: Number, default: 0, min: 0, required: true},
+        reqCount : {
+          type: Object,
+            properties: {
+                locations: {
+                    type: [{
+                        locationName: String,
+                        locationCount: {type: Number, default: 0, min: 0},
+                    }],
+                },
+                devices: {
+                    type: [{
+                        deviceName: String,
+                        deviceCount: {type: Number, default: 0, min: 0},
+                    }],
+                },
+                browsers: {
+                    type: [{
+                        browserName: String,
+                        browserCount: {type: Number, default: 0, min: 0},
+                    }],
+                },
+                //ADD CUSTOM ATTRIBUTES ????????????
+            }
+        },
         status: {
             type: String,
             required: true,
