@@ -4,6 +4,7 @@ const statsRouter = new Router();
 
 statsRouter.get("/userVariant/:id", statsController.getUsersStats)
 statsRouter.get('/:id',statsController.getStatistics);
+statsRouter.get('/testsPerMonth/:account_id',statsController.getTestsPerMonth);
 
 
 module.exports = statsRouter;

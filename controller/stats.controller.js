@@ -4,6 +4,8 @@ const ServerError = require("../errors/internal.errors");
 const ExperimentRepository = require("../repositories/experiment.repository");
 const UserRepository = require("../repositories/user.repository");
 const {mongoose} = require("mongoose");
+const Experiment = require("../models/Experiment.model");
+
 
 const userPercentageVariantByExperiment = async (experimentID, variant) => {
     return (await UserRepository.numUsersByExperimentIdAndVariant(experimentID, variant) / await UserRepository.numUsersByExperimentId(experimentID)) * 100;
@@ -62,7 +64,26 @@ const getUsersStats = async (req, res) => {
     }
 }
 
+const getTestsPerMonth = async (req, res) => {
+
+    const accountID = req.params.account_id;
+    if (!mongoose.isValidObjectId(accountID)) throw new ValidationError.MissingPropertyError("account ID");
+    Experiment.aggregate([
+        { $match: { account_id: mongoose.Types.ObjectId(accountID) } },
+        { $group: { _id: "$account_id", total_calls: { $sum: "$monthly_call_count" } } }
+    ]).exec(function (err, results) {
+        if (err) {
+            throw new ServerError.ServerUnableError("calculate experiment call count");
+        } else {
+            res.status(200).send({
+                tests: results
+            })
+        }
+    });
+}
+
 module.exports = {
     getStatistics,
-    getUsersStats
+    getUsersStats,
+    getTestsPerMonth
 }
