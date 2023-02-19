@@ -62,7 +62,20 @@ const getUsersStats = async (req, res) => {
     }
 }
 
+const getReqPerAttribute = async (req, res) => {
+    const experimentId = req.params.experimentId;
+    if (!mongoose.isValidObjectId(experimentId)) throw new ValidationError.MissingPropertyError("experiment ID");
+    const experiment = await ExperimentRepository.retrieve(experimentId);
+    if (!experiment) throw new NotFoundError.EntityNotFound(`experiment (${experimentId})`);
+    res.status(200).send({
+        locations: experiment.reqCount.locations,
+        devices: experiment.reqCount.devices,
+        browsers: experiment.reqCount.browsers,
+    });
+}
+
 module.exports = {
     getStatistics,
-    getUsersStats
+    getUsersStats,
+    getReqPerAttribute
 }
