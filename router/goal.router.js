@@ -2,7 +2,6 @@ const { Router} = require ('express');
 const goalController = require('../controller/goal.controller');
 const goalRouter = new Router();
 
-goalRouter.get("/", goalController.getAllGoals);
 goalRouter.get("/:id",goalController.retrieveGoalById);
 
 goalRouter.get("/callCount/:id", goalController.getCallCountByExperimentID);

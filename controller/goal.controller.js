@@ -31,10 +31,6 @@ module.exports = {
             throw new PropertyNotFound("getVariantSuccessCountByExperimentID");
     },
 
-    getAllGoals: async (req, res) => {
-        res.status(200).send(await GoalRepository.find());
-    },
-
     retrieveGoalById: async (req, res) => {
         const id = req.params.id;
         if (id)

@@ -10,6 +10,7 @@ const userSchema = new Schema(
         key : {
             type : String,
             required: true,
+            unique: true
         },
         success_count: {
             type : Number,
