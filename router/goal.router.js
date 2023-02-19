@@ -10,9 +10,10 @@ goalRouter.get("/variantCount/:id", goalController.getVariantSuccessCountByExper
 goalRouter.get("/successCount/:id", goalController.geSuccessCountByGoalId);
 goalRouter.post("/", goalController.createGoal);
 
-goalRouter.put("/:id", goalRouter.updateGoal);
+goalRouter.put("/:id", goalController.updateGoal);
 
 goalRouter.put("/variantCount/:id", goalController.incVariantByExperimentID);
 
 goalRouter.delete("/:id", goalController.deleteGoal);
-module.exports =goalRouter;
+
+module.exports = {goalRouter};
