@@ -32,7 +32,7 @@ module.exports = new (class ExperimentsRepository extends MongoStorage {
   }
 
   async incCallCount(id) {
-    return await this.update(id, { $inc: { call_count: 1 } });
+    return await this.update(id, { $inc: { call_count: 1, monthly_call_count: 1 } });
   }
 
   async getCallCount(id) {
