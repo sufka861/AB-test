@@ -4,7 +4,7 @@ const iso = require("iso-3166-1"); // used to validate country code
 const experimentSchema = new Schema(
     {
         name: {type: String, required: true},
-        account_id: {type: ObjectId, required: true},
+        accountId: {type: ObjectId, required: true},
         type: {
             type: String,
             required: true,

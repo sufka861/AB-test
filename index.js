@@ -17,7 +17,7 @@ const { testRouter } = require("./router/external.routes");
 const { userRouter } = require("./router/user.routes");
 const statsRouter = require("./router/stats.router");
 const goalRouter = require("./router/goal.router");
-const { experimentStatusUpdate } = require("./middleware/cron.job");
+const { experimentStatusUpdate } = require("./Service/cron.job");
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
