@@ -8,12 +8,13 @@ const { bodyValidator } = require("../validators/body.validator");
 const { ServerUnableError } = require("../errors/internal.errors");
 
 const userRepository = require("../repositories/user.repository");
+const logger = require("newrelic/lib/logger");
 
 const checkAttributes = (req, res) => {};
 
 const getUserByUuid = (req, res) => {
   const uuid = getCookie(req, res);
-  console.log(uuid);
+  logger.info(`Retrieving user with UUID ${uuid}`);
   if (!uuid) return false;
   const user = userRepository.retrieveByUuid(uuid);
   if (!user) throw new EntityNotFound("user");
