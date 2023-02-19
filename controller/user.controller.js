@@ -1,4 +1,4 @@
-const { v4: uuidv4, validate: uuidValidator } = require("uuid");
+
 const {
   PropertyNotFound,
   EntityNotFound,
@@ -61,10 +61,6 @@ const setCookie = () => {
 const getCookie = (req, res) => {
   console.log(req.cookies);
   return req.cookies.uuid ? req.cookies.uuid : false;
-};
-
-const generateUuid = () => {
-  return uuidv4();
 };
 
 const getAllUsers = async (req, res) => {

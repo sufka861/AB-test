@@ -3,6 +3,7 @@ const parser = require("ua-parser-js");
 const requestIp = require("request-ip");
 const { PropertyNotFound } = require("../errors/NotFound.errors");
 const { ServerUnableError } = require("../errors/internal.errors");
+const { v4: uuidv4, validate: uuidValidator } = require("uuid");
 
 const getClientIP = (endUserReq) => {
   const result = "176.12.223.44";
@@ -26,6 +27,11 @@ const getBrowserDevice = (req) => {
   if (!result) throw new ServerUnableError("getBrowserDevice");
   return result;
 };
+
+const generateUuid = () => {
+  return uuidv4();
+};
+
 
 const shouldAllow = (ratio) => ratio >= 1 - Math.random();
 
@@ -51,4 +57,5 @@ module.exports = {
   shouldAllow,
   checkAttributes,
   checkIfActive,
+  generateUuid,
 };
