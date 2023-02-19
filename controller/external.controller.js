@@ -22,10 +22,7 @@ const runTest = async (req, res, next) => {
   const user = await getUserByUuid(req, res);
   // ---------------------------------------------------------------------  //
   if (user) {
-    console.log("user exist");
     const experimentsList = getUserExperiment(user, req.body.experimentId);
-    console.log(experimentsList);
-    // if list is empty
     if (!experimentsList) {
       const existingVariant = await doExperiment(
         req.body.experimentId,
@@ -34,12 +31,9 @@ const runTest = async (req, res, next) => {
       );
       return res.status(200).json(existingVariant);
     }
-    // if list not empty
-    // if subscription is not premium
     if (!req.body.subscription === "premium") {
       experimentsList.forEach((exp) => {
         if (exp.experimentId === req.body.experimentId) {
-          console.log(exp.experimentId);
           return res.status(200).json(exp.variant);
         }
       });
@@ -52,7 +46,6 @@ const runTest = async (req, res, next) => {
     }
     return res.status(200).json(experimentsList[0].variant);
   }
-  console.log("user does not exist");
   const experiment = await ExperimentRepository.retrieve(req.body.experimentId);
   if (!experiment) throw new EntityNotFound("experiment");
   if (checkAttributes(req, experiment, next)) {
