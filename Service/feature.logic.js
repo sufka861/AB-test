@@ -1,5 +1,5 @@
 const featureCheckAttributes = (endUserReq, experiment) => {
-  const { ON, OFF } = experiment.variants_ff;
+  const { ON, OFF } = experiment.variantsFF;
   return { ON: ON };
 };
 

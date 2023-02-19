@@ -1,7 +1,7 @@
 [{
   "name": "experiment test name",
   "type": "a-b",
-  "test_attributes": {
+  "testAttributes": {
     "location": [
       "IL"
     ],
@@ -12,14 +12,14 @@
       "Chrome"
     ]
   },
-  "variant_success_count": {
+  "variantSuccessCount": {
     "A": 0,
     "B": 0,
     "C": 0
   },
-  "traffic_percentage": 50,
+  "trafficPercentage": 50,
   "goal_id": null,
-  "call_count": 0,
+  "callCount": 0,
   "status": "active",
   "start_time":"2022-12-31T13:35:30.301Z",
   "end_time": "2023-12-31T13:35:30.301Z",
@@ -32,7 +32,7 @@
 {
   "name": "experiment test name country validation",
   "type": "a-b",
-  "test_attributes": {
+  "testAttributes": {
     "location": [
       "XXX", "XXXR"
     ],
@@ -43,14 +43,14 @@
       "Chrome"
     ]
   },
-  "variant_success_count": {
+  "variantSuccessCount": {
     "A": 0,
     "B": 0,
     "C": 0
   },
-  "traffic_percentage": 50,
+  "trafficPercentage": 50,
   "goal_id": null,
-  "call_count": 0,
+  "callCount": 0,
   "status": "active",
   "start_time":"2022-12-31T13:35:30.301Z",
   "end_time": "2023-12-31T13:35:30.301Z",

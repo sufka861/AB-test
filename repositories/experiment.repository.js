@@ -21,24 +21,24 @@ module.exports = new (class ExperimentsRepository extends MongoStorage {
 
   async incVariantSuccessCount(id, variant) {
     return await  this.update(id, {
-      $inc: { [`variant_success_count.${variant}`]: 1 },
+      $inc: { [`variantSuccessCount.${variant}`]: 1 },
     });
   }
 
   async getVariantSuccessCount(id) {
     const experiment = await this.retrieve(id);
-    if (experiment) return  experiment.variant_success_count;
+    if (experiment) return  experiment.variantSuccessCount;
     else return null;
   }
 
   async incCallCount(id) {
-    return await this.update(id, { $inc: { call_count: 1 } });
+    return await this.update(id, { $inc: { callCount: 1 } });
   }
 
   async getCallCount(id) {
     const experiment = await this.retrieve(id);
 
-    if (experiment) return experiment.call_count;
+    if (experiment) return experiment.callCount;
     else return null;
   }
 

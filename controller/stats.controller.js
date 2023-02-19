@@ -16,19 +16,19 @@ const getStatistics = async (req, res) => {
 
     const experiment = await ExperimentRepository.retrieve(experimentID);
     if (!experiment) throw new NotFoundError.EntityNotFound(`experiment (${experimentID})`);
-    if (!experiment.call_count) throw new ServerError.ServerUnableError("calculate experiment call count");
+    if (!experiment.callCount) throw new ServerError.ServerUnableError("calculate experiment call count");
     switch (experiment.type) {
         case "a-b" :
             res.status(200).send({
-                A: (experiment.variant_success_count.A / experiment.call_count * 100).toFixed(2),
-                B: (experiment.variant_success_count.B / experiment.call_count * 100).toFixed(2),
-                C: (experiment.variant_success_count.C / experiment.call_count * 100).toFixed(2),
+                A: (experiment.variantSuccessCount.A / experiment.callCount * 100).toFixed(2),
+                B: (experiment.variantSuccessCount.B / experiment.callCount * 100).toFixed(2),
+                C: (experiment.variantSuccessCount.C / experiment.callCount * 100).toFixed(2),
             });
             break;
         case "f-f":
             res.status(200).send({
-                ON: (experiment.variant_success_count.ON / experiment.call_count * 100).toFixed(2),
-                OFF: (experiment.variant_success_count.OFF / experiment.call_count * 100).toFixed(2)
+                ON: (experiment.variantSuccessCount.ON / experiment.callCount * 100).toFixed(2),
+                OFF: (experiment.variantSuccessCount.OFF / experiment.callCount * 100).toFixed(2)
             })
             break;
         default:

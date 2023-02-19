@@ -13,7 +13,7 @@ const experimentSchema = new Schema(
                 (type) => `${type.value} is not a valid type`,
             ],
         },
-        test_attributes: {
+        testAttributes: {
             location: {
                 type: [String],
                 validate: {
@@ -27,12 +27,12 @@ const experimentSchema = new Schema(
                     validator: deviceValidator,
                     message: () => `Invalid device`,
                 },
-                lowercase: true,
+                testAttributes: true,
                 trim: true,
             },
             browser: [String],
         },
-        variant_success_count: {
+        variantSuccessCount: {
             type: Object,
             properties: {
                 A: {type: Number, default: 0, min: 0},
@@ -47,13 +47,13 @@ const experimentSchema = new Schema(
                     for (const variant in variants_success_count) {
                         variantsSum += variants_success_count[variant];
                     }
-                    return variantsSum <= this.call_count;
+                    return variantsSum <= this.callCount;
                 },
                 message: "Variants total count must be lesser then or equal call count"
             }
         },
-        traffic_percentage: {type: Number, min: 0, max: 100, required: true},
-        call_count: {type: Number, default: 0, min: 0, required: true},
+        trafficPercentage: {type: Number, min: 0, max: 100, required: true},
+        callCount: {type: Number, default: 0, min: 0, required: true},
         status: {
             type: String,
             required: true,
@@ -76,7 +76,7 @@ const experimentSchema = new Schema(
                 message: "Start time should be prior to end time",
             },
         },
-        variants_ab: {
+        variantsAB: {
             type: Object,
             properties: {
                 A: String,
@@ -87,7 +87,7 @@ const experimentSchema = new Schema(
                 return this.type === "a-b";
             }
         },
-        variants_ff: {
+        variantsFF: {
             type: Object,
             properties: {
                 ON: {
