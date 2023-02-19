@@ -13,7 +13,6 @@ const checkAttributes = (req, res) => {};
 
 const getUserByUuid = (req, res) => {
   const uuid = getCookie(req, res);
-  console.log(uuid);
   if (!uuid) return false;
   const user = userRepository.retrieveByUuid(uuid);
   if (!user) throw new EntityNotFound("user");
@@ -43,7 +42,7 @@ const insertExperiment = async (uuid, experiment) => {
   return updatedUser;
 };
 
-const getUserExperiment = (user, experimentId) => {
+const getUserExperiment = (user) => {
   if (!user[0].experiments || user[0].experiments.length === 0) {
     return false;
   }

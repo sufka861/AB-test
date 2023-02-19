@@ -20,9 +20,8 @@ const runTest = async (req, res, next) => {
   if (!(await checkIfExperimentIsActive(req.body.experimentId)))
     throw new ExperimentNotActive(req.body.experimentId);
   const user = await getUserByUuid(req, res);
-  // ---------------------------------------------------------------------  //
   if (user) {
-    const experimentsList = getUserExperiment(user, req.body.experimentId);
+    const experimentsList = getUserExperiment(user);
     if (!experimentsList) {
       const existingVariant = await doExperiment(
         req.body.experimentId,
