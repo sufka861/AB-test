@@ -44,13 +44,10 @@ const insertExperiment = async (uuid, experiment) => {
 };
 
 const getUserExperiment = (user, experimentId) => {
-  if (!user[0].experiments) {
+  if (!user[0].experiments || user[0].experiments.length === 0) {
     return false;
   }
-  for (const exp of user[0].experiments) {
-    if (exp.experimentId == experimentId) return exp;
-  }
-  return false;
+  return user[0].experiments;
 };
 
 const setCookie = () => {
