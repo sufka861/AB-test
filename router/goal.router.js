@@ -13,7 +13,7 @@ goalRouter.post("/", goalController.createGoal);
 goalRouter.put("/:id", goalController.updateGoal);
 
 goalRouter.put("/variantCount/:id", goalController.incVariantByExperimentID);
-
+goalRouter.put('/incSuccessCount/:id', goalController.incGoalSuccessCount);
 goalRouter.delete("/:id", goalController.deleteGoal);
 
 module.exports = {goalRouter};

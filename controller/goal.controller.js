@@ -70,6 +70,11 @@ module.exports = {
         const goalId =  req.params.id;
         if (!goalId) throw new PropertyNotFound("Goal Id in geSuccessCountByGoalId");
         res.status(200).send(await GoalRepository.getGoalSuccessCountById(goalId));
+    },
+    incGoalSuccessCount: async (req, res) =>{
+        const goalId =  req.params.id;
+        if (!goalId) throw new PropertyNotFound("Goal Id in geSuccessCountByGoalId");
+        res.status(200).send(await GoalRepository.incGoalSuccessCount(goalId));
     }
 
 
