@@ -6,7 +6,6 @@ const { ServerUnableError } = require("../errors/internal.errors");
 
 const getClientIP = (endUserReq) => {
   const result = "176.12.223.44";
-  // requestIp.getClientIp(endUserReq);
   if (!result) throw new ServerUnableError("getClientIP");
   return result;
 };
