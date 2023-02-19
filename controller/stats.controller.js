@@ -9,31 +9,38 @@ const userPercentageVariantByExperiment = async (experimentID, variant) => {
     return (await UserRepository.numUsersByExperimentIdAndVariant(experimentID, variant) / await UserRepository.numUsersByExperimentId(experimentID)) * 100;
 }
 
-const getStatistics = async (req, res) => {
+const calculateSuccessPercentage = (successCount, callCount) => {
+    return (successCount / callCount * 100).toFixed(2);
+}
 
+const getStatistics = async (req, res) => {
     const experimentID = req.params.id;
     if (!mongoose.isValidObjectId(experimentID)) throw new ValidationError.MissingPropertyError("experiment ID");
 
     const experiment = await ExperimentRepository.retrieve(experimentID);
     if (!experiment) throw new NotFoundError.EntityNotFound(`experiment (${experimentID})`);
     if (!experiment.callCount) throw new ServerError.ServerUnableError("calculate experiment call count");
+
+    let result;
     switch (experiment.type) {
-        case "a-b" :
-            res.status(200).send({
-                A: (experiment.variantSuccessCount.A / experiment.callCount * 100).toFixed(2),
-                B: (experiment.variantSuccessCount.B / experiment.callCount * 100).toFixed(2),
-                C: (experiment.variantSuccessCount.C / experiment.callCount * 100).toFixed(2),
-            });
+        case "a-b":
+            result = {
+                A: calculateSuccessPercentage(experiment.variantSuccessCount.A, experiment.callCount),
+                B: calculateSuccessPercentage(experiment.variantSuccessCount.B, experiment.callCount),
+                C: calculateSuccessPercentage(experiment.variantSuccessCount.C, experiment.callCount),
+            };
             break;
         case "f-f":
-            res.status(200).send({
-                ON: (experiment.variantSuccessCount.ON / experiment.callCount * 100).toFixed(2),
-                OFF: (experiment.variantSuccessCount.OFF / experiment.callCount * 100).toFixed(2)
-            })
+            result = {
+                ON: calculateSuccessPercentage(experiment.variantSuccessCount.ON, experiment.callCount),
+                OFF: calculateSuccessPercentage(experiment.variantSuccessCount.OFF, experiment.callCount)
+            };
             break;
         default:
             throw new ValidationError.InvalidProperty(`experiment type in experiment (${experimentID})`);
     }
+
+    res.status(200).send(result);
 }
 
 const getUsersStats = async (req, res) => {
