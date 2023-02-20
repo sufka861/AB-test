@@ -19,7 +19,7 @@ const experimentStatusUpdate =(startTime, endTime) => {
             });
 
           }
-          // Check if the current time is after the time interval
+          // Check if the current time is after the time intervall
           else if (currentTime > end) {
             console.log('ended')
             query = {status: "active", duration: {end_time:{$gte: now}, start_time: {$lte: now}}};
