@@ -32,15 +32,25 @@ const shouldAllow = (ratio) => ratio >= 1 - Math.random();
 
 const checkIfActive = (experiment) => experiment.status === "active";
 
-const checkAttributes = (endUserReq, experiment, next) => {
+const experimentCustomAttributes = (experiment) => experiment.test_attributes.custom_attributes.reduce((acc, curr) => acc[curr.key] = curr.value, {} )
+
+const checkAttributes = (endUserReq, experiment, next, ...userAttributes) => {
   try {
+
+    const customAttributes =experimentCustomAttributes(experiment);
     const geo = getLocation(getClientIP(endUserReq));
     const { browser, device } = getBrowserDevice(endUserReq);
-    if (geo && browser && device) {
+
+    if (geo && browser && device ) {
       const result =
         geo.country === experiment.test_attributes.location[0] &&
         browser === experiment.test_attributes.browser[0] &&
         device === experiment.test_attributes.device[0];
+
+      if(customAttributes)
+      {
+        return result && userAttributes.every((attr) => customAttributes[attr.keys()[0]].includes(attr[attr.keys()[0]]))
+      }
       return result;
     } else return false;
   } catch (error) {
