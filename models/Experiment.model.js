@@ -15,14 +15,20 @@ const experimentSchema = new Schema(
         },
         test_attributes: {
             location: {
-                type: [String],
+                type: [{
+                    locationName: String,
+                    locationCount: {type: Number, default: 0, min: 0},
+                }],
                 validate: {
                     validator: countryValidator,
                     message: () => `Invalid country code`,
                 },
             },
             device: {
-                type: [String],
+                type: [{
+                    deviceName: String,
+                    deviceCount: {type: Number, default: 0, min: 0},
+                }],
                 validate: {
                     validator: deviceValidator,
                     message: () => `Invalid device`,
@@ -30,112 +36,92 @@ const experimentSchema = new Schema(
                 lowercase: true,
                 trim: true,
             },
-            browser: [String],
-        },
-        variant_success_count: {
-            type: Object,
-            properties: {
-                A: {type: Number, default: 0, min: 0},
-                B: {type: Number, default: 0, min: 0},
-                C: {type: Number, default: 0, min: 0},
-                ON: {type: Number, default: 0, min: 0},
-                OFF: {type: Number, default: 0, min: 0},
+            browser: {
+                type: [{
+                    browserName: String,
+                    browserCount: {type: Number, default: 0, min: 0},
+                }],
             },
-            validate: {
-                validator: function (variants_success_count) {
-                    let variantsSum = 0;
-                    for (const variant in variants_success_count) {
-                        variantsSum += variants_success_count[variant];
-                    }
-                    return variantsSum <= this.call_count;
+            variant_success_count: {
+                type: Object,
+                properties: {
+                    A: {type: Number, default: 0, min: 0},
+                    B: {type: Number, default: 0, min: 0},
+                    C: {type: Number, default: 0, min: 0},
+                    ON: {type: Number, default: 0, min: 0},
+                    OFF: {type: Number, default: 0, min: 0},
                 },
-                message: "Variants total count must be lesser then or equal call count"
-            }
-        },
-        traffic_percentage: {type: Number, min: 0, max: 100, required: true},
-        call_count: {type: Number, default: 0, min: 0, required: true},
-        reqCount : {
-          type: Object,
-            properties: {
-                locations: {
-                    type: [{
-                        locationName: String,
-                        locationCount: {type: Number, default: 0, min: 0},
-                    }],
-                },
-                devices: {
-                    type: [{
-                        deviceName: String,
-                        deviceCount: {type: Number, default: 0, min: 0},
-                    }],
-                },
-                browsers: {
-                    type: [{
-                        browserName: String,
-                        browserCount: {type: Number, default: 0, min: 0},
-                    }],
-                },
-                //ADD CUSTOM ATTRIBUTES ????????????
-            }
-        },
-        status: {
-            type: String,
-            required: true,
-            enum: {
-                values: ["active", "ended", "terminated", "planned"],
-                message: `{VALUE} is not a valid status.`,
+                validate: {
+                    validator: function (variants_success_count) {
+                        let variantsSum = 0;
+                        for (const variant in variants_success_count) {
+                            variantsSum += variants_success_count[variant];
+                        }
+                        return variantsSum <= this.call_count;
+                    },
+                    message: "Variants total count must be lesser then or equal call count"
+                }
             },
-        },
-        duration: {
-            type: Object,
-            properties: {
-                start_time: Date,
-                end_time: Date,
-            },
-            required: true,
-            validate: {
-                validator: (duration) => {
-                    return duration.end_time > duration.start_time;
+            traffic_percentage: {type: Number, min: 0, max: 100, required: true},
+            call_count: {type: Number, default: 0, min: 0, required: true},
+            status: {
+                type: String,
+                required: true,
+                enum: {
+                    values: ["active", "ended", "terminated", "planned"],
+                    message: `{VALUE} is not a valid status.`,
                 },
-                message: "Start time should be prior to end time",
             },
-        },
-        variants_ab: {
-            type: Object,
-            properties: {
-                A: String,
-                B: String,
-                C: String,
+            duration: {
+                type: Object,
+                properties: {
+                    start_time: Date,
+                    end_time: Date,
+                },
+                required: true,
+                validate: {
+                    validator: (duration) => {
+                        return duration.end_time > duration.start_time;
+                    },
+                    message: "Start time should be prior to end time",
+                },
             },
-            required: function () {
-                return this.type === "a-b";
-            }
-        },
-        variants_ff: {
-            type: Object,
-            properties: {
-                ON: {
-                    type: Boolean,
-                    default: true,
-                    validate: {
-                        validator: (ON) => ON,
-                        message: "Feature flag variant ON must be true",
+            variants_ab: {
+                type: Object,
+                properties: {
+                    A: String,
+                    B: String,
+                    C: String,
+                },
+                required: function () {
+                    return this.type === "a-b";
+                }
+            },
+            variants_ff: {
+                type: Object,
+                properties: {
+                    ON: {
+                        type: Boolean,
+                        default: true,
+                        validate: {
+                            validator: (ON) => ON,
+                            message: "Feature flag variant ON must be true",
+                        },
+                    },
+                    OFF: {
+                        type: Boolean,
+                        default: false,
+                        validate: {
+                            validator: (OFF) => !OFF,
+                            message: "Feature flag variant OFF must be false",
+                        },
                     },
                 },
-                OFF: {
-                    type: Boolean,
-                    default: false,
-                    validate: {
-                        validator: (OFF) => !OFF,
-                        message: "Feature flag variant OFF must be false",
-                    },
+                required: function () {
+                    return this.type === "f-f";
                 },
             },
-            required: function () {
-                return this.type === "f-f";
-            },
         },
-    },
 {
     collection: "experiments"
 }
