@@ -30,12 +30,12 @@ const runTest = async (req, res, next) => {
       );
       return res.status(200).json(existingVariant);
     }
-    if (!req.body.subscription === "premium") {
-      experimentsList.forEach((exp) => {
-        if (exp.experimentId === req.body.experimentId) {
+    if (!(req.body.subscription === "premium")) {
+      for (const exp of experimentsList) {
+        if (exp.experimentId.toString() === req.body.experimentId) {
           return res.status(200).json(exp.variant);
         }
-      });
+      }
       const newVariant = await doExperiment(
         req.body.experimentId,
         user[0].uuid,
@@ -75,4 +75,5 @@ const checkIfExperimentIsActive = async (experimentId) => {
   if (experiment.status !== "active") return false;
   return true;
 };
+
 module.exports = { runTest };
