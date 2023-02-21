@@ -15,36 +15,62 @@ const {
 } = require("./../Service/route.logic.experiment");
 
 const runTest = async (req, res, next) => {
-  bodyValidator(req);
-  if (!req.body.experimentId) throw new MissingPropertyError("experiment id");
-  if (!(await checkIfExperimentIsActive(req.body.experimentId)))
-    throw new ExperimentNotActive(req.body.experimentId);
+  validateRun(req, req.body.experimentId, req.body.subscription);
   const user = await getUserByUuid(req, res);
-  if (user) {
-    const exp = getUserExperiment(user, req.body.experimentId);
-    if (exp) {
-      return res.status(200).json(exp.variant);
-    }
-    const existingVariant = await doExperiment(
+  if (user)
+    return experimentExistingUser(
+      req,
+      res,
+      user,
       req.body.experimentId,
-      user[0].uuid,
-      req
+      req.body.subscription
     );
-    return res.status(200).json(existingVariant);
-  }
-  const experiment = await ExperimentRepository.retrieve(req.body.experimentId);
+  return experimentNewUser(req, res, next, req.body.experimentId);
+};
+
+const validateRun = async (req, experimentId, subscription) => {
+  bodyValidator(req);
+  if (!experimentId) throw new MissingPropertyError("experiment id");
+  if (!subscription) throw new MissingPropertyError("subscription");
+  if (!(await checkIfExperimentIsActive(experimentId)))
+    throw new ExperimentNotActive(experimentId);
+};
+
+const experimentNewUser = async (req, res, next, experimentId) => {
+  const experiment = await ExperimentRepository.retrieve(experimentId);
   if (!experiment) throw new EntityNotFound("experiment");
   if (checkAttributes(req, experiment, next)) {
     const newUser = await addUser(req, res);
     res.cookie("uuid", newUser.uuid, { maxAge: 900000, httpOnly: true });
-    const variant = await doExperiment(
-      req.body.experimentId,
-      newUser.uuid,
-      req
-    );
+    const variant = await doExperiment(experimentId, newUser.uuid, req);
     res.status(200).json(variant);
   } else {
     res.status(200).json({ message: "user does not match attributes" });
+  }
+};
+
+const experimentExistingUser = async (
+  req,
+  res,
+  user,
+  experimentId,
+  subscription
+) => {
+  const experimentsList = getUserExperiment(user);
+  // if (!experimentsList) {
+  //   const variant = await doExperiment(experimentId, user[0].uuid, req);
+  //   return res.status(200).json(variant);
+  // }
+  if (!(subscription === "premium")) {
+    for (const exp of experimentsList) {
+      if (exp.experimentId.toString() === experimentId) {
+        return res.status(200).json(exp.variant);
+      }
+    }
+    const newVariant = await doExperiment(experimentId, user.uuid, req);
+    return res.status(200).json(newVariant);
+  } else {
+    return res.status(200).json(experimentsList[0].variant);
   }
 };
 
@@ -62,4 +88,5 @@ const checkIfExperimentIsActive = async (experimentId) => {
   if (experiment.status !== "active") return false;
   return true;
 };
+
 module.exports = { runTest };
