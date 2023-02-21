@@ -35,6 +35,10 @@ module.exports = new (class ExperimentsRepository extends MongoStorage {
     return await this.update(id, { $inc: { call_count: 1 } });
   }
 
+  async incReqCount(id, req) {
+    return await this.update(id, { $inc: { test_attributes: 1 } });
+  }
+
   async getCallCount(id) {
     const experiment = await this.retrieve(id);
 

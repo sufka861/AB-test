@@ -50,6 +50,7 @@ const runTest = async (req, res, next) => {
 
 const doExperiment = async (experimentId, uuid, req) => {
   await ExperimentRepository.incCallCount(experimentId);
+  await ExperimentRepository.incReqCount(experimentId, req);
   let variant = await checkExperimentTypeAndExecExperiment(experimentId, req);
   const userExperiment = { experimentId, variant };
   const updatedUser = await insertExperiment(uuid, userExperiment);
