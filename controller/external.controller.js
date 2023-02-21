@@ -57,17 +57,17 @@ const experimentExistingUser = async (
   subscription
 ) => {
   const experimentsList = getUserExperiment(user);
-  if (!experimentsList) {
-    const variant = await doExperiment(experimentId, user[0].uuid, req);
-    return res.status(200).json(variant);
-  }
+  // if (!experimentsList) {
+  //   const variant = await doExperiment(experimentId, user[0].uuid, req);
+  //   return res.status(200).json(variant);
+  // }
   if (!(subscription === "premium")) {
     for (const exp of experimentsList) {
       if (exp.experimentId.toString() === experimentId) {
         return res.status(200).json(exp.variant);
       }
     }
-    const newVariant = await doExperiment(experimentId, user[0].uuid, req);
+    const newVariant = await doExperiment(experimentId, user.uuid, req);
     return res.status(200).json(newVariant);
   } else {
     return res.status(200).json(experimentsList[0].variant);

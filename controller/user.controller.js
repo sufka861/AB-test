@@ -11,10 +11,10 @@ const userRepository = require("../repositories/user.repository");
 
 const checkAttributes = (req, res) => {};
 
-const getUserByUuid = (req, res) => {
+const getUserByUuid = async (req, res) => {
   const uuid = getCookie(req, res);
   if (!uuid) return false;
-  const user = userRepository.retrieveByUuid(uuid);
+  const [user] = await userRepository.retrieveByUuid(uuid);
   if (!user) throw new EntityNotFound("user");
   return user;
 };
@@ -43,10 +43,10 @@ const insertExperiment = async (uuid, experiment) => {
 };
 
 const getUserExperiment = (user) => {
-  if (!user[0].experiments || user[0].experiments.length === 0) {
+  if (!user.experiments || user.experiments.length === 0) {
     return false;
   }
-  return user[0].experiments;
+  return user.experiments;
 };
 
 const setCookie = () => {
@@ -55,7 +55,6 @@ const setCookie = () => {
 };
 
 const getCookie = (req, res) => {
-  console.log(req.cookies);
   return req.cookies.uuid ? req.cookies.uuid : false;
 };
 
