@@ -7,11 +7,8 @@ const experimentSchema = new Schema(
         account_id: {type: ObjectId, required: true},
         type: {
             type: String,
+            enum: ["f-f", "a-b"],
             required: true,
-            validate: [
-                experimentTypeValidator,
-                (type) => `${type.value} is not a valid type`,
-            ],
         },
         test_attributes: {
             location: {
@@ -111,25 +108,19 @@ const experimentSchema = new Schema(
                 return this.type === "f-f";
             },
         },
-        goals:{
-            type:[ObjectId],
-            validate:{
-              validator: (goals) => goals.length() > 0 && goals.every(ObjectId.isValid),
-              message: "There Must be at least one goal, all goals must be of type mongoose objectId"
+        goals: {
+            type: [ObjectId],
+            validate: {
+                validator: (goals) => goals.length() > 0 && goals.every(ObjectId.isValid),
+                message: "There Must be at least one goal, all goals must be of type mongoose objectId"
             },
             ref: 'Goal'
         }
     },
-{
-    collection: "experiments"
-}
-)
-;
-
-function experimentTypeValidator(type) {
-    type = type.toLowerCase();
-    return type === "a-b" || type === "f-f";
-}
+    {
+        collection: "experiments"
+    }
+);
 
 function deviceValidator(devices) {
     const devicesSet = new Set([
