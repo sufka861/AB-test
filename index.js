@@ -28,6 +28,7 @@ index.use(
   })
 );
 index.use(cookieParser());
+index.use(bodyParser.urlencoded({extended:false}))
 
 index.use(
   cors({
@@ -36,12 +37,21 @@ index.use(
   })
 );
 
-
-// this api to test node crone work  // 
-app.use("/testCrone",(req,res,next)=>{
-  experimentStatusUpdate('00:26', '00:27')
+// this api to test node crone work  // mohammed
+index.use("/testCrone",(req,res,next)=>{
+  console.log( req.body.experimentId)
+  experimentStatusUpdate(req.body.startTime, req.body.endTime ,true , req.body.experimentId)
   res.send("Test Node crone ")
 })
+
+
+// make api that terminate the crone  if user want to stop the job
+index.post('/terminate',(req,res,next) => {
+  console.log( req.body.experimentId)
+  experimentStatusUpdate(undefined , undefined,false , req.body.experimentId)
+  res.send('Terminate the Job ')
+})
+
 
 // Routes goes here!
 
