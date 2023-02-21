@@ -34,6 +34,7 @@ const checkIfActive = (experiment) => experiment.status === "active";
 
 const experimentCustomAttributes = (experiment) => experiment.test_attributes.custom_attributes.reduce((acc, curr) => acc[curr.key] = curr.value, {} )
 
+// {color : red}, {shape: square}, .....
 const checkAttributes = (endUserReq, experiment, next, ...userAttributes) => {
   try {
 
@@ -49,7 +50,7 @@ const checkAttributes = (endUserReq, experiment, next, ...userAttributes) => {
 
       if(customAttributes)
       {
-        return result && userAttributes.every((attr) => customAttributes[attr.keys()[0]].includes(attr[attr.keys()[0]]))
+        return  result && userAttributes.every((attr) => customAttributes[attr.keys()[0]].includes(attr[attr.keys()[0]]))
       }
       return result;
     } else return false;

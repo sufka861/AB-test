@@ -13,6 +13,14 @@ const attributeSchema = new Schema({
             validator: (values) => values.length > 0,
             message: "At least one value must be provided"
         }
+    },
+    counter: {
+        type: Number,
+        default: 0,
+        validate: {
+            validator: (counter) => counter >= 0 && counter % 1 === 0,
+            message: 'counter value must be a positive whole number'
+        }
     }
 })
 
