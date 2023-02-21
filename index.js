@@ -1,10 +1,10 @@
-
 require("dotenv").config();
 const newrelic = require("newrelic");
 require("express-async-errors");
 const express = require("express");
 const logger = require("morgan");
 const cors = require("cors");
+const bodyParser = require('body-parser')
 const fs = require("fs");
 const path = require("path");
 const cookieParser = require("cookie-parser");
@@ -28,6 +28,7 @@ app.use(
   })
 );
 app.use(cookieParser());
+app.use(bodyParser.urlencoded({extended:false}))
 
 app.use(
   cors({
@@ -36,15 +37,23 @@ app.use(
   })
 );
 
-
-// this api to test node crone work  // 
+// this api to test node crone work  // mohammed
 app.use("/testCrone",(req,res,next)=>{
-  experimentStatusUpdate('00:26', '00:27')
+  console.log( req.body.experimentId)
+  experimentStatusUpdate(req.body.startTime, req.body.endTime ,true , req.body.experimentId)
   res.send("Test Node crone ")
 })
 
-// Routes goes here!
 
+// make api that terminate the crone  if user want to stop the job
+app.post('/terminate',(req,res,next) => {
+  console.log( req.body.experimentId)
+  experimentStatusUpdate(undefined , undefined,false , req.body.experimentId)
+  res.send('Terminate the Job ')
+})
+
+
+// Routes goes here!
 app.use("/test", testRouter);
 app.use("/user", userRouter);
 app.use("/experiments", experimentRouter);
@@ -53,5 +62,5 @@ app.use("/stats", statsRouter);
 app.use(errorHandler);
 
 app.listen(port, () => {
-  console.log(`Server is listening on port ${port}...`);
+  console.log(`Server is listening on port${port}...`);
 });

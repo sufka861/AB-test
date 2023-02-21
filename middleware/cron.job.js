@@ -1,8 +1,8 @@
 const cron = require("node-cron");
 const ExperimentRepository = require("../repositories/experiment.repository");
 
-const experimentStatusUpdate =(startTime, endTime) => {
-    cron.schedule("* * * * *", async () => {
+const experimentStatusUpdate =async(startTime = new Date(), endTime = new Date() , status = true , experimentId) => {
+   const job =   cron.schedule("* * * * *", async () => {
         const currentTime = new Date();
         const start = new Date(currentTime);
         const end = new Date(currentTime);
@@ -11,26 +11,25 @@ const experimentStatusUpdate =(startTime, endTime) => {
 
         if (currentTime >= start && currentTime <= end) {
             console.log('active');
-            const now = new Date();
-            let query = {status: "planned", duration: {start_time:{$lte: now}, end_time: {$gte: now}}};
-            let experiments = await ExperimentRepository.findByQuery(query);
-            experiments.forEach((experiment) => {
-                ExperimentRepository.update(experiment._id, {status: "active"})
-            });
+            let experiments = await ExperimentRepository.update(experimentId, {status: "active"})
 
           }
-          // Check if the current time is after the time intervall
+          // Check if the current time is after the time interval
           else if (currentTime > end) {
             console.log('ended')
-            query = {status: "active", duration: {end_time:{$gte: now}, start_time: {$lte: now}}};
-            experiments = await ExperimentRepository.findByQuery(query);
-            experiments.forEach((experiment) => {
-                ExperimentRepository.update(experiment._id, {status: "ended"})
-            });
-          }
-
-
+            let experiments = await ExperimentRepository.update(experimentId, {status: "ended"})
+          }      
+        
     })
+
+    if(status == false){
+      console.log('stopped')
+        job.stop()
+        let experiments = await  ExperimentRepository.update(experimentId, {status: "terminated"})
+     
+
+
+    }
 }
 
 
