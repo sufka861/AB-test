@@ -6,11 +6,11 @@ const {bodyValidator} = require("../validators/body.validator");
 const {BodyNotSent} = require("../errors/BadRequest.errors");
 
 module.exports = {
-    incVariantByExperimentID: async (req, res) => {
+    incVariantByGoalID: async (req, res) => {
         const id = req.params.id;
         const {variant} = req.body;
         if (id && variant)
-            res.status(200).send(await ExperimentRepository.incVariantSuccessCount(id, variant));
+            res.status(200).send(await GoalRepository.incVariantSuccessCount(id, variant));
         else
             throw new PropertyNotFound("incVariantByExperimentID");
     },
@@ -23,10 +23,10 @@ module.exports = {
             throw new PropertyNotFound("getCallCountByExperimentID");
     },
 
-    getVariantSuccessCountByExperimentID: async (req, res) => {
+    getVariantSuccessCountByGoalID: async (req, res) => {
         const id = req.params.id;
         if (id)
-            res.status(200).send(await ExperimentRepository.getVariantSuccessCount(id));
+            res.status(200).send(await GoalRepository.getVariantSuccessCount(id));
         else
             throw new PropertyNotFound("getVariantSuccessCountByExperimentID");
     },
