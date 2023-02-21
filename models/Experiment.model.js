@@ -29,26 +29,6 @@ const experimentSchema = new Schema(
             },
             browser: [String],
         },
-        variant_success_count: {
-            type: Object,
-            properties: {
-                A: {type: Number, default: 0, min: 0},
-                B: {type: Number, default: 0, min: 0},
-                C: {type: Number, default: 0, min: 0},
-                ON: {type: Number, default: 0, min: 0},
-                OFF: {type: Number, default: 0, min: 0},
-            },
-            validate: {
-                validator: function (variants_success_count) {
-                    let variantsSum = 0;
-                    for (const variant in variants_success_count) {
-                        variantsSum += variants_success_count[variant];
-                    }
-                    return variantsSum <= this.call_count;
-                },
-                message: "Variants total count must be lesser then or equal call count"
-            }
-        },
         traffic_percentage: {type: Number, min: 0, max: 100, required: true},
         call_count: {type: Number, default: 0, min: 0, required: true},
         status: {
