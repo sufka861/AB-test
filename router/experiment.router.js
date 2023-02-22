@@ -11,7 +11,9 @@ experimentRouter.get('/:experiment_id', experimentController.getExperimentById);
 
 
 experimentRouter.put('/:experiment_id', experimentController.updateExperimentsByID);
+experimentRouter.put('/:experiment_id/:goal_id', experimentController.addGoalToExperiment);
 
+experimentRouter.delete('/:experiment_id/:goal_id', experimentController.removeGoalToExperiment);
 experimentRouter.delete('/:experiment_id', experimentController.deleteExperimentsByID);
 
 experimentRouter.post('/', experimentController.createExperiments);
