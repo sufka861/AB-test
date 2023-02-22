@@ -29,7 +29,7 @@ const experimentSchema = new Schema(
             },
             browser: [String],
         },
-        traffic_percentage: {type: Number, min: 0, max: 100, required: true},
+        trafficPercentage: {type: Number, min: 0, max: 100, required: true},
         callCount: {type: Number, default: 0, min: 0, required: true},
         status: {
             type: String,

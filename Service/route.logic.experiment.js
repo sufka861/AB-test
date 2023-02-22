@@ -13,7 +13,7 @@ const checkExperimentTypeAndExecExperiment = async (
   const experiment = await ExperimentStorage.retrieve(experimentID);
   const { status, type } = experiment;
 
-  if (Util.shouldAllow(experiment.traffic_percentage / 100)) {
+  if (Util.shouldAllow(experiment.trafficPercentage / 100)) {
     const experimentLogic =
       type === featureFlagExpType
         ? ffLogic.featureCheckAttributes
