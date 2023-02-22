@@ -20,6 +20,14 @@ const statsRouter = require("./router/stats.router");
 const {goalRouter} = require("./router/goal.router");
 const { experimentStatusUpdate } = require("./Service/cron.job");
 
+
+//logger core team
+const Logger = require('abtest-logger');
+const abtestlogger = new Logger('mongodb+srv://coreteam:bVZR3Is9VfhlDFv1@cluster0.1cxlyo9.mongodb.net/logger?retryWrites=true&w=majority');
+console.log(abtestlogger)
+
+
+
 index.use(express.json());
 index.use(express.urlencoded({ extended: true }));
 index.use(
