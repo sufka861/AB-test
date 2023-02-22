@@ -2,10 +2,10 @@
   "name": "tradebench",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon -r newrelic app.js"
+    "dev": "nodemon -r newrelic index.js"
   },
   "author": "",
   "license": "ISC",
@@ -17,6 +17,7 @@
     "express": "^4.18.2",
     "express-async-errors": "^3.1.1",
     "geoip-lite": "^1.4.6",
+    "install": "^0.13.0",
     "iso-3166-1": "^2.1.1",
     "mongodb": "^4.13.0",
     "mongoose": "^6.8.1",

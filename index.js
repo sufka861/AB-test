@@ -8,7 +8,7 @@ const cors = require("cors");
 const fs = require("fs");
 const path = require("path");
 const cookieParser = require("cookie-parser");
-const app = express();
+const index = express();
 const requestIp = require("request-ip");
 const { errorHandler } = require("./middleware/errorHandler.mw");
 const logPath = path.join(__dirname, "logs", "http.log");
@@ -20,16 +20,16 @@ const statsRouter = require("./router/stats.router");
 const {goalRouter} = require("./router/goal.router");
 const { experimentStatusUpdate } = require("./Service/cron.job");
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(
+index.use(express.json());
+index.use(express.urlencoded({ extended: true }));
+index.use(
   logger(":date --> :method :url :status :response-time ms", {
     stream: fs.createWriteStream(logPath, { flags: "a" }),
   })
 );
-app.use(cookieParser());
+index.use(cookieParser());
 
-app.use(
+index.use(
   cors({
     origin: "http://localhost:3000",
     credentials: true,
@@ -38,13 +38,13 @@ app.use(
 
 // Routes goes here!
 
-app.use("/test", testRouter);
-app.use("/user", userRouter);
-app.use("/experiments", experimentRouter);
-app.use("/goal", goalRouter);
-app.use("/stats", statsRouter);
-app.use(errorHandler);
+index.use("/test", testRouter);
+index.use("/user", userRouter);
+index.use("/experiments", experimentRouter);
+index.use("/goal", goalRouter);
+index.use("/stats", statsRouter);
+index.use(errorHandler);
 
-app.listen(port, () => {
+index.listen(port, () => {
   console.log(`Server is listening on port ${port}...`);
 });
