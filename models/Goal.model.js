@@ -12,15 +12,15 @@ const userSchema = new Schema(
             required: true,
             unique: true
         },
-        success_count: {
-            type : Number,
-            default: 0,
-            min: 0,
-            validate:{
-                validator: (count) => count % 1 === 0,
-                message: "Success count must be a positive whole number"
-            },
-            required:true
+        variant_success_count: {
+            type: Object,
+            properties: {
+                A: {type: Number, default: 0, min: 0},
+                B: {type: Number, default: 0, min: 0},
+                C: {type: Number, default: 0, min: 0},
+                ON: {type: Number, default: 0, min: 0},
+                OFF: {type: Number, default: 0, min: 0},
+            }
         }
     },
     { collection: "goals" }
