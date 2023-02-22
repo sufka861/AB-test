@@ -1,4 +1,4 @@
-const {Schema, model, ObjectId} = require("mongoose");
+const {Schema, model, ObjectId,isValidObjectId} = require("mongoose");
 const iso = require("iso-3166-1"); // used to validate country code
 
 const experimentSchema = new Schema(
@@ -91,7 +91,7 @@ const experimentSchema = new Schema(
         goals: {
             type: [ObjectId],
             validate: {
-                validator: (goals) => goals.length() > 0 && goals.every(ObjectId.isValid),
+                validator: (goals) => goals.length() > 0 && goals.every(isValidObjectId),
                 message: "There Must be at least one goal, all goals must be of type mongoose objectId"
             },
             ref: 'Goal'
