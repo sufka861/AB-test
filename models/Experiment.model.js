@@ -29,7 +29,7 @@ const experimentSchema = new Schema(
             browser: [String],
         },
         traffic_percentage: {type: Number, min: 0, max: 100, required: true},
-        call_count: {type: Number, default: 0, min: 0, required: true},
+        callCount: {type: Number, default: 0, min: 0, required: true},
         status: {
             type: String,
             required: true,
@@ -47,7 +47,7 @@ const experimentSchema = new Schema(
             required: true,
             validate: {
                 validator: (duration) => {
-                    return duration.end_time > duration.start_time;
+                    return duration.endTime > duration.startTime;
                 },
                 message: "Start time should be prior to end time",
             },

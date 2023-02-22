@@ -22,7 +22,7 @@ const checkExperimentTypeAndExecExperiment = async (
     await ExperimentStorage.incCallCount(experiment._id);
     return experimentLogic(endUserReq, experiment);
   }
-  return type ===featureFlagExpType ? { OFF: false } : { C: experiment.variants_ab.C };
+  return type ===featureFlagExpType ? { OFF: false } : { C: experiment.variantsAB.C };
 };
 
 module.exports = {
