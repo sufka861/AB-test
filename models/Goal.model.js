@@ -12,7 +12,7 @@ const userSchema = new Schema(
             required: true,
             unique: true
         },
-        variant_success_count: {
+        variantSuccessCount: {
             type: Object,
             properties: {
                 A: {type: Number, default: 0, min: 0},
