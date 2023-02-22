@@ -3,9 +3,9 @@ const experimentController = require('../controller/experiment.controller');
 const experimentRouter = new express.Router();
 
 experimentRouter.get('/', experimentController.getAllExperiments);
-experimentRouter.get('/AB/:accountId', experimentController.getExperimentsAB);
-experimentRouter.get('/FF/:accountId', experimentController.getExperimentsFF);
-experimentRouter.get('/account/:accountId', experimentController.getExperimentsByAccountId);
+experimentRouter.get('/AB/:acaccountId', experimentController.getExperimentsAB);
+experimentRouter.get('/FF/:acaccountId', experimentController.getExperimentsFF);
+experimentRouter.get('/account/:acaccountId', experimentController.getExperimentsByAcaccountId);
 experimentRouter.get('/date', experimentController.getExperimentsByDate);
 experimentRouter.get('/:experimentId', experimentController.getExperimentById);
 

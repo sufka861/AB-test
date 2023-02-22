@@ -19,27 +19,27 @@ const getExperimentById = async (req, res) => {
     res.status(200).json(result);
 };
 
-const getExperimentsByAccountId = async (req, res) => {
-    if (!req.params.accountId) throw new PropertyNotFound("accountId");
-    const accountId = req.params.accountId;
-    const result = await ExperimentRepository.findByAttribute("accountId", accountId);
-    if (!result) throw new ServerUnableError("getExperimentsByAccountId")
+const getExperimentsByAcaccountId = async (req, res) => {
+    if (!req.params.acaccountId) throw new PropertyNotFound("acaccountId");
+    const acaccountId = req.params.acaccountId;
+    const result = await ExperimentRepository.findByAttribute("acaccountId", acaccountId);
+    if (!result) throw new ServerUnableError("getExperimentsByAcaccountId")
     res.status(200).json(result);
 }
 
 const getExperimentsAB = async (req, res) => {
-    if (!req.params.accountId) throw new PropertyNotFound("accountId");
-    const accountId = req.params.accountId;
-    const result = await ExperimentRepository.findByTwoAttributes("type", "a-b", "accountId", accountId);
+    if (!req.params.acaccountId) throw new PropertyNotFound("acaccountId");
+    const acaccountId = req.params.acaccountId;
+    const result = await ExperimentRepository.findByTwoAttributes("type", "a-b", "acaccountId", acaccountId);
     if (!result) throw new ServerUnableError("getExperimentsAB")
     res.status(200).json(result);
 
 }
 
 const getExperimentsFF = async (req, res) => {
-    if (!req.params.accountId) throw new PropertyNotFound("accountId");
-    const accountId = req.params.accountId;
-    const result = await ExperimentRepository.findByTwoAttributes("type", "f-f", "accountId", accountId);
+    if (!req.params.acaccountId) throw new PropertyNotFound("acaccountId");
+    const acaccountId = req.params.acaccountId;
+    const result = await ExperimentRepository.findByTwoAttributes("type", "f-f", "acaccountId", acaccountId);
     if (!result) throw new ServerUnableError("getExperimentsFF")
     res.status(200).json(result);
 
@@ -94,7 +94,7 @@ const removeGoalToExperiment = async (req,res) =>{
 module.exports = {
     getAllExperiments,
     getExperimentById,
-    getExperimentsByAccountId,
+    getExperimentsByAcaccountId,
     getExperimentsAB,
     getExperimentsFF,
     getExperimentsByDate,
