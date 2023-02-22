@@ -91,7 +91,7 @@ const experimentSchema = new Schema(
         goals: {
             type: [ObjectId],
             validate: {
-                validator: (goals) => goals.length() > 0 && goals.every(isValidObjectId),
+                validator: (goals) => goals.length > 0 && goals.every(isValidObjectId),
                 message: "There Must be at least one goal, all goals must be of type mongoose objectId"
             },
             ref: 'Goal'
