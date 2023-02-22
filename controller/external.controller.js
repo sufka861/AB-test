@@ -4,9 +4,11 @@ const {
   insertExperiment,
   getUserExperiment,
 } = require("./user.controller");
+const { incVariantByGoalID } = require("./goal.controller");
 const { checkAttributes } = require("./../Service/utils");
 const { bodyValidator } = require("./../validators/body.validator");
 const ExperimentRepository = require("../repositories/experiment.repository");
+const GoalRepository = require("./../repositories/goal.repository");
 const { MissingPropertyError } = require("../errors/validation.errors");
 const { EntityNotFound } = require("../errors/NotFound.errors");
 const { ExperimentNotActive } = require("../errors/BadRequest.errors");
@@ -97,9 +99,17 @@ const reportGoal = async (req, res) => {
   // get user experiments
   const user = await getUserByUuid(req, res);
   const experimentsList = getUserExperiment(user);
+  console.log(experimentsList);
   // is goal in user experiments?
   for (exp of experimentsList) {
-    if (exp.experimentId === experimentId) {
+    if (exp.experimentId.toString() === experimentId) {
+      const variant = [...exp.variant.keys()];
+      GoalRepository.incVariantSuccessCount(goalId, variant[0]);
+      return res
+        .status(200)
+        .json({
+          message: `Goal count for variant ${variant[0]} is increased by 1.`,
+        });
     }
   }
   // inc goal success count
