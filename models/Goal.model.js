@@ -1,7 +1,7 @@
 
 const { Schema, model } = require("mongoose");
 
-const userSchema = new Schema(
+const goalSchema = new Schema(
     {
         name:{
             type: String,
@@ -27,4 +27,4 @@ const userSchema = new Schema(
     { collection: "goals" }
 );
 
-    module.exports = model("Goal", userSchema);
+    module.exports = model("Goal", goalSchema);
