@@ -20,7 +20,8 @@ const userSchema = new Schema(
                 C: {type: Number, default: 0, min: 0},
                 ON: {type: Number, default: 0, min: 0},
                 OFF: {type: Number, default: 0, min: 0},
-            }
+            },
+            required: true
         }
     },
     { collection: "goals" }
