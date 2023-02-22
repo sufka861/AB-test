@@ -20,7 +20,7 @@ You can perform the experiment, schedule it and view the results in form of stat
    h.ua-parser-js
    i. request-ip
 3. [x] Download the code from Git-Hub https://github.com/sufka861/AB-test.git
-4. [x] Cd to the working directory and start the server using the following command in the terminal - $node index.js
+4. [x] Cd to the working directory and start the server using the following command in the terminal - $node app.js
 5. [x] Open a browser page and go to https://ab-test-bvtg.onrender.com/
 6. [x] Full documentation of the API calls can be seen at: https://documenter.getpostman.com/view/24139741/2s8Z711C7C
 
@@ -28,7 +28,7 @@ You can perform the experiment, schedule it and view the results in form of stat
 
 1. [x] Using the calls to the render website via Postman you can create and start AB test / Feature Flag experiments.
 2. [x] View lists of exist experiments and planned future experiments.
-3. [x] index.js – http – the entry point of the system
+3. [x] app.js – http – the entry point of the system
 4. [x] Router folder – consists of a map of all the API points for both server and client
 5. [x] Controllers – direct the functionality of the system6.
 6. [x] Services – contain the business logic of the system.
