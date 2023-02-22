@@ -8,10 +8,6 @@ const experimentSchema = new Schema(
         type: {
             type: String,
             required: true,
-            validate: [
-                experimentTypeValidator,
-                (type) => `${type.value} is not a valid type`,
-            ],
         },
         testAttributes: {
             location: {
@@ -27,33 +23,13 @@ const experimentSchema = new Schema(
                     validator: deviceValidator,
                     message: () => `Invalid device`,
                 },
-                testAttributes: true,
+                lowercase: true,
                 trim: true,
             },
             browser: [String],
         },
-        variantSuccessCount: {
-            type: Object,
-            properties: {
-                A: {type: Number, default: 0, min: 0},
-                B: {type: Number, default: 0, min: 0},
-                C: {type: Number, default: 0, min: 0},
-                ON: {type: Number, default: 0, min: 0},
-                OFF: {type: Number, default: 0, min: 0},
-            },
-            validate: {
-                validator: function (variantsSuccessCount) {
-                    let variantsSum = 0;
-                    for (const variant in variantsSuccessCount) {
-                        variantsSum += variantsSuccessCount[variant];
-                    }
-                    return variantsSum <= this.callCount;
-                },
-                message: "Variants total count must be lesser then or equal call count"
-            }
-        },
-        trafficPercentage: {type: Number, min: 0, max: 100, required: true},
-        callCount: {type: Number, default: 0, min: 0, required: true},
+        traffic_percentage: {type: Number, min: 0, max: 100, required: true},
+        call_count: {type: Number, default: 0, min: 0, required: true},
         status: {
             type: String,
             required: true,
@@ -71,7 +47,7 @@ const experimentSchema = new Schema(
             required: true,
             validate: {
                 validator: (duration) => {
-                    return duration.endTime > duration.startTime;
+                    return duration.end_time > duration.start_time;
                 },
                 message: "Start time should be prior to end time",
             },
@@ -111,25 +87,19 @@ const experimentSchema = new Schema(
                 return this.type === "f-f";
             },
         },
-        goals:{
-            type:[ObjectId],
-            validate:{
-              validator: (goals) => goals.length() > 0 && goals.every(ObjectId.isValid),
-              message: "There Must be at least one goal, all goals must be of type mongoose objectId"
+        goals: {
+            type: [ObjectId],
+            validate: {
+                validator: (goals) => goals.length() > 0 && goals.every(ObjectId.isValid),
+                message: "There Must be at least one goal, all goals must be of type mongoose objectId"
             },
             ref: 'Goal'
         }
     },
-{
-    collection: "experiments"
-}
-)
-;
-
-function experimentTypeValidator(type) {
-    type = type.toLowerCase();
-    return type === "a-b" || type === "f-f";
-}
+    {
+        collection: "experiments"
+    }
+);
 
 function deviceValidator(devices) {
     const devicesSet = new Set([
