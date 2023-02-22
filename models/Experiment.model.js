@@ -111,6 +111,14 @@ const experimentSchema = new Schema(
                 return this.type === "f-f";
             },
         },
+        goals:{
+            type:[ObjectId],
+            validate:{
+              validator: (goals) => goals.length() > 0 && goals.every(ObjectId.isValid),
+              message: "There Must be at least one goal, all goals must be of type mongoose objectId"
+            },
+            ref: 'Goal'
+        }
     },
 {
     collection: "experiments"

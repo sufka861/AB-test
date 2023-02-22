@@ -3,16 +3,18 @@ const experimentController = require('../controller/experiment.controller');
 const experimentRouter = new express.Router();
 
 experimentRouter.get('/', experimentController.getAllExperiments);
-experimentRouter.get('/AB/:accountId', experimentController.getExperimentsAB);
-experimentRouter.get('/FF/:accountId', experimentController.getExperimentsFF);
-experimentRouter.get('/account/:accountId', experimentController.getExperimentsByAccountId);
+experimentRouter.get('/AB/:account_id', experimentController.getExperimentsAB);
+experimentRouter.get('/FF/:account_id', experimentController.getExperimentsFF);
+experimentRouter.get('/account/:account_id', experimentController.getExperimentsByAccountId);
 experimentRouter.get('/date', experimentController.getExperimentsByDate);
-experimentRouter.get('/:experimentId', experimentController.getExperimentById);
+experimentRouter.get('/:experiment_id', experimentController.getExperimentById);
 
 
-experimentRouter.put('/:experimentId', experimentController.updateExperimentsByID);
+experimentRouter.put('/:experiment_id', experimentController.updateExperimentsByID);
+experimentRouter.put('/:experiment_id/:goal_id', experimentController.addGoalToExperiment);
 
-experimentRouter.delete('/:experimentId', experimentController.deleteExperimentsByID);
+experimentRouter.delete('/:experiment_id/:goal_id', experimentController.removeGoalToExperiment);
+experimentRouter.delete('/:experiment_id', experimentController.deleteExperimentsByID);
 
 experimentRouter.post('/', experimentController.createExperiments);
 

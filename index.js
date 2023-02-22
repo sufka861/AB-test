@@ -1,3 +1,4 @@
+
 require("dotenv").config();
 const newrelic = require("newrelic");
 require("express-async-errors");
@@ -16,8 +17,9 @@ const { experimentRouter } = require("./router/experiment.router");
 const { testRouter } = require("./router/external.routes");
 const { userRouter } = require("./router/user.routes");
 const statsRouter = require("./router/stats.router");
-const goalRouter = require("./router/goal.router");
-const { experimentStatusUpdate } = require("./Service/cron.job");
+const {goalRouter} = require("./router/goal.router");
+const { experimentStatusUpdate } = require("./middleware/cron.job");
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
@@ -35,12 +37,12 @@ app.use(
 );
 
 // Routes goes here!
+
 app.use("/test", testRouter);
 app.use("/user", userRouter);
 app.use("/experiments", experimentRouter);
 app.use("/goal", goalRouter);
 app.use("/stats", statsRouter);
-
 app.use(errorHandler);
 
 app.listen(port, () => {
