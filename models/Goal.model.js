@@ -12,7 +12,7 @@ const userSchema = new Schema(
             required: true,
             unique: true
         },
-        success_count: {
+        successCount: {
             type : Number,
             default: 0,
             min: 0,

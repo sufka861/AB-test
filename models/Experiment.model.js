@@ -4,7 +4,7 @@ const iso = require("iso-3166-1"); // used to validate country code
 const experimentSchema = new Schema(
     {
         name: {type: String, required: true},
-        accountId: {type: ObjectId, required: true},
+        countId: {type: ObjectId, required: true},
         type: {
             type: String,
             required: true,
@@ -42,10 +42,10 @@ const experimentSchema = new Schema(
                 OFF: {type: Number, default: 0, min: 0},
             },
             validate: {
-                validator: function (variants_success_count) {
+                validator: function (variantsSuccessCount) {
                     let variantsSum = 0;
-                    for (const variant in variants_success_count) {
-                        variantsSum += variants_success_count[variant];
+                    for (const variant in variantsSuccessCount) {
+                        variantsSum += variantsSuccessCount[variant];
                     }
                     return variantsSum <= this.callCount;
                 },
@@ -65,13 +65,13 @@ const experimentSchema = new Schema(
         duration: {
             type: Object,
             properties: {
-                start_time: Date,
-                end_time: Date,
+                startTime: Date,
+                endTime: Date,
             },
             required: true,
             validate: {
                 validator: (duration) => {
-                    return duration.end_time > duration.start_time;
+                    return duration.endTime > duration.startTime;
                 },
                 message: "Start time should be prior to end time",
             },

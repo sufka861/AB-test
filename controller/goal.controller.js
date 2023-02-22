@@ -10,7 +10,7 @@ module.exports = {
         const id = req.params.id;
         const {variant} = req.body;
         if (id && variant)
-            res.status(200).send(await ExperimentRepository.incVariantSuccessCount(id, variant));
+            res.status(200).send(await ExperimentRepository.incvariant_(id, variant));
         else
             throw new PropertyNotFound("incVariantByExperimentID");
     },

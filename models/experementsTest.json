@@ -18,11 +18,11 @@
     "C": 0
   },
   "trafficPercentage": 50,
-  "goal_id": null,
+  "goalId": null,
   "callCount": 0,
   "status": "active",
-  "start_time":"2022-12-31T13:35:30.301Z",
-  "end_time": "2023-12-31T13:35:30.301Z",
+  "startTime":"2022-12-31T13:35:30.301Z",
+  "endTime": "2023-12-31T13:35:30.301Z",
   "variants": {
     "A": "Alternative1",
     "B": "Alternative2",
@@ -49,11 +49,11 @@
     "C": 0
   },
   "trafficPercentage": 50,
-  "goal_id": null,
+  "goalId": null,
   "callCount": 0,
   "status": "active",
-  "start_time":"2022-12-31T13:35:30.301Z",
-  "end_time": "2023-12-31T13:35:30.301Z",
+  "startTime":"2022-12-31T13:35:30.301Z",
+  "endTime": "2023-12-31T13:35:30.301Z",
   "variants": {
     "A": "Alternative1",
     "B": "Alternative2",
