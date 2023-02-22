@@ -1,6 +1,30 @@
 const {Schema, model, ObjectId,isValidObjectId} = require("mongoose");
 const iso = require("iso-3166-1"); // used to validate country code
 
+const attributeSchema = new Schema({
+    key: {
+        type: String,
+        unique: true,
+        required: true,
+    },
+    value: {
+        type: [String],
+        validate: {
+            validator: (values) => values.length > 0,
+            message: "At least one value must be provided"
+        }
+    },
+    reqCounter: {
+        type: Number,
+        default: 0,
+        validate: {
+            validator: (counter) => counter >= 0 && counter % 1 === 0,
+            message: 'counter value must be a positive whole number'
+        }
+    }
+})
+
+
 const experimentSchema = new Schema(
     {
         name: {type: String, required: true},
