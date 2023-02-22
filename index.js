@@ -1,10 +1,10 @@
-
 require("dotenv").config();
 const newrelic = require("newrelic");
 require("express-async-errors");
 const express = require("express");
 const logger = require("morgan");
 const cors = require("cors");
+const bodyParser = require('body-parser')
 const fs = require("fs");
 const path = require("path");
 const cookieParser = require("cookie-parser");
@@ -18,7 +18,7 @@ const { testRouter } = require("./router/external.routes");
 const { userRouter } = require("./router/user.routes");
 const statsRouter = require("./router/stats.router");
 const {goalRouter} = require("./router/goal.router");
-const { experimentStatusUpdate } = require("./Service/cron.job");
+const { experimentStatusUpdate } = require("./middleware/cron.job");
 
 index.use(express.json());
 index.use(express.urlencoded({ extended: true }));
