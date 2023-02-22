@@ -6,7 +6,7 @@ module.exports = new (class GoalRepository extends MongoStorage {
     }
 
     getGoalSuccessCountById(goalId) {
-        return this.retrieve(goalId)?.success_count ?? null;
+        return this.retrieve(goalId)?.successCount ?? null;
     }
 
     incGoalSuccessCount(goalId) {
@@ -15,12 +15,12 @@ module.exports = new (class GoalRepository extends MongoStorage {
 
     async incVariantSuccessCount(id, variant) {
         return await this.update(id, {
-            $inc: {[`variant_success_count.${variant}`]: 1},
+            $inc: {[`variantSuccessCount.${variant}`]: 1},
         });
     }
     async getVariantSuccessCount(id) {
         const experiment = await this.retrieve(id);
-        if (experiment) return  experiment.variant_success_count;
+        if (experiment) return  experiment.variantSuccessCount;
         else return null;
     }
 })();

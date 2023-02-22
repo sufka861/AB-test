@@ -13,7 +13,7 @@ const checkExperimentTypeAndExecExperiment = async (
   const experiment = await ExperimentStorage.retrieve(experimentID);
   const { status, type } = experiment;
 
-  if (Util.shouldAllow(experiment.traffic_percentage / 100)) {
+  if (Util.shouldAllow(experiment.trafficPercentage / 100)) {
     const experimentLogic =
       type === featureFlagExpType
         ? ffLogic.featureCheckAttributes
@@ -22,7 +22,7 @@ const checkExperimentTypeAndExecExperiment = async (
     await ExperimentStorage.incCallCount(experiment._id);
     return experimentLogic(endUserReq, experiment);
   }
-  return type ===featureFlagExpType ? { OFF: false } : { C: experiment.variants_ab.C };
+  return type ===featureFlagExpType ? { OFF: false } : { C: experiment.variantsAB.C };
 };
 
 module.exports = {
