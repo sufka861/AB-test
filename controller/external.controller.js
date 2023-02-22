@@ -89,4 +89,20 @@ const checkIfExperimentIsActive = async (experimentId) => {
   return true;
 };
 
-module.exports = { runTest };
+const reportGoal = async (req, res) => {
+  const { experimentId, goalId } = req.body;
+  // is experiment active?
+  if (!(await checkIfExperimentIsActive(experimentId)))
+    throw new ExperimentNotActive(experimentId);
+  // get user experiments
+  const user = await getUserByUuid(req, res);
+  const experimentsList = getUserExperiment(user);
+  // is goal in user experiments?
+  for (exp of experimentsList) {
+    if (exp.experimentId === experimentId) {
+    }
+  }
+  // inc goal success count
+};
+
+module.exports = { runTest, reportGoal };
