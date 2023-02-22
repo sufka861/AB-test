@@ -1,16 +1,40 @@
-const { Schema, model, ObjectId, isValidObjectId } = require("mongoose");
+const {Schema, model, ObjectId} = require("mongoose");
 const iso = require("iso-3166-1"); // used to validate country code
+
+const attributeSchema = new Schema({
+    key: {
+        type: String,
+        unique: true,
+        required: true,
+    },
+    value: {
+        type: [String],
+        validate: {
+            validator: (values) => values.length > 0,
+            message: "At least one value must be provided"
+        }
+    },
+    reqCounter: {
+        type: Number,
+        default: 0,
+        validate: {
+            validator: (counter) => counter >= 0 && counter % 1 === 0,
+            message: 'counter value must be a positive whole number'
+        }
+    }
+})
+
 
 const experimentSchema = new Schema(
     {
         name: {type: String, required: true},
-        account_id: {type: ObjectId, required: true},
+        accountId: {type: ObjectId, required: true},
         type: {
             type: String,
             enum: ["f-f", "a-b"],
             required: true,
         },
-        test_attributes: {
+        testAttributes: {
             location: {
                 type: [String],
                 validate: {
@@ -29,8 +53,8 @@ const experimentSchema = new Schema(
             },
             browser: [String],
         },
-        traffic_percentage: {type: Number, min: 0, max: 100, required: true},
-        call_count: {type: Number, default: 0, min: 0, required: true},
+        trafficPercentage: {type: Number, min: 0, max: 100, required: true},
+        callCount: {type: Number, default: 0, min: 0, required: true},
         status: {
             type: String,
             required: true,
@@ -42,18 +66,18 @@ const experimentSchema = new Schema(
         duration: {
             type: Object,
             properties: {
-                start_time: Date,
-                end_time: Date,
+                startTime: Date,
+                endTime: Date,
             },
             required: true,
             validate: {
                 validator: (duration) => {
-                    return duration.end_time > duration.start_time;
+                    return duration.endTime > duration.startTime;
                 },
                 message: "Start time should be prior to end time",
             },
         },
-        variants_ab: {
+        variantsAB: {
             type: Object,
             properties: {
                 A: String,
@@ -64,7 +88,7 @@ const experimentSchema = new Schema(
                 return this.type === "a-b";
             }
         },
-        variants_ff: {
+        variantsFF: {
             type: Object,
             properties: {
                 ON: {
