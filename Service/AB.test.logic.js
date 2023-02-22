@@ -1,5 +1,5 @@
 const ABcheckAttributes = (endUserReq, experiment) => {
-  const { A, B, C } = experiment.variants_ab;
+  const { A, B, C } = experiment.variantsAB;
   return returnByRatio({ A: A }, { B: B });
 };
 

@@ -105,7 +105,7 @@ const reportGoal = async (req, res) => {
         variant[0]
       );
       return res.status(200).json({
-        variant_success_count: response.variant_success_count,
+        variant_success_count: response.variantSuccessCount,
       });
     }
   }
