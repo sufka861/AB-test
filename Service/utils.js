@@ -38,9 +38,9 @@ const checkAttributes = (endUserReq, experiment, next) => {
     const { browser, device } = getBrowserDevice(endUserReq);
     if (geo && browser && device) {
       const result =
-        geo.country === experiment.test_attributes.location[0] &&
-        browser === experiment.test_attributes.browser[0] &&
-        device === experiment.test_attributes.device[0];
+        geo.country === experiment.testAttributes.location[0] &&
+        browser === experiment.testAttributes.browser[0] &&
+        device === experiment.testAttributes.device[0];
       return result;
     } else return false;
   } catch (error) {
