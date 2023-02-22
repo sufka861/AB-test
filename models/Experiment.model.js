@@ -14,7 +14,7 @@ const attributeSchema = new Schema({
             message: "At least one value must be provided"
         }
     },
-    counter: {
+    reqCounter: {
         type: Number,
         default: 0,
         validate: {

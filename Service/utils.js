@@ -31,17 +31,17 @@ const getBrowserDevice = (req) => {
 const shouldAllow = (ratio) => ratio >= 1 - Math.random();
 
 const checkIfActive = (experiment) => experiment.status === "active";
-
+// [{key : masho, value: [mashim]}] => {masho: [mashoim]}
 const experimentCustomAttributes = (experiment) => experiment.test_attributes.custom_attributes.reduce((acc, curr) => acc[curr.key] = curr.value, {} )
 
-// {color : red}, {shape: square}, .....
-const checkAttributes = (endUserReq, experiment, next, ...userAttributes) => {
+// {color : red, shape: square}, .....
+const checkAttributes = (endUserReq, experiment, next) => {
   try {
 
     const customAttributes =experimentCustomAttributes(experiment);
     const geo = getLocation(getClientIP(endUserReq));
     const { browser, device } = getBrowserDevice(endUserReq);
-
+    const {userAttributes} = endUserReq.body;
     if (geo && browser && device ) {
       const result =
         geo.country === experiment.test_attributes.location[0] &&
@@ -50,7 +50,8 @@ const checkAttributes = (endUserReq, experiment, next, ...userAttributes) => {
 
       if(customAttributes)
       {
-        return  result && userAttributes.every((attr) => customAttributes[attr.keys()[0]].includes(attr[attr.keys()[0]]))
+        //ToFix
+        // return  result && userAttributes.every((attr) => customAttributes[attr.keys()[0]].includes(attr[attr.keys()[0]]))
       }
       return result;
     } else return false;
