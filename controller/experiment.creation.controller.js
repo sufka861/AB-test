@@ -4,6 +4,8 @@ const {PropertyNotFound} = require("../errors/NotFound.errors");
 const {ServerUnableError} = require("../errors/internal.errors");
 const {BodyNotSent} = require("../errors/BadRequest.errors");
 const {bodyValidator} = require("../validators/body.validator");
+const {isLogForwardingEnabled} = require("newrelic/lib/util/application-logging");
+const {log} = require("winston");
 
 
 const createExperimentWithGoals = async (req, res) => {
@@ -12,14 +14,20 @@ const createExperimentWithGoals = async (req, res) => {
 
     if (!experiment || !goals) throw new PropertyNotFound("Invalid request body for creating new experiment");
 
-    const goalsId = [];
-    goals.map(async (goal) => await GoalRepository.create(goal).then(newGoal => { if (!newGoal) throw ServerUnableError("Creating new goal") else goalsId.append(newGoal._id)}));
-    experiment.goals = goalsId;
-    const newExperiment = await  ExperimentRepository.create(experiment);
+
+    experiment.goals = await Promise.all(goals.map(async (goal) => {
+           return await GoalRepository.create(goal)
+               .then(newGoal => newGoal._id)
+                .catch(err => console.log(err))
+        }
+    ));
+
+    const newExperiment = await ExperimentRepository.create(experiment);
+
     if (!newExperiment) throw ServerUnableError("Creating new experiment");
 
     res.status(200).send(newExperiment);
 
 }
 
-export default createExperimentWithGoals;
+module.exports = {createExperimentWithGoals};

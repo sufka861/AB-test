@@ -4,12 +4,15 @@ const Path = require("path");
 
 module.exports = class MongoStorage {
   constructor(entity) {
-    this.entityName = entity.charAt(0).toUpperCase() + entity.slice(1);
-    this.Model = require(Path.join(
-      __dirname,
-      `../models/${this.entityName}.model.js`
-    ));
-    this.connect();
+
+      this.entityName = entity.charAt(0).toUpperCase() + entity.slice(1);
+      this.Model = require(Path.join(
+          __dirname,
+          `../models/${this.entityName}.model.js`
+      ));
+      this.connect();
+
+
   }
 
   connect() {

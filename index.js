@@ -13,7 +13,9 @@ const requestIp = require("request-ip");
 const { errorHandler } = require("./middleware/errorHandler.mw");
 const logPath = path.join(__dirname, "logs", "http.log");
 const port = process.env.PORT || 3000;
+
 const { experimentRouter } = require("./router/experiment.router");
+
 const { testRouter } = require("./router/external.routes");
 const { userRouter } = require("./router/user.routes");
 const statsRouter = require("./router/stats.router");
@@ -40,7 +42,10 @@ index.use(
 
 index.use("/test", testRouter);
 index.use("/user", userRouter);
+
+
 index.use("/experiments", experimentRouter);
+
 index.use("/goal", goalRouter);
 index.use("/stats", statsRouter);
 index.use(errorHandler);

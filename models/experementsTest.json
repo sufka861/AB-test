@@ -1,63 +1,50 @@
-[{
-  "name": "experiment test name",
-  "type": "a-b",
-  "testAttributes": {
-    "location": [
-      "IL"
-    ],
-    "device": [
-      "mobile"
-    ],
-    "browser": [
-      "Chrome"
-    ]
-  },
-  "variantSuccessCount": {
-    "A": 0,
-    "B": 0,
-    "C": 0
-  },
-  "trafficPercentage": 50,
-  "goalId": null,
-  "callCount": 0,
-  "status": "active",
-  "startTime":"2022-12-31T13:35:30.301Z",
-  "endTime": "2023-12-31T13:35:30.301Z",
-  "variants": {
-    "A": "Alternative1",
-    "B": "Alternative2",
-    "C": "Default"
-  }
-},
 {
-  "name": "experiment test name country validation",
-  "type": "a-b",
-  "testAttributes": {
-    "location": [
-      "XXX", "XXXR"
-    ],
-    "device": [
-      "mobile"
-    ],
-    "browser": [
-      "Chrome"
-    ]
+  "experiment": {
+    "name": "experiment test name",
+    "accountId": "63b9ff3f28ce812bf358d0b5",
+    "type": "a-b",
+    "testAttributes": {
+      "location": [
+        "IL"
+      ],
+      "device": [
+        "mobile"
+      ],
+      "browser": [
+        "Chrome"
+      ],
+      "customAttributes": [
+        {
+          "key": "customAttributeKey",
+          "value": [
+            "customAttributeValue",
+            "anotherCustomAttributeValue"
+          ]
+        }
+      ]
+    },
+    "trafficPercentage": 50,
+    "callCount": 0,
+    "status": "active",
+    "duration": {
+      "startTime": "2022-12-31T13:35:30.301Z",
+      "endTime": "2023-12-31T13:35:30.301Z"
+    },
+    "variantsAB": {
+      "A": "Alternative1",
+      "B": "Alternative2",
+      "C": "Default"
+    }
   },
-  "variantSuccessCount": {
-    "A": 0,
-    "B": 0,
-    "C": 0
-  },
-  "trafficPercentage": 50,
-  "goalId": null,
-  "callCount": 0,
-  "status": "active",
-  "startTime":"2022-12-31T13:35:30.301Z",
-  "endTime": "2023-12-31T13:35:30.301Z",
-  "variants": {
-    "A": "Alternative1",
-    "B": "Alternative2",
-    "C": "Default"
-  }
-}
+  "goals": [
+    {
+      "name": "goalName",
+      "key": "uniqueGoalKey"
+    },
+    {
+      "name": "anotherGoalName",
+      "key": "anotherUniqueGoalKey"
+    }
   ]
+}
+

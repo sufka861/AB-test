@@ -17,6 +17,7 @@ const attributeSchema = new Schema({
     reqCounter: {
         type: Number,
         default: 0,
+        required: true,
         validate: {
             validator: (counter) => counter >= 0 && counter % 1 === 0,
             message: 'counter value must be a positive whole number'
@@ -28,7 +29,7 @@ const attributeSchema = new Schema({
 const experimentSchema = new Schema(
     {
         name: {type: String, required: true},
-        accountId: {type: ObjectId, required: true},
+        accountId: {type: ObjectId, required: true, validate: [isValidObjectId, "AccountId must be a valid id"]},
         type: {
             type: String,
             enum: ["f-f", "a-b"],
@@ -52,6 +53,10 @@ const experimentSchema = new Schema(
                 trim: true,
             },
             browser: [String],
+            customAttributes: {
+                type: [attributeSchema],
+                default: null,
+            }
         },
         trafficPercentage: {type: Number, min: 0, max: 100, required: true},
         callCount: {type: Number, default: 0, min: 0, required: true},
