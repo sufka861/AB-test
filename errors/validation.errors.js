@@ -28,9 +28,17 @@ class RegisterError extends ValidationError {
   }
 }
 
+class UserUnknown extends ValidationError {
+  constructor() {
+    super(`user is not a part of any experiment yet`);
+    this.name = this.constructor.name;
+  }
+}
+
 module.exports = {
   MissingPropertyError,
   InvalidProperty,
   ValidationError,
   RegisterError,
+  UserUnknown,
 };
