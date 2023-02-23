@@ -22,12 +22,9 @@ const experimentStatusUpdate =async(startTime = new Date(), endTime = new Date()
 
     })
 
-    if(status == false){
-      console.log('stopped')
+    if(status === false){
         job.stop()
         let experiments = await  ExperimentRepository.update(experimentId, {status: "terminated"})
-
-
 
     }
 }
