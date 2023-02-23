@@ -1,4 +1,3 @@
-
 require("dotenv").config();
 const newrelic = require("newrelic");
 require("express-async-errors");

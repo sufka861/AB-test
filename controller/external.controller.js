@@ -4,10 +4,15 @@ const {
   insertExperiment,
   getUserExperiment,
 } = require("./user.controller");
+const { incVariantByGoalID } = require("./goal.controller");
 const { checkAttributes } = require("./../Service/utils");
 const { bodyValidator } = require("./../validators/body.validator");
 const ExperimentRepository = require("../repositories/experiment.repository");
-const { MissingPropertyError } = require("../errors/validation.errors");
+const GoalRepository = require("./../repositories/goal.repository");
+const {
+  MissingPropertyError,
+  UserUnknown,
+} = require("../errors/validation.errors");
 const { EntityNotFound } = require("../errors/NotFound.errors");
 const { ExperimentNotActive } = require("../errors/BadRequest.errors");
 const {
@@ -85,4 +90,28 @@ const checkIfExperimentIsActive = async (experimentId) => {
   return true;
 };
 
-module.exports = { runTest };
+const reportGoal = async (req, res) => {
+  const { experimentId, goalId } = req.body;
+  if (!(await checkIfExperimentIsActive(experimentId)))
+    throw new ExperimentNotActive(experimentId);
+  const user = await getUserByUuid(req, res);
+  if (!user) throw new UserUnknown();
+  const experimentsList = getUserExperiment(user);
+  for (exp of experimentsList) {
+    if (exp.experimentId.toString() === experimentId) {
+      const variant = [...exp.variant.keys()];
+      const response = await GoalRepository.incVariantSuccessCount(
+        goalId,
+        variant[0]
+      );
+      return res.status(200).json({
+        variant_success_count: response.variantSuccessCount,
+      });
+    }
+  }
+  return res.status(200).json({
+    message: `current user is not a part of experiment: ${experimentId}`,
+  });
+};
+
+module.exports = { runTest, reportGoal };
