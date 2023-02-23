@@ -28,6 +28,10 @@ const getBrowserDevice = (req) => {
   return result;
 };
 
+const generateUuid = () => {
+  return uuidv4();
+};
+
 const shouldAllow = (ratio) => ratio >= 1 - Math.random();
 
 const checkIfActive = (experiment) => experiment.status === "active";

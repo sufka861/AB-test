@@ -4,7 +4,6 @@ const iso = require("iso-3166-1"); // used to validate country code
 const attributeSchema = new Schema({
     key: {
         type: String,
-        unique: true,
         required: true,
     },
     value: {
@@ -17,6 +16,7 @@ const attributeSchema = new Schema({
     reqCounter: {
         type: Number,
         default: 0,
+        required: true,
         validate: {
             validator: (counter) => counter >= 0 && counter % 1 === 0,
             message: 'counter value must be a positive whole number'
@@ -26,154 +26,125 @@ const attributeSchema = new Schema({
 
 
 const experimentSchema = new Schema(
-        {
-            name: {type: String, required: true},
-            account_id: {type: ObjectId, required: true},
-            type: {
-                type: String,
-                required: true,
-                validate: [
-                    experimentTypeValidator,
-                    (type) => `${type.value} is not a valid type`,
-                ],
-            },
-            test_attributes: {
-                location: {
-                    type: [String],
-                    validate: {
-                        validator: countryValidator,
-                        message: () => `Invalid country code`,
-                    },
-                },
-                device: {
-                    type: [String],
-                    validate: {
-                        validator: deviceValidator,
-                        message: () => `Invalid device`,
-                    },
-                    lowercase: true,
-                    trim: true,
-                },
-                browser: [String],
-                custom_attributes: {
-                    type: [attributeSchema],
-                    default: null,
-                }
-            },
-            variant_success_count: {
-                type: Object,
-                properties: {
-                    A: {type: Number, default: 0, min: 0},
-                    B: {type: Number, default: 0, min: 0},
-                    C: {type: Number, default: 0, min: 0},
-                    ON: {type: Number, default: 0, min: 0},
-                    OFF: {type: Number, default: 0, min: 0},
-                },
+    {
+        name: {type: String, required: true},
+        accountId: {type: ObjectId, required: true, validate: [isValidObjectId, "AccountId must be a valid id"]},
+        type: {
+            type: String,
+            enum: ["f-f", "a-b"],
+            required: true,
+        },
+        testAttributes: {
+            location: {
+                type: [String],
                 validate: {
-                    validator: function (variants_success_count) {
-                        let variantsSum = 0;
-                        for (const variant in variants_success_count) {
-                            variantsSum += variants_success_count[variant];
-                        }
-                        return variantsSum <= this.call_count;
-                    },
-                    message: "Variants total count must be lesser then or equal call count"
-                }
-            },
-            traffic_percentage: {type: Number, min: 0, max: 100, required: true},
-            call_count: {type: Number, default: 0, min: 0, required: true},
-            status: {
-                type: String,
-                required: true,
-                enum: {
-                    values: ["active", "ended", "terminated", "planned"],
-                    message: `{VALUE} is not a valid status.`,
+                    validator: countryValidator,
+                    message: () => `Invalid country code`,
                 },
             },
-            duration: {
-                type: Object,
-                properties: {
-                    start_time: Date,
-                    end_time: Date,
-                },
-                required: true,
+            device: {
+                type: [String],
                 validate: {
-                    validator: (duration) => {
-                        return duration.end_time > duration.start_time;
-                    },
-                    message: "Start time should be prior to end time",
+                    validator: deviceValidator,
+                    message: () => `Invalid device`,
                 },
+                lowercase: true,
+                trim: true,
             },
-            variants_ab: {
-                type: Object,
-                properties: {
-                    A: String,
-                    B: String,
-                    C: String,
-                },
-                required: function () {
-                    return this.type === "a-b";
-                }
-            },
-            variants_ff: {
-                type: Object,
-                properties: {
-                    ON: {
-                        type: Boolean,
-                        default: true,
-                        validate: {
-                            validator: (ON) => ON,
-                            message: "Feature flag variant ON must be true",
-                        },
-                    },
-                    OFF: {
-                        type: Boolean,
-                        default: false,
-                        validate: {
-                            validator: (OFF) => !OFF,
-                            message: "Feature flag variant OFF must be false",
-                        },
-                    },
-                },
-                required: function () {
-                    return this.type === "f-f";
-                },
-            },
-            goals: {
-                type: [ObjectId],
-                validate: {
-                    validator: (goals) => goals.length() > 0 && goals.every(ObjectId.isValid),
-                    message: "There Must be at least one goal, all goals must be of type mongoose objectId"
-                },
-                ref: 'Goal'
+            browser: [String],
+            customAttributes: {
+                type: [attributeSchema],
+                default: null,
             }
         },
-        {
-            collection: "experiments"
+        trafficPercentage: {type: Number, min: 0, max: 100, required: true},
+        callCount: {type: Number, default: 0, min: 0, required: true},
+        status: {
+            type: String,
+            required: true,
+            enum: {
+                values: ["active", "ended", "terminated", "planned"],
+                message: `{VALUE} is not a valid status.`,
+            },
+        },
+        duration: {
+            type: Object,
+            properties: {
+                startTime: Date,
+                endTime: Date,
+            },
+            required: true,
+            validate: {
+                validator: (duration) => {
+                    return duration.endTime > duration.startTime;
+                },
+                message: "Start time should be prior to end time",
+            },
+        },
+        variantsAB: {
+            type: Object,
+            properties: {
+                A: String,
+                B: String,
+                C: String,
+            },
+            required: function () {
+                return this.type === "a-b";
+            }
+        },
+        variantsFF: {
+            type: Object,
+            properties: {
+                ON: {
+                    type: Boolean,
+                    default: true,
+                    validate: {
+                        validator: (ON) => ON,
+                        message: "Feature flag variant ON must be true",
+                    },
+                },
+                OFF: {
+                    type: Boolean,
+                    default: false,
+                    validate: {
+                        validator: (OFF) => !OFF,
+                        message: "Feature flag variant OFF must be false",
+                    },
+                },
+            },
+            required: function () {
+                return this.type === "f-f";
+            },
+        },
+        goals: {
+            type: [ObjectId],
+            validate: {
+                validator: (goals) => goals.length > 0 && goals.every(isValidObjectId),
+                message: "There Must be at least one goal, all goals must be of type mongoose objectId"
+            },
+            ref: 'Goal'
         }
-    )
-;
-
-function experimentTypeValidator(type) {
-    type = type.toLowerCase();
-    return type === "a-b" || type === "f-f";
-}
+    },
+    {
+        collection: "experiments"
+    }
+);
 
 function deviceValidator(devices) {
-    const devicesSet = new Set([
-        "console",
-        "mobile",
-        "tablet",
-        "smarttv",
-        "wearable",
-        "embedded",
-        "desktop",
-    ]);
-    return devices.every((device) => devicesSet.has(device.toLowerCase()));
+  const devicesSet = new Set([
+    "console",
+    "mobile",
+    "tablet",
+    "smarttv",
+    "wearable",
+    "embedded",
+    "desktop",
+  ]);
+  return devices.every((device) => devicesSet.has(device.toLowerCase()));
 }
 
 function countryValidator(countries) {
-    return countries.every((country) => !!iso.whereAlpha2(country));
+  return countries.every((country) => !!iso.whereAlpha2(country));
 }
 
 module.exports = model("Experiment", experimentSchema);

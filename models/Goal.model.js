@@ -1,29 +1,30 @@
+const {Schema, model} = require("mongoose");
 
-const { Schema, model } = require("mongoose");
-
-const userSchema = new Schema(
-    {
-        name:{
-            type: String,
-            required: true
-        },
-        key : {
-            type : String,
-            required: true,
-            unique: true
-        },
-        success_count: {
-            type : Number,
-            default: 0,
-            min: 0,
-            validate:{
-                validator: (count) => count % 1 === 0,
-                message: "Success count must be a positive whole number"
+const goalSchema = new Schema(
+        {
+            name: {
+                type: String,
+                required: true
             },
-            required:true
+            key: {
+                type: String,
+                required: true,
+            },
+            variantSuccessCount: {
+                type: Object,
+                properties: {
+                    A: {type: Number, default: 0, min: 0,  required: true},
+                    B: {type: Number, default: 0, min: 0,  required: true},
+                    C: {type: Number, default: 0, min: 0,  required: true},
+                    ON: {type: Number, default: 0, min: 0,  required: true},
+                    OFF: {type: Number, default: 0, min: 0,  required: true},
+                },
+            }
+        },
+        {
+            collection: "goals"
         }
-    },
-    { collection: "goals" }
-);
+    )
+;
 
-    module.exports = model("Goal", userSchema);
+module.exports = model("Goal", goalSchema);
