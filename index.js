@@ -37,7 +37,7 @@ app.use(
   })
 );
 
-// this api to test node crone work  // 
+// this api to test node cron work  // 
 app.use("/testCrone",(req,res,next)=>{
   console.log( req.body.experimentId)
   experimentStatusUpdate(req.body.startTime, req.body.endTime ,true , req.body.experimentId)
@@ -45,7 +45,7 @@ app.use("/testCrone",(req,res,next)=>{
 })
 
 
-// make api that terminate the crone  if user want to stop the job
+//  api that terminate the cron job  if user want to stop 
 app.post('/terminate',(req,res,next) => {
   console.log( req.body.experimentId)
   experimentStatusUpdate(undefined , undefined,false , req.body.experimentId)
