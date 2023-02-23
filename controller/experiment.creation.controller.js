@@ -15,12 +15,11 @@ const createExperimentWithGoals = async (req, res) => {
     if (!experiment || !goals) throw new PropertyNotFound("Invalid request body for creating new experiment");
 
 
-    experiment.goals = await Promise.all(goals.map(async (goal) => {
-           return await GoalRepository.create(goal)
-               .then(newGoal => newGoal._id)
-                .catch(err => console.log(err))
-        }
-    ));
+    experiment.goals = await GoalRepository.createMany(goals)
+        .then(newGoals => newGoals.map(newGoal => newGoal._id))
+        .catch(err => {
+            if (err) throw new ServerUnableError(err.message)
+        })
 
     const newExperiment = await ExperimentRepository.create(experiment);
 

@@ -11,8 +11,6 @@ module.exports = class MongoStorage {
           `../models/${this.entityName}.model.js`
       ));
       this.connect();
-
-
   }
 
   connect() {
@@ -49,6 +47,10 @@ module.exports = class MongoStorage {
   create(data) {
     const entity = new this.Model(data);
     return entity.save();
+  }
+  createMany(data)
+  {
+    return this.Model.create(data)
   }
 
   delete(id) {
