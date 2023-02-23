@@ -4,12 +4,13 @@ const Path = require("path");
 
 module.exports = class MongoStorage {
   constructor(entity) {
-    this.entityName = entity.charAt(0).toUpperCase() + entity.slice(1);
-    this.Model = require(Path.join(
-      __dirname,
-      `../models/${this.entityName}.model.js`
-    ));
-    this.connect();
+
+      this.entityName = entity.charAt(0).toUpperCase() + entity.slice(1);
+      this.Model = require(Path.join(
+          __dirname,
+          `../models/${this.entityName}.model.js`
+      ));
+      this.connect();
   }
 
   connect() {
@@ -46,6 +47,10 @@ module.exports = class MongoStorage {
   create(data) {
     const entity = new this.Model(data);
     return entity.save();
+  }
+  createMany(data)
+  {
+    return this.Model.create(data)
   }
 
   delete(id) {
