@@ -36,7 +36,7 @@ const shouldAllow = (ratio) => ratio >= 1 - Math.random();
 
 const checkIfActive = (experiment) => experiment.status === "active";
 // [{key : masho, value: [mashim]}] => {masho: [mashoim]}
-const experimentCustomAttributes = (experiment) => experiment.test_attributes.custom_attributes.reduce((acc, curr) => acc[curr.key] = curr.value, {} )
+const experimentCustomAttributes = (experiment) => experiment.testAttributes.customAttributes.reduce((acc, curr) => acc[curr.key] = curr.value, {} )
 
 // {color : red, shape: square}, .....
 const checkAttributes = (endUserReq, experiment, next) => {
@@ -48,9 +48,9 @@ const checkAttributes = (endUserReq, experiment, next) => {
     const {userAttributes} = endUserReq.body;
     if (geo && browser && device ) {
       const result =
-        geo.country === experiment.test_attributes.location[0] &&
-        browser === experiment.test_attributes.browser[0] &&
-        device === experiment.test_attributes.device[0];
+        geo.country === experiment.testAttributes.location[0] &&
+        browser === experiment.testAttributes.browser[0] &&
+        device === experiment.testAttributes.device[0];
 
       if(customAttributes)
       {
