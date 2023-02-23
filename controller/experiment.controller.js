@@ -54,12 +54,6 @@ const getExperimentsByDate = async (req, res) => {
     res.status(200).json(result);
 }
 
-const createExperiments = async (req, res) => {
-    if (!bodyValidator(req)) throw new BodyNotSent();
-    const result = await ExperimentRepository.create(req.body)
-    if (!result) throw new ServerUnableError("createExperiments")
-    res.status(200).json(result);
-}
 
 const updateExperimentsByID = async (req, res) => {
     if (!req.params.experimentId) throw new PropertyNotFound("experimentId");
@@ -83,7 +77,7 @@ const addGoalToExperiment = async (req,res) =>{
     if (!result) throw new ServerUnableError("addGoalToExperiment")
     res.status(200).json(result);
 }
-const removeGoalToExperiment = async (req,res) =>{
+const removeGoalFromExperiment = async (req,res) =>{
     if (!req.params.experimentId) throw new PropertyNotFound("experimentId");
     if (!req.params.goalId) throw new PropertyNotFound("goalId");
     const result = await ExperimentRepository.removeGoal(req.params.experimentId, req.params.goalId)
@@ -102,5 +96,5 @@ module.exports = {
     deleteExperimentsByID,
     createExperiments,
     addGoalToExperiment,
-    removeGoalToExperiment
+    removeGoalFromExperiment
 }
