@@ -8,7 +8,7 @@ const bodyParser = require('body-parser')
 const fs = require("fs");
 const path = require("path");
 const cookieParser = require("cookie-parser");
-const app = express();
+const index = express();
 const requestIp = require("request-ip");
 const { errorHandler } = require("./middleware/errorHandler.mw");
 const logPath = path.join(__dirname, "logs", "http.log");
@@ -20,33 +20,33 @@ const statsRouter = require("./router/stats.router");
 const {goalRouter} = require("./router/goal.router");
 const { experimentStatusUpdate } = require("./middleware/cron.job");
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(
+index.use(express.json());
+index.use(express.urlencoded({ extended: true }));
+index.use(
   logger(":date --> :method :url :status :response-time ms", {
     stream: fs.createWriteStream(logPath, { flags: "a" }),
   })
 );
-app.use(cookieParser());
-app.use(bodyParser.urlencoded({extended:false}))
+index.use(cookieParser());
+index.use(bodyParser.urlencoded({extended:false}))
 
-app.use(
+index.use(
   cors({
     origin: "http://localhost:3000",
     credentials: true,
   })
 );
 
-// this api to test node cron work  // 
-app.use("/testCrone",(req,res,next)=>{
+// this api to test node crone work  // mohammed
+index.use("/testCrone",(req,res,next)=>{
   console.log( req.body.experimentId)
   experimentStatusUpdate(req.body.startTime, req.body.endTime ,true , req.body.experimentId)
   res.send("Test Node cron job ")
 })
 
 
-//  api that terminate the cron job  if user want to stop 
-app.post('/terminate',(req,res,next) => {
+// make api that terminate the crone  if user want to stop the job
+index.post('/terminate',(req,res,next) => {
   console.log( req.body.experimentId)
   experimentStatusUpdate(undefined , undefined,false , req.body.experimentId)
   res.send('Terminate the Job ')
@@ -54,13 +54,13 @@ app.post('/terminate',(req,res,next) => {
 
 
 // Routes goes here!
-app.use("/test", testRouter);
-app.use("/user", userRouter);
-app.use("/experiments", experimentRouter);
-app.use("/goal", goalRouter);
-app.use("/stats", statsRouter);
-app.use(errorHandler);
+index.use("/test", testRouter);
+index.use("/user", userRouter);
+index.use("/experiments", experimentRouter);
+index.use("/goal", goalRouter);
+index.use("/stats", statsRouter);
+index.use(errorHandler);
 
-app.listen(port, () => {
-  console.log(`Server is listening on port${port}...`);
+index.listen(port, () => {
+  console.log(`Server is listening on port ${port}...`);
 });

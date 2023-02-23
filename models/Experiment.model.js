@@ -1,19 +1,16 @@
-const {Schema, model, ObjectId} = require("mongoose");
+const {Schema, model, ObjectId,isValidObjectId} = require("mongoose");
 const iso = require("iso-3166-1"); // used to validate country code
 
 const experimentSchema = new Schema(
     {
         name: {type: String, required: true},
-        account_id: {type: ObjectId, required: true},
+        accountId: {type: ObjectId, required: true},
         type: {
             type: String,
+            enum: ["f-f", "a-b"],
             required: true,
-            validate: [
-                experimentTypeValidator,
-                (type) => `${type.value} is not a valid type`,
-            ],
         },
-        test_attributes: {
+        testAttributes: {
             location: {
                 type: [String],
                 validate: {
@@ -32,28 +29,8 @@ const experimentSchema = new Schema(
             },
             browser: [String],
         },
-        variant_success_count: {
-            type: Object,
-            properties: {
-                A: {type: Number, default: 0, min: 0},
-                B: {type: Number, default: 0, min: 0},
-                C: {type: Number, default: 0, min: 0},
-                ON: {type: Number, default: 0, min: 0},
-                OFF: {type: Number, default: 0, min: 0},
-            },
-            validate: {
-                validator: function (variants_success_count) {
-                    let variantsSum = 0;
-                    for (const variant in variants_success_count) {
-                        variantsSum += variants_success_count[variant];
-                    }
-                    return variantsSum <= this.call_count;
-                },
-                message: "Variants total count must be lesser then or equal call count"
-            }
-        },
-        traffic_percentage: {type: Number, min: 0, max: 100, required: true},
-        call_count: {type: Number, default: 0, min: 0, required: true},
+        trafficPercentage: {type: Number, min: 0, max: 100, required: true},
+        callCount: {type: Number, default: 0, min: 0, required: true},
         status: {
             type: String,
             required: true,
@@ -65,18 +42,18 @@ const experimentSchema = new Schema(
         duration: {
             type: Object,
             properties: {
-                start_time: Date,
-                end_time: Date,
+                startTime: Date,
+                endTime: Date,
             },
             required: true,
             validate: {
                 validator: (duration) => {
-                    return duration.end_time > duration.start_time;
+                    return duration.endTime > duration.startTime;
                 },
                 message: "Start time should be prior to end time",
             },
         },
-        variants_ab: {
+        variantsAB: {
             type: Object,
             properties: {
                 A: String,
@@ -87,7 +64,7 @@ const experimentSchema = new Schema(
                 return this.type === "a-b";
             }
         },
-        variants_ff: {
+        variantsFF: {
             type: Object,
             properties: {
                 ON: {
@@ -111,25 +88,19 @@ const experimentSchema = new Schema(
                 return this.type === "f-f";
             },
         },
-        goals:{
-            type:[ObjectId],
-            validate:{
-              validator: (goals) => goals.length() > 0 && goals.every(ObjectId.isValid),
-              message: "There Must be at least one goal, all goals must be of type mongoose objectId"
+        goals: {
+            type: [ObjectId],
+            validate: {
+                validator: (goals) => goals.length() > 0 && goals.every(isValidObjectId),
+                message: "There Must be at least one goal, all goals must be of type mongoose objectId"
             },
             ref: 'Goal'
         }
     },
-{
-    collection: "experiments"
-}
-)
-;
-
-function experimentTypeValidator(type) {
-    type = type.toLowerCase();
-    return type === "a-b" || type === "f-f";
-}
+    {
+        collection: "experiments"
+    }
+);
 
 function deviceValidator(devices) {
     const devicesSet = new Set([

@@ -3,18 +3,18 @@ const experimentController = require('../controller/experiment.controller');
 const experimentRouter = new express.Router();
 
 experimentRouter.get('/', experimentController.getAllExperiments);
-experimentRouter.get('/AB/:account_id', experimentController.getExperimentsAB);
-experimentRouter.get('/FF/:account_id', experimentController.getExperimentsFF);
-experimentRouter.get('/account/:account_id', experimentController.getExperimentsByAccountId);
+experimentRouter.get('/AB/:acaccountId', experimentController.getExperimentsAB);
+experimentRouter.get('/FF/:acaccountId', experimentController.getExperimentsFF);
+experimentRouter.get('/account/:acaccountId', experimentController.getExperimentsByAcaccountId);
 experimentRouter.get('/date', experimentController.getExperimentsByDate);
-experimentRouter.get('/:experiment_id', experimentController.getExperimentById);
+experimentRouter.get('/:experimentId', experimentController.getExperimentById);
 
 
-experimentRouter.put('/:experiment_id', experimentController.updateExperimentsByID);
-experimentRouter.put('/:experiment_id/:goal_id', experimentController.addGoalToExperiment);
+experimentRouter.put('/:experimentId', experimentController.updateExperimentsByID);
+experimentRouter.put('/:experimentId/:goalId', experimentController.addGoalToExperiment);
 
-experimentRouter.delete('/:experiment_id/:goal_id', experimentController.removeGoalToExperiment);
-experimentRouter.delete('/:experiment_id', experimentController.deleteExperimentsByID);
+experimentRouter.delete('/:experimentId/:goalId', experimentController.removeGoalToExperiment);
+experimentRouter.delete('/:experimentId', experimentController.deleteExperimentsByID);
 
 experimentRouter.post('/', experimentController.createExperiments);
 
