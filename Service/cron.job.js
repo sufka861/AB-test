@@ -18,12 +18,7 @@ const experimentStatusUpdate = cron.schedule("* 0 * * *", async () => {
 })
 
 cron.schedule("0 0 1 * *", async () => {
-  try {
-    await Experiment.updateMany({}, { $set: { monthlyCallCount: 0 } });
-    console.log("Monthly call count reset successful");
-  } catch (err) {
-    console.error(err);
-  }
+    await ExperimentRepository.resetMonthlyCallCount();
 });
 
 module.exports = {
