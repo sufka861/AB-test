@@ -60,7 +60,7 @@ const experimentSchema = new Schema(
         },
         trafficPercentage: {type: Number, min: 0, max: 100, required: true},
         callCount: {type: Number, default: 0, min: 0, required: true},
-        monthly_call_count: {type: Number, default: 0, min: 0, required: true},
+        monthlyCallCount: {type: Number, default: 0, min: 0, required: true},
         status: {
             type: String,
             required: true,

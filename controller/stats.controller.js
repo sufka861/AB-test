@@ -73,11 +73,11 @@ const getUsersStats = async (req, res) => {
 
 const getTestsPerMonth = async (req, res) => {
 
-    const accountID = req.params.account_id;
+    const accountID = req.params.accountId;
     if (!mongoose.isValidObjectId(accountID)) throw new ValidationError.MissingPropertyError("account ID");
     Experiment.aggregate([
-        { $match: { account_id: mongoose.Types.ObjectId(accountID) } },
-        { $group: { _id: "$account_id", total_calls: { $sum: "$monthly_call_count" } } }
+        { $match: { accountId: mongoose.Types.ObjectId(accountID) } },
+        { $group: { _id: "$accountId", total_calls: { $sum: "$monthlyCallCount" } } }
     ]).exec(function (err, results) {
         if (err) {
             throw new ServerError.ServerUnableError("calculate experiment call count");
