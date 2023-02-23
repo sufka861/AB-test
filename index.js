@@ -41,7 +41,7 @@ app.use(
 app.use("/testCrone",(req,res,next)=>{
   console.log( req.body.experimentId)
   experimentStatusUpdate(req.body.startTime, req.body.endTime ,true , req.body.experimentId)
-  res.send("Test Node crone ")
+  res.send("Test Node cron job ")
 })
 
 
