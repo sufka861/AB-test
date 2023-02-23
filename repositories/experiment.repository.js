@@ -34,7 +34,7 @@ module.exports = new (class ExperimentsRepository extends MongoStorage {
       const start = new Date(year, month, 1);
       const end = new Date(year, month, 31);
       return this.Model.countDocuments({
-        end_time: {
+        endTime: {
           $gte: start,
           $lte: end,
         },
@@ -44,7 +44,7 @@ module.exports = new (class ExperimentsRepository extends MongoStorage {
 
 
   async incCallCount(id) {
-    return await this.update(id, { $inc: { call_count: 1 } }).populate({path: 'goals'});
+    return await this.update(id, { $inc: { callCount: 1 } }).populate({path: 'goals'});
   }
 
   async incReqCount(id, req) {
@@ -54,7 +54,7 @@ module.exports = new (class ExperimentsRepository extends MongoStorage {
   async getCallCount(id) {
     const experiment = await this.retrieve(id);
 
-    if (experiment) return experiment.call_count;
+    if (experiment) return experiment.callCount;
     else return null;
   }
 

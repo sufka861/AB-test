@@ -18,7 +18,7 @@ module.exports = {
     getCallCountByExperimentID: async (req, res) => {
         const id = req.params.id;
         if (id)
-            res.status(200).json({call_count: await ExperimentRepository.getCallCount(id) || 0});
+            res.status(200).json({callCount: await ExperimentRepository.getCallCount(id) || 0});
         else
             throw new PropertyNotFound("getCallCountByExperimentID");
     },
