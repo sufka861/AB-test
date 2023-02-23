@@ -132,20 +132,20 @@ const experimentSchema = new Schema(
 );
 
 function deviceValidator(devices) {
-    const devicesSet = new Set([
-        "console",
-        "mobile",
-        "tablet",
-        "smarttv",
-        "wearable",
-        "embedded",
-        "desktop",
-    ]);
-    return devices.every((device) => devicesSet.has(device.toLowerCase()));
+  const devicesSet = new Set([
+    "console",
+    "mobile",
+    "tablet",
+    "smarttv",
+    "wearable",
+    "embedded",
+    "desktop",
+  ]);
+  return devices.every((device) => devicesSet.has(device.toLowerCase()));
 }
 
 function countryValidator(countries) {
-    return countries.every((country) => !!iso.whereAlpha2(country));
+  return countries.every((country) => !!iso.whereAlpha2(country));
 }
 
 module.exports = model("Experiment", experimentSchema);

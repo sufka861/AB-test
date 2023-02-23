@@ -5,7 +5,6 @@ const Util = require("./utils");
 
 const featureFlagExpType = "f-f";
 
-
 const checkExperimentTypeAndExecExperiment = async (
   experimentID,
   endUserReq
@@ -22,7 +21,9 @@ const checkExperimentTypeAndExecExperiment = async (
     await ExperimentStorage.incCallCount(experiment._id);
     return experimentLogic(endUserReq, experiment);
   }
-  return type ===featureFlagExpType ? { OFF: false } : { C: experiment.variantsAB.C };
+  return type === featureFlagExpType
+    ? { OFF: false }
+    : { C: experiment.variantsAB.C };
 };
 
 module.exports = {
