@@ -17,6 +17,7 @@ const experimentStatusUpdate =async(startTime = new Date(), endTime = new Date()
           // Check if the current time is after the time interval
           else if (currentTime > end) {
             console.log('ended')
+            job.stop();
             let experiments = await ExperimentRepository.update(experimentId, {status: "ended"})
           }
 
