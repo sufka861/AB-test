@@ -54,7 +54,6 @@ index.post('/terminate',(req,res,next) => {
 
 
 // Routes goes here!
-
 index.use("/test", testRouter);
 index.use("/user", userRouter);
 index.use("/experiments", experimentRouter);
