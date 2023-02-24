@@ -14,12 +14,13 @@ const { errorHandler } = require("./middleware/errorHandler.mw");
 const logPath = path.join(__dirname, "logs", "http.log");
 const port = process.env.PORT || 3000;
 const { experimentRouter } = require("./router/experiment.router");
-// const { testRouter } = require("./router/external.routes");
+const { testRouter } = require("./router/external.routes");
 const { userRouter } = require("./router/user.routes");
 const statsRouter = require("./router/stats.router");
 const {goalRouter} = require("./router/goal.router");
-const { experimentStatusUpdate } = require("./middleware/cron.job");
+const {experimentStatusUpdate} = require("./middleware/cron.job");
 
+experimentStatusUpdate();
 index.use(express.json());
 index.use(express.urlencoded({ extended: true }));
 index.use(
@@ -37,7 +38,6 @@ index.use(
   })
 );
 
-index.use(experimentStatusUpdate);
 // // this api to test node crone work
 // index.use("/testCrone",(req,res,next)=>{
 //   experimentStatusUpdate(req.body.startTime, req.body.endTime ,true )
@@ -53,7 +53,7 @@ index.use(experimentStatusUpdate);
 
 
 // Routes goes here!
-// index.use("/test", testRouter);
+index.use("/test", testRouter);
 index.use("/user", userRouter);
 index.use("/experiments", experimentRouter);
 index.use("/goal", goalRouter);
