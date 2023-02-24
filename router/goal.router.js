@@ -16,3 +16,4 @@ goalRouter.put("/variantCount/:id", goalController.incVariantByGoalID);
 goalRouter.delete("/:id", goalController.deleteGoal);
 
 module.exports = {goalRouter};
+

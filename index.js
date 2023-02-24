@@ -23,6 +23,7 @@ const port = process.env.PORT || 3000;
 
 //logger core teamm
 const Logger = require('abtest-logger');
+//must uncomment line 27
 // const abtestlogger = new Logger('amqps://qdniwzza:a-yzSrHM7aPJ-ySEYMc7trjzvs00QJ5b@rattlesnake.rmq.cloudamqp.com/qdniwzza');
 console.log(abtestlogger)
 const logsFunctions=async() => {

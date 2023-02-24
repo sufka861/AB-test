@@ -5,3 +5,4 @@ const { runTest } = require("../controller/external.controller");
 testRouter.post("/test", runTest);
 
 module.exports = { testRouter };
+
