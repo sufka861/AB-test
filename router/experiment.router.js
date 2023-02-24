@@ -16,6 +16,7 @@ experimentRouter.get('/:experimentId', experimentController.getExperimentById);
 
 experimentRouter.put('/:experimentId', experimentController.updateExperimentsByID);
 experimentRouter.put('/:experimentId/:goalId', experimentController.addGoalToExperiment);
+experimentRouter.put('/terminate/:experimentId', experimentController.terminateExperiment);
 
 experimentRouter.delete('/:experimentId/:goalId', experimentController.removeGoalFromExperiment);
 experimentRouter.delete('/:experimentId', experimentController.deleteExperimentsByID);

@@ -37,18 +37,19 @@ index.use(
   })
 );
 
-// this api to test node crone work  
-index.use("/testCrone",(req,res,next)=>{
-  experimentStatusUpdate(req.body.startTime, req.body.endTime ,true )
-  res.send("Test Node cron job ")
-})
-
-
-// make api that terminate the crone  if user want to stop the job
-index.post('/terminate',(req,res,next) => {
-  experimentStatusUpdate(undefined , undefined,false )
-  res.send('Terminate the Job ')
-})
+index.use(experimentStatusUpdate);
+// // this api to test node crone work
+// index.use("/testCrone",(req,res,next)=>{
+//   experimentStatusUpdate(req.body.startTime, req.body.endTime ,true )
+//   res.send("Test Node cron job ")
+// })
+//
+//
+// // make api that terminate the crone  if user want to stop the job
+// index.post('/terminate',(req,res,next) => {
+//   experimentStatusUpdate(undefined , undefined,false )
+//   res.send('Terminate the Job ')
+// })
 
 
 // Routes goes here!

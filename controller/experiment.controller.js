@@ -86,6 +86,13 @@ const removeGoalFromExperiment = async (req,res) =>{
     res.status(200).json(result);
 }
 
+const terminateExperiment = async (req,res) => {
+    if (!req.params.experimentId) throw new PropertyNotFound("experimentId");
+    const result = await ExperimentRepository.update(req.params.experimentId, {status: "terminated"})
+    if (!result)  throw new ServerUnableError("Update experiment status to terminated")
+    res.status(200).send(result);
+}
+
 module.exports = {
     getAllExperiments,
     getExperimentById,
@@ -96,5 +103,6 @@ module.exports = {
     updateExperimentsByID,
     deleteExperimentsByID,
     addGoalToExperiment,
-    removeGoalFromExperiment
+    removeGoalFromExperiment,
+    terminateExperiment
 }
