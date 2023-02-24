@@ -1,5 +1,6 @@
 const MongoStorage = require("../db/mongo.storage");
 const validateDate = require("validate-date");
+const {mongoose} = require("mongoose");
 
 module.exports = new (class ExperimentsRepository extends MongoStorage {
   constructor() {
@@ -44,7 +45,7 @@ module.exports = new (class ExperimentsRepository extends MongoStorage {
 
 
   async incCallCount(id) {
-    return await this.update(id, { $inc: { callCount: 1 } }).populate({path: 'goals'});
+    return await this.update(id, { $inc: { callCount: 1, monthly_call_count: 1 } }).populate({path: 'goals'});
   }
 
   async incReqCount(id, attributes) {
@@ -68,6 +69,17 @@ module.exports = new (class ExperimentsRepository extends MongoStorage {
   }
   async removeGoal(experimentId, goalId){
     return await this.update(experimentId, {$pull: {goals: goalId}}).populate({path: 'goals'});
+  }
+
+  async getMonthlyCalls(accountID){
+    return await this.Model.aggregate([
+        { $match: { accountId: mongoose.Types.ObjectId(accountID) } },
+        { $group: { _id: "$accountId", total_calls: { $sum: "$monthlyCallCount" } } }
+    ])
+  }
+
+  async resetMonthlyCallCount() {
+    return await Experiment.updateMany({}, { $set: { monthlyCallCount: 0 } });
   }
 
 })();
