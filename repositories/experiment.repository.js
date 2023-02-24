@@ -47,7 +47,8 @@ module.exports = new (class ExperimentsRepository extends MongoStorage {
     return await this.update(id, { $inc: { callCount: 1 } }).populate({path: 'goals'});
   }
 
-  async incReqCount(id, req) {
+  async incReqCount(id, attributes) {
+    //MODIFY
     return await this.update(id, { $inc: { test_attributes: 1 } });
   }
 
