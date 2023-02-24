@@ -1,9 +1,9 @@
 const ExperimentRepository = require("../repositories/experiment.repository");
-
 const {PropertyNotFound} = require("../errors/NotFound.errors");
 const {ServerUnableError} = require("../errors/internal.errors");
 const {bodyValidator} = require("../validators/body.validator");
 const {BodyNotSent} = require("../errors/BadRequest.errors");
+const {readFile} = require ("fs/promises");
 
 const getAllExperiments = async (req, res) => {
     const result = await ExperimentRepository.find();
@@ -97,7 +97,9 @@ const allowChangeAttribute = async (req, res) => {
 }
 
 const getFeaturesList = async (req, res) => {
-
+    const features = JSON.parse(await readFile(__dirname + "/../db/features.list.json", "utf8"));
+    if (!features) throw new ServerUnableError("getFeaturesList");
+    res.status(200).json(features);
 }
 
 module.exports = {
