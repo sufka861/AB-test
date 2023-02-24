@@ -45,7 +45,7 @@ module.exports = new (class ExperimentsRepository extends MongoStorage {
 
 
   async incCallCount(id) {
-    return await this.update(id, { $inc: { callCount: 1, monthly_call_count: 1 } }).populate({path: 'goals'});
+    return await this.update(id, { $inc: { callCount: 1, monthlyCallCount: 1 } }).populate({path: 'goals'});
   }
 
   async getCallCount(id) {
@@ -74,7 +74,7 @@ module.exports = new (class ExperimentsRepository extends MongoStorage {
   }
 
   async resetMonthlyCallCount() {
-    return await Experiment.updateMany({}, { $set: { monthlyCallCount: 0 } });
+    return await this.Model.updateMany({}, { $set: { monthlyCallCount: 0 } });
   }
 
 })();
