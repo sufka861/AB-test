@@ -49,9 +49,10 @@ module.exports = new (class ExperimentsRepository extends MongoStorage {
   }
 
   async incAttributeReqCount(id, defAttributes, customAttributes) {
-
-    this.updateMany({_id : id},{$inc: `d`} )
-    // return await this.update(id, { $inc: { testAttributes: 1 } });
+    const {country, device, browser} = defAttributes;
+    const experiment = await this.retrieve(id);
+    let index = experiment.testAttributes.location.indexOf({value: country});
+    this.updateMany({_id : id},{$inc: {`testAttributes.location.$[${index}].valueReqCount`: 1}});
   }
 
   async getCallCount(id) {
