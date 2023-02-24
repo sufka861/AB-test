@@ -47,8 +47,8 @@ const checkAttributes = (endUserReq, experiment, next) => {
                 browser === experiment.testAttributes.browser[0] &&
                 device === experiment.testAttributes.device[0];
             //GET CUSTOM ATTRIBUTE
-            const customAttributes = []
-            const attributes = [result, customAttributes]
+            const customAttributes = endUserReq.customAttributes;
+            const attributes = [geo.country, browser, device, ...customAttributes]
             const incReq = incReqCount(experiment.experimentId, attributes);
             return result;
         } else return false;

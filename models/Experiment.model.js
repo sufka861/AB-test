@@ -4,23 +4,16 @@ const iso = require("iso-3166-1"); // used to validate country code
 const attributeSchema = new Schema({
     key: {
         type: String,
-        unique: true,
         required: true,
     },
     value: {
-        type: [String],
+        type: [{
+            attributeName: String,
+            attributeReqCount: {type: Number, default: 0, min: 0, require: true},
+        }],
         validate: {
-            validator: (values) => values.length > 0,
-            message: "At least one value must be provided"
-        }
-    },
-    reqCounter: {
-        type: Number,
-        default: 0,
-        required: true,
-        validate: {
-            validator: (counter) => counter >= 0 && counter % 1 === 0,
-            message: 'counter value must be a positive whole number'
+            validator: (values) => values.length > 0 && values.every((value)=> value.attributeReqCount % 1 === 0),
+            message: "At least one value must be provided, and reqCount must be a whole number"
         }
     }
 })
@@ -37,20 +30,14 @@ const experimentSchema = new Schema(
         },
         testAttributes: {
             location: {
-                type: [{
-                  locationName: String,
-                  locationCount: {type: Number, default: 0, min: 0},
-                }],
+                type: [attributeSchema],
                 validate: {
                     validator: countryValidator,
                     message: () => `Invalid country code`,
                 },
             },
             device: {
-                type: [{
-                  deviceName: String,
-                  deviceCount: {type: Number, default: 0, min: 0},
-                }],
+                type: [attributeSchema],
                 validate: {
                     validator: deviceValidator,
                     message: () => `Invalid device`,
@@ -58,10 +45,7 @@ const experimentSchema = new Schema(
                 lowercase: true,
                 trim: true,
             },
-            browser: [{
-              browserName: String,
-              browserCount: {type: Number, default: 0, min: 0},
-            }],
+            browser: [attributeSchema],
             customAttributes: {
                 type: [attributeSchema],
                 default: null,

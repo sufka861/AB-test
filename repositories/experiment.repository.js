@@ -45,12 +45,14 @@ module.exports = new (class ExperimentsRepository extends MongoStorage {
 
 
   async incCallCount(id) {
-    return await this.update(id, { $inc: { callCount: 1, monthly_call_count: 1 } }).populate({path: 'goals'});
+    return await this.update(id, { $inc: { callCount: 1, monthlyCallCount: 1 } }).populate({path: 'goals'});
   }
 
   async incReqCount(id, attributes) {
-    //MODIFY
-    return await this.update(id, { $inc: { test_attributes: 1 } });
+    attributes.forEach((attribute)=> {
+
+    })
+    return await this.update(id, { $inc: { testAttributes: 1 } });
   }
 
   async getCallCount(id) {
@@ -74,7 +76,7 @@ module.exports = new (class ExperimentsRepository extends MongoStorage {
   async getMonthlyCalls(accountID){
     return await this.Model.aggregate([
         { $match: { accountId: mongoose.Types.ObjectId(accountID) } },
-        { $group: { _id: "$accountId", total_calls: { $sum: "$monthlyCallCount" } } }
+        { $group: { _id: "$accountId", totalCalls: { $sum: "$monthlyCallCount" } } }
     ])
   }
 
