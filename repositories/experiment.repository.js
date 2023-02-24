@@ -69,7 +69,7 @@ module.exports = new (class ExperimentsRepository extends MongoStorage {
   async getMonthlyCalls(accountID){
     return await this.Model.aggregate([
         { $match: { accountId: mongoose.Types.ObjectId(accountID) } },
-        { $group: { _id: "$accountId", total_calls: { $sum: "$monthlyCallCount" } } }
+        { $group: { _id: "$accountId", totalCalls: { $sum: "$monthlyCallCount" } } }
     ])
   }
 
