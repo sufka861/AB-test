@@ -6,7 +6,6 @@ module.exports = new (class ExperimentsRepository extends MongoStorage {
     super("experiment");
   }
 
-  
   find() {
     return this.Model.find({}).populate({path: 'goals'});
   }
