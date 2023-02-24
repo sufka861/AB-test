@@ -1,5 +1,5 @@
 const chai = require('chai');
-const { featureCheckAttributes } = require('../Service/feature.logic');
+const { featureCheckAttributes } = require('../../Service/feature.logic');
 const expect = chai.expect;
 
 describe('featureCheckAttributes', () => {
