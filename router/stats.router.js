@@ -5,6 +5,7 @@ const statsRouter = new Router();
 statsRouter.get("/userVariant/:id", statsController.getUsersStats)
 statsRouter.get('/:id',statsController.getStatistics);
 statsRouter.get('/testsPerMonth/:accountId',statsController.getTestsPerMonth);
+statsRouter.get('/variantSuccessCount/:experimentId/:goalId',statsController.getVariantSuccessCount);
 
 
 

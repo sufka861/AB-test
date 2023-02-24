@@ -3,6 +3,7 @@ const NotFoundError = require("../errors/NotFound.errors");
 const ServerError = require("../errors/internal.errors");
 const ExperimentRepository = require("../repositories/experiment.repository");
 const UserRepository = require("../repositories/user.repository");
+const GoalRepository = require("../repositories/goal.repository")
 const {mongoose} = require("mongoose");
 
 const userPercentageVariantByExperiment = async (experimentID, variant) => {
@@ -83,8 +84,37 @@ const getTestsPerMonth = async (req, res) => {
     }
 }
 
+const getVariantSuccessCount = async (req, res) => {
+
+    const goalID = req.params.goalId;
+    const experimentID = req.params.experimentId;
+    if (!mongoose.isValidObjectId(goalID)) throw new ValidationError.MissingPropertyError("goal ID");
+    if (!mongoose.isValidObjectId(experimentID)) throw new ValidationError.MissingPropertyError("experiment ID");
+    const result = await GoalRepository.getVariantSuccessCount(goalID);
+    const callCount = await ExperimentRepository.getCallCount(experimentID);
+    if(callCount === 0)
+        callCount = 1;
+    if (!result) {
+        throw new ServerError.ServerUnableError("calculate variant success count");
+    } else {
+    console.log(result)
+    result.A && (result.A /= callCount);
+    result.B && (result.B /= callCount);
+    result.C && (result.C /= callCount);
+    result.ON && (result.ON /= callCount);
+    result.OFF && (result.OFF /= callCount);
+
+        res.status(200).send({
+            tests: result
+        })
+    }
+}
+
+
+
 module.exports = {
     getStatistics,
     getUsersStats,
-    getTestsPerMonth
+    getTestsPerMonth,
+    getVariantSuccessCount
 }
