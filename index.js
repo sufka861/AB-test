@@ -23,7 +23,7 @@ const port = process.env.PORT || 3000;
 
 //logger core team
 const Logger = require('abtest-logger');
-const abtestlogger = new Logger('mongodb+srv://coreteam:bVZR3Is9VfhlDFv1@cluster0.1cxlyo9.mongodb.net/logger?retryWrites=true&w=majority');
+const abtestlogger = new Logger('amqps://qdniwzza:a-yzSrHM7aPJ-ySEYMc7trjzvs00QJ5b@rattlesnake.rmq.cloudamqp.com/qdniwzza');
 console.log(abtestlogger)
 const logsFunctions=async() => {
 
