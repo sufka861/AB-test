@@ -48,11 +48,10 @@ module.exports = new (class ExperimentsRepository extends MongoStorage {
     return await this.update(id, { $inc: { callCount: 1, monthlyCallCount: 1 } }).populate({path: 'goals'});
   }
 
-  async incReqCount(id, attributes) {
-    attributes.forEach((attribute)=> {
+  async incAttributeReqCount(id, defAttributes, customAttributes) {
 
-    })
-    return await this.update(id, { $inc: { testAttributes: 1 } });
+    this.updateMany({_id : id},{$inc: `d`} )
+    // return await this.update(id, { $inc: { testAttributes: 1 } });
   }
 
   async getCallCount(id) {
@@ -81,7 +80,7 @@ module.exports = new (class ExperimentsRepository extends MongoStorage {
   }
 
   async resetMonthlyCallCount() {
-    return await Experiment.updateMany({}, { $set: { monthlyCallCount: 0 } });
+    return await ExperimentsRepository.updateMany({}, { $set: { monthlyCallCount: 0 } });
   }
 
 })();

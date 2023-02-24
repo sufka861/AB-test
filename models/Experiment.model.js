@@ -1,23 +1,15 @@
-const {Schema, model, ObjectId,isValidObjectId} = require("mongoose");
+const {Schema, model, ObjectId, isValidObjectId} = require("mongoose");
 const iso = require("iso-3166-1"); // used to validate country code
 
 const attributeSchema = new Schema({
-    key: {
-        type: String,
-        required: true,
-    },
-    value: {
-        type: [{
-            attributeName: String,
-            attributeReqCount: {type: Number, default: 0, min: 0, require: true},
-        }],
-        validate: {
-            validator: (values) => values.length > 0 && values.every((value)=> value.attributeReqCount % 1 === 0),
+    value: String,
+    valueReqCount: {
+        type: Number, default: 0, min: 0, required: true, validate: {
+            validator: (reqCount) => reqCount % 1 === 0,
             message: "At least one value must be provided, and reqCount must be a whole number"
         }
     }
-})
-
+}, { _id : false })
 
 const experimentSchema = new Schema(
     {
@@ -46,11 +38,13 @@ const experimentSchema = new Schema(
                 trim: true,
             },
             browser: [attributeSchema],
-            customAttributes: {
-                type: [attributeSchema],
-                default: null,
-            }
         },
+        customAttributes: {
+            type: Map,
+            of: [attributeSchema],
+            default: null,
+        },
+
         trafficPercentage: {type: Number, min: 0, max: 100, required: true},
         callCount: {type: Number, default: 0, min: 0, required: true},
         monthlyCallCount: {type: Number, default: 0, min: 0, required: true},
@@ -126,20 +120,20 @@ const experimentSchema = new Schema(
 );
 
 function deviceValidator(devices) {
-  const devicesSet = new Set([
-    "console",
-    "mobile",
-    "tablet",
-    "smarttv",
-    "wearable",
-    "embedded",
-    "desktop",
-  ]);
-  return devices.every((device) => devicesSet.has(device.toLowerCase()));
+    const devicesSet = new Set([
+        "console",
+        "mobile",
+        "tablet",
+        "smarttv",
+        "wearable",
+        "embedded",
+        "desktop",
+    ]);
+    return devices.every((device) => devicesSet.has(device.value.toLowerCase()));
 }
 
 function countryValidator(countries) {
-  return countries.every((country) => !!iso.whereAlpha2(country));
+    return countries.every((country) => !!iso.whereAlpha2(country.value));
 }
 
 module.exports = model("Experiment", experimentSchema);

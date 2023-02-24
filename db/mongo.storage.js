@@ -63,4 +63,8 @@ module.exports = class MongoStorage {
       runValidators: true,
     });
   }
+  updateMany(query, data)
+  {
+    return this.Model.update(query , data, {multi: true})
+  }
 };
