@@ -132,9 +132,7 @@ const updateExperimentWithGoalsByExpID = async (req, res) => {
   const experimentID = req.params.experimentId;
   const {experiment,goals} = req.body;
   if (!experiment || !goals) throw new PropertyNotFound("Invalid request body for editing experiment");
-  console.log(goals)
   const updatedGoals = await Promise.all( goals.map(async ({_id, ...updatedGoalData}) => await GoalRepository.update(_id, updatedGoalData)));
-  console.log(updatedGoals)
   if(!updatedGoals.every((goal) =>!!goal)) throw new ServerUnableError("updating goals");
   const updatedExperiment = await ExperimentRepository.update(experimentID, experiment)
   if (!updatedExperiment) throw new ServerUnableError("updateExperimentsByID")
