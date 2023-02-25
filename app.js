@@ -20,6 +20,17 @@ const statsRouter = require("./router/stats.router");
 const {goalRouter} = require("./router/goal.router");
 const {experimentStatusUpdate} = require("./Service/cron.job");
 
+
+
+const Logger = require('abtest-logger');
+const loggerr = new Logger("amqps://qdniwzza:a-yzSrHM7aPJ-ySEYMc7trjzvs00QJ5b@rattlesnake.rmq.cloudamqp.com/qdniwzza");
+const logermethods = async()=>{
+  await logger.info('inforamtion about the code')
+  await logger.error('errors')
+  await logger.debug('debug purposes')
+}
+
+
 experimentStatusUpdate();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
