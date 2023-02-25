@@ -18,7 +18,7 @@ const { experimentRouter } = require("./router/experiment.router");
 const { userRouter } = require("./router/user.routes");
 const statsRouter = require("./router/stats.router");
 const {goalRouter} = require("./router/goal.router");
-const {experimentStatusUpdate} = require("./middleware/cron.job");
+const {experimentStatusUpdate} = require("./Service/cron.job");
 
 experimentStatusUpdate();
 index.use(express.json());
