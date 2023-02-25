@@ -36,7 +36,10 @@ The purpose of this project is to identify any change in the webpage to maximize
 24. [x] Open a browser page and go to https://ab-test-bvtg.onrender.com/
 25. [x] Make sure you have our .env file containing the sensitive info of our system account.
 26. [x] Open a browser page and go to https://ab-test-bvtg.onrender.com/
-27. [x] Full documentation of the API calls can be seen at: https://documenter.getpostman.com/view/24139741/2s8Z711C7C
+
+> **API reference**
+
+ Full documentation of the API calls can be seen at: https://documenter.getpostman.com/view/24139741/2s8Z711C7C
 
 
 > **Instructions**
@@ -54,10 +57,16 @@ The purpose of this project is to identify any change in the webpage to maximize
 12.[x] express-async-errors package - wraps the controllers in try/catch statement automatically (no implementation needed), and calls the next(error) function in the catch block with the error thrown. the next function will "fall" into the errorHandler.
 13.[x] errorHandler - a function that is used at the end of the server that catches all the errors thrown in the controllers
 14.[x] Custom Errors - in the errors' directory. Classes that extends Error class, with status and message to pass to the error handier at the end. More can be added if we need them.
-15. [x] Test - contain all the tests , use [npm run test] to run all the test and check coverage and results.
+
+> **Tests**>
+
+ All tests were done using Mocha,Chai and sinos.
+you can find all the tests under the folder "test".
+ use [npm run test] to run all the test and check coverage and results.
 
 > **How to Use**
 
+NOTE:
 `Create AB Test Experiment:`
 1. Open Homepage.html.
 2. Go to "New Experiment"
@@ -65,7 +74,7 @@ The purpose of this project is to identify any change in the webpage to maximize
     * Name
     * Type - choose A/B test.
     * Duration
-    * choose 3 attributes.
+    * choose 3 attributes and costume attribute. 
     * traffic
     * variants - 2
 4. Click on "Create" button.
@@ -81,7 +90,7 @@ The purpose of this project is to identify any change in the webpage to maximize
    * Name
    * Type - choose Feature Flag.
    * Duration
-   * choose 3 attributes.
+   * choose 3 attributes and costume attribute.
    * traffic
    * variants - 3
    * goal
@@ -144,6 +153,9 @@ NOTE: if you created AB test Experiment make sure you have 3 variants,if you cre
 3. Special 404 page will show and redirect back to home page if the router is given a wrong path.
 4. 404 page is server side rendered.
 5. Try accessing an invalid address in the url and see for yourself ;)
+
+
+
 
 > **Group members 😇**
 
