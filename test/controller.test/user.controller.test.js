@@ -11,12 +11,6 @@ const {
     getUserExperiment,
 } = require("../../controller/user.controller");
 
-describe("checkAttributes", () => {
-    it("should do something", () => {
-        // Test case here
-    });
-});
-
 describe("getAllUsers", () => {
     it("should return all users", async () => {
         const res = {
@@ -24,7 +18,7 @@ describe("getAllUsers", () => {
         };
         const users = await getAllUsers({}, res);
         expect(users).to.be.an("array");
-        expect(users.length).to.equal(2); // replace 2 with expected number of users
+        expect(users.length).to.equal(2);
     });
 });
 
@@ -47,7 +41,6 @@ describe("setCookie", () => {
             cookie: () => {},
         };
         setCookie({}, res);
-        // Test that a cookie was set
     });
 });
 

@@ -1,6 +1,6 @@
 const { expect } = require("chai");
 const sinon = require("sinon");
-const {createExperimentWithGoals} = require ("../../controller/experiment.creation.controller");
+const {createExperimentWithGoals} = require ("../../controller/external.controller");
 const ExperimentRepository = require("../../repositories/experiment.repository");
 const GoalRepository = require("../../repositories/goal.repository");
 const {

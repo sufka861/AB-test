@@ -26,9 +26,7 @@ describe('Test Router', () => {
             const req = { body: { goalId: 'goal1', value: 100 } };
             const res = { send: sinon.stub() };
             const next = sinon.stub();
-
             sinon.replace(reportGoal, 'reportGoal', reportGoalStub);
-
             return testRouter(req, res, next).then(() => {
                 expect(reportGoalStub.calledOnceWith(req.body.goalId, req.body.value)).to.be.true;
                 expect(res.send.calledOnceWith('goal reported')).to.be.true;
