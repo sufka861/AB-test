@@ -49,7 +49,7 @@ const checkAttributes = (endUserReq, experiment, next) => {
             const customAttributes = endUserReq.customAttributes;
             const attributes = {"location": geo.country, "browser": browser, "device": device, ...customAttributes};
             const attReqCountResult = incAttributeReqCount(experiment.experimentId, attributes);
-            if (!attReqCountResult) throw new ServerUnableError("attReqCountResult");
+            // if (!attReqCountResult) throw new ServerUnableError("attReqCountResult");
             return result;
         } else return false;
     } catch (error) {

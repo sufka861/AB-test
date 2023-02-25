@@ -83,7 +83,7 @@ module.exports = new (class ExperimentsRepository extends MongoStorage {
         }
 
 
-        return await this.updateMany(filter, update, options).catch(err => throw new ServerUnableError(err.message));
+        return await this.updateMany(filter, update, options);
 
     }
 
