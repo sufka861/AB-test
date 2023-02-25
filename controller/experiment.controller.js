@@ -62,11 +62,12 @@ const getExperimentsByDate = async (req, res) => {
   const year = req.query.year;
   const month = req.query.month;
   const result = await ExperimentRepository.findByDate(year, month);
-  if (!result) throw new ServerUnableError("getExperimentsByDate");
-  res.status(200).json(result);
+  if(result === 0 || result) {
+    res.status(200).json({result})
+  } else {
+    throw new ServerUnableError("getExperimentsByDate");
+  }
 };
-
-
 
 const deleteExperimentsByID = async (req, res) => {
   if (!req.params.experimentId) throw new PropertyNotFound("experimentId");
@@ -92,6 +93,7 @@ const terminateExperiment = async (req, res) => {
   });
   if (!result)
     throw new ServerUnableError("Update experiment status to terminated");
+  res.status(200).json({message: 'terminated successfully'})
 };
 const removeGoalFromExperiment = async (req, res) => {
   if (!req.params.experimentId) throw new PropertyNotFound("experimentId");

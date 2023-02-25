@@ -13,8 +13,8 @@ experimentRouter.get("/allowChangeAttribute/:accountId", experimentController.al
 experimentRouter.get('/features', experimentController.getFeaturesList);
 experimentRouter.get('/:experimentId', experimentController.getExperimentById);
 experimentRouter.get("/features", experimentController.getFeaturesList);
-experimentRouter.put("/:experimentId/:goalId", experimentController.addGoalToExperiment);
 experimentRouter.put("/terminate/:experimentId", experimentController.terminateExperiment);
+experimentRouter.put("/:experimentId/:goalId", experimentController.addGoalToExperiment);
 experimentRouter.put('/:experimentId', externalController.updateExperimentWithGoalsByExpID);
 experimentRouter.post('/new', externalController.createExperimentWithGoals);
 experimentRouter.delete("/:experimentId/:goalId", experimentController.removeGoalFromExperiment);

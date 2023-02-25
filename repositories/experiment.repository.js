@@ -3,6 +3,7 @@ const validateDate = require("validate-date");
 const {mongoose} = require("mongoose");
 const {log} = require("winston");
 const {ServerUnableError} = require("../errors/internal.errors");
+const moment = require('moment');
 
 module.exports = new (class ExperimentsRepository extends MongoStorage {
     constructor() {
@@ -32,18 +33,22 @@ module.exports = new (class ExperimentsRepository extends MongoStorage {
         return this.Model.findById(id).populate({path: 'goals'});
     }
 
-    findByDate(year, month) {
-        if (validateDate(`${month}/01/${year}`)) {
-            const start = new Date(year, month, 1);
-            const end = new Date(year, month, 31);
-            return this.Model.countDocuments({
-                endTime: {
+    async findByDate(year, month) {
+        const adjustedMonth = Number(month) - 1;
+        if (validateDate(`${adjustedMonth}/01/${year}`)) {
+            const start = new Date(year, adjustedMonth, 1);
+            const end = new Date(year, adjustedMonth, 31);
+            const result = await this.Model.countDocuments({
+                 endTime: {
                     $gte: start,
                     $lte: end,
                 },
             }).populate({path: 'goals'});
+            return result;
         }
     }
+
+
 
 
     async incCallCount(id) {
@@ -116,5 +121,83 @@ module.exports = new (class ExperimentsRepository extends MongoStorage {
   async resetMonthlyCallCount() {
     return await this.Model.updateMany({}, { $set: { monthlyCallCount: 0 } });
   }
+
+  async getActiveExperimentsByDate(month, year){
+    const start = moment.utc([year, month - 1, 1]).startOf('month');
+    const end = moment.utc([year, month - 1, 1]).endOf('month');
+    try {
+        const result = await this.Model.countDocuments({
+          status: 'active',
+          'duration.startTime': { $lte: end.toDate() },
+          $or: [
+            { 'duration.endTime': { $gte: start.toDate() } },
+            { 'duration.endTime': { $type: 'null' } },
+          ],
+        });
+        return result;
+    } catch {
+    return null
+    }
+  }
+
+  async getExperimentCountsByAttributes() {
+    const result = await this.Model.aggregate([
+      {
+        $unwind: "$testAttributes.device"
+      },
+      {
+        $group: {
+          _id: {
+            device: "$testAttributes.device"
+          },
+          count: { $sum: 1 }
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          device: "$_id.device",
+          count: 1
+        }
+      },
+      {
+        $sort: {
+          device: 1
+        }
+      }
+    ]).exec();
+    const locationResult = await this.Model.aggregate([
+      {
+        $unwind: "$testAttributes.location"
+      },
+      {
+        $group: {
+          _id: {
+            location: "$testAttributes.location"
+          },
+          count: { $sum: 1 }
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          location: "$_id.location",
+          count: 1
+        }
+      },
+      {
+        $sort: {
+          location: 1
+        }
+      }
+    ]).exec();
+    return { devices: result, locations: locationResult };
+  }
+
+
+
+
+
+
 
 })();
