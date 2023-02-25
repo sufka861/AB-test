@@ -12,15 +12,13 @@ experimentRouter.get('/date', experimentController.getExperimentsByDate);
 experimentRouter.get("/allowChangeAttribute/:accountId", experimentController.allowChangeAttribute);
 experimentRouter.get('/features', experimentController.getFeaturesList);
 experimentRouter.get('/:experimentId', experimentController.getExperimentById);
-
-
+experimentRouter.get("/features", experimentController.getFeaturesList);
+experimentRouter.put("/:experimentId/:goalId", experimentController.addGoalToExperiment);
+experimentRouter.put("/terminate/:experimentId", experimentController.terminateExperiment);
 experimentRouter.put('/:experimentId', externalController.updateExperimentWithGoalsByExpID);
-experimentRouter.put('/:experimentId/:goalId', experimentController.addGoalToExperiment);
-
-experimentRouter.delete('/:experimentId/:goalId', experimentController.removeGoalFromExperiment);
-experimentRouter.delete('/:experimentId', experimentController.deleteExperimentsByID);
-
 experimentRouter.post('/new', externalController.createExperimentWithGoals);
+experimentRouter.delete("/:experimentId/:goalId", experimentController.removeGoalFromExperiment);
+experimentRouter.delete("/:experimentId", experimentController.deleteExperimentsByID);
 
 module.exports = {
     experimentRouter
