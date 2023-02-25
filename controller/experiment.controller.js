@@ -69,8 +69,6 @@ const getExperimentsByDate = async (req, res) => {
   }
 };
 
-
-
 const deleteExperimentsByID = async (req, res) => {
   if (!req.params.experimentId) throw new PropertyNotFound("experimentId");
   const experimentID = req.params.experimentId;
