@@ -97,7 +97,7 @@ const reportGoal = async (req, res) => {
   const user = await getUserByUuid(req, res);
   if (!user) throw new UserUnknown();
   const experimentsList = getUserExperiment(user);
-  for (exp of experimentsList) {
+  for (const exp of experimentsList) {
     if (exp.experimentId.toString() === experimentId) {
       const variant = [...exp.variant.keys()];
       const response = await GoalRepository.incVariantSuccessCount(
