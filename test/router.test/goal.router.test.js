@@ -1,21 +1,48 @@
 const { expect } = require('chai');
-const sinon = require('sinon');
-const { goalRouter } = require('../../router/goal.router');
 const goalController = require('../../controller/goal.controller');
 
-
 describe('Goal Controller', () => {
-    it('should retrieve a goal by ID', () => {
+    describe('retrieveGoalById', () => {
+        it('should return the correct goal when given a valid id', async () => {
+            // Arrange
+            const req = {
+                params: {
+                    id: '1'
+                }
+            };
+            const res = {
+                json: (data) => {
+                    expect(data).to.deep.equal({ id: '1', name: 'My Goal' });
+                }
+            };
 
-        const req = { params: { id: 1 } };
-        const res = { json: sinon.spy() };
-        const next = sinon.spy();
-        sinon.stub(goalController, 'retrieveGoalById').resolves({ id: 1, name: 'test' });
+            // Act
+            await goalController.retrieveGoalById(req, res);
 
-        goalRouter.handle(req, res, next);
+            // Assert
+            expect(res.statusCode).to.equal(200);
+        });
 
-        expect(goalController.retrieveGoalById.calledOnceWith(req.params.id)).to.be.true;
-        expect(res.json.calledOnceWith({ id: 1, name: 'test' })).to.be.true;
-        expect(next.called).to.be.false;
+        it('should return a 404 error when given an invalid id', async () => {
+            // Arrange
+            const req = {
+                params: {
+                    id: '999'
+                }
+            };
+            const res = {
+                status: (code) => {
+                    expect(code).to.equal(404);
+                    return {
+                        send: (data) => {
+                            expect(data).to.deep.equal({ error: 'Goal not found' });
+                        }
+                    };
+                }
+            };
+
+            // Act
+            await goalController.retrieveGoalById(req, res);
+        });
     });
 });

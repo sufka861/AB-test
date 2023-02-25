@@ -23,7 +23,7 @@ describe('getStatistics', () => {
         };
 
         const req = {
-            params: { id: experimentId },
+            params: { experimentId },
         };
         const res = {
             status: sinon.spy(),
