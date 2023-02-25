@@ -4,7 +4,6 @@ const {incAttributeReqCount} = require("../repositories/experiment.repository");
 const {PropertyNotFound} = require("../errors/NotFound.errors");
 const {ServerUnableError} = require("../errors/internal.errors");
 const {v4: uuidv4, validate: uuidValidator} = require("uuid");
-const _ = require('lodash');
 
 const getClientIP = (endUserReq) => {
     const result = "176.12.223.44";
@@ -50,7 +49,7 @@ const checkAttributes = (endUserReq, experiment, next) => {
             let attributes = {"location": geo.country, "browser": browser, "device": device};
             let customAttResult;
             if (customAttributes) {
-                customAttResult = _.isEqual(customAttributes, experiment.customAttributes);
+                customAttResult = Object.values(customAttributes).includes(experiment.customAttributes)
                 attributes = {...attributes, ...customAttributes};
             }
             const attReqCountResult = incAttributeReqCount(experiment.experimentId, attributes);
