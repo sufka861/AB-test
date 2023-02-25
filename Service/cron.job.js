@@ -24,6 +24,6 @@ const experimentStatusUpdate =  ( ) => {
           await ExperimentRepository.resetMonthlyCallCount();
          });
 
-module.exports = {
+     module.exports = {
         experimentStatusUpdate,
-    }
+       }
