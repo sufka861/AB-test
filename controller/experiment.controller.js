@@ -66,13 +66,7 @@ const getExperimentsByDate = async (req, res) => {
   res.status(200).json(result);
 };
 
-const updateExperimentsByID = async (req, res) => {
-  if (!req.params.experimentId) throw new PropertyNotFound("experimentId");
-  const experimentID = req.params.experimentId;
-  const result = await ExperimentRepository.update(experimentID, req.body);
-  if (!result) throw new ServerUnableError("updateExperimentsByID");
-  res.status(200).json(result);
-};
+
 
 const deleteExperimentsByID = async (req, res) => {
   if (!req.params.experimentId) throw new PropertyNotFound("experimentId");
@@ -137,7 +131,6 @@ module.exports = {
   getExperimentsAB,
   getExperimentsFF,
   getExperimentsByDate,
-  updateExperimentsByID,
   deleteExperimentsByID,
   addGoalToExperiment,
   removeGoalFromExperiment,
