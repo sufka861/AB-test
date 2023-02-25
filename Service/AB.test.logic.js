@@ -7,6 +7,7 @@ const returnByRatio = (optionA, optionB) => {
   return 0.5 < Math.random() ? optionA : optionB;
 };
 
+
 module.exports = {
   ABcheckAttributes,
   returnByRatio
