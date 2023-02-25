@@ -117,5 +117,6 @@ module.exports = {
     addGoalToExperiment,
     removeGoalFromExperiment,
     allowChangeAttribute,
-    getFeaturesList
+    getFeaturesList,
+    terminateExperiment
 }
