@@ -66,7 +66,11 @@ you can find all the tests under the folder "test".
 
 > **How to Use**
 
-NOTE:
+NOTE!pay attention to the account type - 
+ - exclusive - the account have the option to choose - Does each experiment stand by itself and only one experiment will appear for each.
+ - Inclusive - This means that every customer has a lot of experiments
+And all the experiments together can be together for all the weird who sees them.
+
 `Create AB Test Experiment:`
 1. Open Homepage.html.
 2. Go to "New Experiment"
@@ -153,9 +157,6 @@ NOTE: if you created AB test Experiment make sure you have 3 variants,if you cre
 3. Special 404 page will show and redirect back to home page if the router is given a wrong path.
 4. 404 page is server side rendered.
 5. Try accessing an invalid address in the url and see for yourself ;)
-
-
-
 
 > **Group members 😇**
 
