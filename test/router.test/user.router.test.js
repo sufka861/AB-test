@@ -1,121 +1,99 @@
 const chai = require("chai");
 const chaiHttp = require("chai-http");
-const { expect } = chai;
+const { userRouter } = require("../routes/user.routes");
+
 chai.use(chaiHttp);
 
-const app = require("../app");
-const { userRouter } = require("../routes/user.router");
+const expect = chai.expect;
 
-describe("User Routes", () => {
-    describe("GET /users", () => {
-        it("should return all users", (done) => {
-            chai
-                .request(app)
-                .get("/users")
-                .end((err, res) => {
-                    expect(res).to.have.status(200);
-                    expect(res.body).to.be.an("array");
-                    expect(res.body.length).to.be.greaterThan(0);
-                    done();
-                });
+describe("User routes", () => {
+    describe("GET /:uuid", () => {
+        it("should return user with matching uuid", async () => {
+            const res = await chai
+                .request(userRouter)
+                .get("/abc123")
+                .send();
+
+            expect(res).to.have.status(200);
+            expect(res.body).to.have.property("uuid", "abc123");
+        });
+
+        it("should return 404 for non-existent uuid", async () => {
+            const res = await chai
+                .request(userRouter)
+                .get("/non-existent-uuid")
+                .send();
+
+            expect(res).to.have.status(404);
         });
     });
 
-    describe("GET /users/:uuid", () => {
-        it("should return a user by uuid", (done) => {
-            chai
-                .request(app)
-                .get("/users/1")
-                .end((err, res) => {
-                    expect(res).to.have.status(200);
-                    expect(res.body).to.be.an("object");
-                    expect(res.body.uuid).to.equal("1");
-                    done();
-                });
+    describe("GET /experiment/:experimentId", () => {
+        it("should return experiment for user with matching experiment ID", async () => {
+            const res = await chai
+                .request(userRouter)
+                .get("/experiment/123")
+                .send();
+
+            expect(res).to.have.status(200);
+            expect(res.body).to.have.property("experimentId", "123");
+        });
+
+        it("should return 404 for non-existent experiment ID", async () => {
+            const res = await chai
+                .request(userRouter)
+                .get("/experiment/non-existent-experiment-id")
+                .send();
+
+            expect(res).to.have.status(404);
         });
     });
 
-    describe("GET /users/experiment/:experimentId", () => {
-        it("should return users by experiment id", (done) => {
-            chai
-                .request(app)
-                .get("/users/experiment/1")
-                .end((err, res) => {
-                    expect(res).to.have.status(200);
-                    expect(res.body).to.be.an("array");
-                    expect(res.body.length).to.be.greaterThan(0);
-                    done();
-                });
+    describe("GET /set-cookie", () => {
+        it("should set a cookie", async () => {
+            const res = await chai.request(userRouter).get("/set-cookie").send();
+
+            expect(res).to.have.status(200);
+            expect(res).to.have.cookie("my-cookie");
         });
     });
 
-    describe("GET /users/set-cookie", () => {
-        it("should set a cookie", (done) => {
-            chai
-                .request(app)
-                .get("/users/set-cookie")
-                .end((err, res) => {
-                    expect(res).to.have.status(200);
-                    expect(res).to.have.cookie("cookieName");
-                    done();
-                });
+    describe("GET /cookie", () => {
+        it("should return the value of the cookie", async () => {
+            const agent = chai.request.agent(userRouter);
+
+            await agent.get("/set-cookie").send();
+
+            const res = await agent.get("/cookie").send();
+
+            expect(res).to.have.status(200);
+            expect(res.text).to.equal("cookie value");
+        });
+
+        it("should return 404 if cookie is not set", async () => {
+            const res = await chai.request(userRouter).get("/cookie").send();
+
+            expect(res).to.have.status(404);
         });
     });
 
-    describe("GET /users/cookie", () => {
-        it("should return cookie values", (done) => {
-            chai
-                .request(app)
-                .get("/users/cookie")
-                .end((err, res) => {
-                    expect(res).to.have.status(200);
-                    expect(res.body).to.be.an("object");
-                    expect(res.body.cookieName).to.equal("cookieValue");
-                    done();
-                });
-        });
-    });
+    describe("POST /", () => {
+        it("should create a new user", async () => {
+            const user = {name: "John Doe", email: "john@example.com"};
 
-    describe("POST /users", () => {
-        it("should create a new user", (done) => {
-            const newUser = {
-                firstName: "John",
-                lastName: "Doe",
-                email: "john.doe@example.com",
-            };
-            chai
-                .request(app)
-                .post("/users")
-                .send(newUser)
-                .end((err, res) => {
-                    expect(res).to.have.status(201);
-                    expect(res.body).to.be.an("object");
-                    expect(res.body.firstName).to.equal(newUser.firstName);
-                    expect(res.body.lastName).to.equal(newUser.lastName);
-                    expect(res.body.email).to.equal(newUser.email);
-                    done();
-                });
-        });
-    });
+            const res = await chai.request(userRouter).post("/").send(user);
 
-    describe("PUT /users/:uuid", () => {
-        it("should add an experiment to a user", (done) => {
-            const experiment = {
-                experimentId: "1",
-                variant: "A",
-            };
-            chai
-                .request(app)
-                .put("/users/1")
-                .send(newUser)
-                .end((err, res) => {
-                    expect(res).to.have.status(201);
-                    expect(res.body).to.be.an("object");
-                    expect(res.body.firstName).to.equal(newUser.firstName);
-                    expect(res.body.lastName).to.equal(newUser.lastName);
-                    expect(res.body.email).to.equal(newUser.email);
-                    done();
-                });
+            expect(res).to.have.status(201);
+            expect(res.body).to.have.property("name", "John Doe");
+            expect(res.body).to.have.property("email", "john@example.com");
         });
+
+        it("should return 400 for invalid user attributes", async () => {
+            const user = {name: "John Doe"}; // missing email attribute
+
+            const res = await chai.request(userRouter).post("/").send(user);
+
+            expect(res).to.have.status(400);
+        })
     })
 });

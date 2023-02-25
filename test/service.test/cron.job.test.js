@@ -1,16 +1,16 @@
 const { expect } = require('chai');
 const sinon = require('sinon');
 const cron = require('node-cron');
-const ExperimentRepository = require('../repositories/experiment.repository');
-const Experiment = require('../models/Experiment.model');
-const { experimentStatusUpdate } = require('./cronjobs');
+const Experiment = require
+const { experimentStatusUpdate } = require("../../Service/cron.job");
+const ExperimentRepository = require("../../repositories/experiment.repository");
 
 describe('experimentStatusUpdate', () => {
     let clock;
 
     beforeEach(() => {
         // Create a fake clock to control the timing of cron jobs
-        clock = sinon.useFakeTimers(new Date('2022-01-01T00:00:00.000Z').getTime());
+        clock = sinon.useFakeTimers(new Date('2022-01-01T10:00:00.000Z').getTime());
     });
 
     afterEach(() => {
@@ -24,8 +24,8 @@ describe('experimentStatusUpdate', () => {
             _id: 'experiment1',
             status: 'planned',
             duration: {
-                startTime: new Date('2022-01-01T00:00:00.000Z'),
-                endTime: new Date('2022-01-02T00:00:00.000Z'),
+                startTime: new Date('2022-01-01T10:10:00.000Z'),
+                endTime: new Date('2022-01-02T11:12:00.000Z'),
             },
         }]);
 

@@ -1,6 +1,8 @@
 const { expect } = require("chai");
 const sinon = require("sinon");
 const geoip = require("geoip-lite");
+const parser = require("ua-parser-js");
+const { v4: uuidv4, validate: uuidValidator } = require("uuid");
 const { PropertyNotFound } = require("../../errors/NotFound.errors");
 const { ServerUnableError } = require("../../errors/internal.errors");
 const {
@@ -17,6 +19,7 @@ describe("89.139.22.219", () => {
     describe("getClientIP", () => {
         it("should return a string", () => {
             const result = getClientIP({});
+            console.log(result);
             expect(result).to.be.a("string");
         });
     });
@@ -37,23 +40,19 @@ describe("89.139.22.219", () => {
             const req = "176.12.223.44";
             sinon.stub(geoip, "lookup").returns({country: "US"});
             const result = getLocation(req);
-            expect(result).to.be.an("object");
+            expect(result).to.be.an("string");
             expect(result).to.have.property("country", "US");
             geoip.lookup.restore();
+            console.log(result);
         });
     });
 
     describe("getBrowserDevice", () => {
         it("should return an object with 'browser' and 'device' properties", () => {
-            const req = {
-                headers: {
-                    "user-agent":
-                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36",
-                },
-            };
+            const req = { headers: { 'user-agent': 'Mozilla/5.0 (X11; CrOS x86_64 8172.45.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.64 Safari/537.36' } };
             const result = getBrowserDevice(req);
             expect(result).to.be.an("object");
-            expect(result).to.have.property("browser", "Chrome");
+            expect(result).to.have.property("browser", "chrome");
             expect(result).to.have.property("device", "desktop");
         });
 
@@ -88,6 +87,24 @@ describe('checkIfActive', () => {
 
     it('should return false if experiment status is not active', () => {
         const experiment = { status: 'paused' };
+        const result = checkIfActive(experiment);
+        expect(result).to.be.false;
+    });
+
+    it('should return false if experiment status is not active', () => {
+        const experiment = { status: 'planned' };
+        const result = checkIfActive(experiment);
+        expect(result).to.be.false;
+    });
+
+    it('should return false if experiment status is not active', () => {
+        const experiment = { status: 'terminated' };
+        const result = checkIfActive(experiment);
+        expect(result).to.be.false;
+    });
+
+    it('should return false if experiment status is not active', () => {
+        const experiment = { status: 'ended' };
         const result = checkIfActive(experiment);
         expect(result).to.be.false;
     });
