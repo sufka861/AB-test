@@ -1,21 +1,23 @@
-const express = require('express');
-const experimentController = require('../controller/experiment.controller');
+const express = require("express");
+const experimentController = require("../controller/experiment.controller");
+const newExperimentController = require("../controller/experiment.creation.controller");
 const experimentRouter = new express.Router();
 
-experimentRouter.get('/', experimentController.getAllExperiments);
-experimentRouter.get('/AB/:account_id', experimentController.getExperimentsAB);
-experimentRouter.get('/FF/:account_id', experimentController.getExperimentsFF);
-experimentRouter.get('/account/:account_id', experimentController.getExperimentsByAccountId);
-experimentRouter.get('/date', experimentController.getExperimentsByDate);
-experimentRouter.get('/:experiment_id', experimentController.getExperimentById);
-
-
-experimentRouter.put('/:experiment_id', experimentController.updateExperimentsByID);
-
-experimentRouter.delete('/:experiment_id', experimentController.deleteExperimentsByID);
-
-experimentRouter.post('/', experimentController.createExperiments);
+experimentRouter.get("/", experimentController.getAllExperiments);
+experimentRouter.get("/AB/:accountId", experimentController.getExperimentsAB);
+experimentRouter.get("/FF/:accountId", experimentController.getExperimentsFF);
+experimentRouter.get("/account/:accountId", experimentController.getExperimentsByAccountId);
+experimentRouter.get("/date", experimentController.getExperimentsByDate);
+experimentRouter.get("/allowChangeAttribute/:accountId", experimentController.allowChangeAttribute);
+experimentRouter.get("/features", experimentController.getFeaturesList);
+experimentRouter.get("/:experimentId", experimentController.getExperimentById);
+experimentRouter.put("/:experimentId", experimentController.updateExperimentsByID);
+experimentRouter.put("/:experimentId/:goalId", experimentController.addGoalToExperiment);
+experimentRouter.put("/terminate/:experimentId", experimentController.terminateExperiment);
+experimentRouter.delete("/:experimentId/:goalId", experimentController.removeGoalFromExperiment);
+experimentRouter.delete("/:experimentId", experimentController.deleteExperimentsByID);
+experimentRouter.post("/new", newExperimentController.createExperimentWithGoals);
 
 module.exports = {
-    experimentRouter
-}
+    experimentRouter,
+};

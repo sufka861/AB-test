@@ -5,11 +5,14 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon -r newrelic index.js"
+    "dev": "nodemon -r newrelic index.js",
+    "start": "nodemon -r newrelic index.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.20.1",
+    "bson": "^5.0.1",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
@@ -18,6 +21,7 @@
     "express-async-errors": "^3.1.1",
     "geoip-lite": "^1.4.6",
     "iso-3166-1": "^2.1.1",
+    "moment": "^2.29.4",
     "mongodb": "^4.13.0",
     "mongoose": "^6.8.1",
     "morgan": "^1.10.0",
@@ -31,6 +35,8 @@
     "winston": "^3.8.2"
   },
   "devDependencies": {
+    "eslint": "^8.34.0",
+    "eslint-plugin-react": "^7.32.2",
     "nodemon": "^2.0.20"
   }
 }
