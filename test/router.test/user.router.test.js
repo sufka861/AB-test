@@ -5,10 +5,10 @@ const userController = require("../../controller/user.controller");
 
 describe("userRouter", () => {
     describe("GET /:uuid", () => {
-        it("should call getUserByUuid controller function with uuid param", async () => {
+        it("should call getUserByUuid controller function", async () => {
             const getUserByUuidStub = sinon.stub(userController, "getUserByUuid");
             const uuid = "abc123";
-            const req = { params: { uuid } };
+            const req =uuid;
             const res = {};
             await userRouter.handle(req, res);
             expect(getUserByUuidStub.calledOnceWithExactly(uuid)).to.be.true;
@@ -17,7 +17,7 @@ describe("userRouter", () => {
     });
 
     describe("GET /experiment/:experimentId", () => {
-        it("should call getUserExperiment controller function with experimentId param", async () => {
+        it("should call getUserExperiment controller function with experimentId", async () => {
             const getUserExperimentStub = sinon.stub(userController, "getUserExperiment");
             const experimentId = "def456";
             const req = { params: { experimentId } };
@@ -62,7 +62,7 @@ describe("userRouter", () => {
     });
 
     describe("PUT /:uuid", () => {
-        it("should call insertExperiment controller function with uuid and body params", async () => {
+        it("should call insertExperiment controller function", async () => {
             const insertExperimentStub = sinon.stub(userController, "insertExperiment");
             const uuid = "abc123";
             const experiment = { experimentId: "def456", variant: "A" };
