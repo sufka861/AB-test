@@ -1,83 +1,62 @@
 const { expect } = require('chai');
 const sinon = require('sinon');
 const cron = require('node-cron');
-const Experiment = require
-const { experimentStatusUpdate } = require("../../Service/cron.job");
-const ExperimentRepository = require("../../repositories/experiment.repository");
+const ExperimentRepository = require('../../repositories/experiment.repository');
+const {experimentStatusUpdate} = require('../../Service/cron.job');
 
-describe('experimentStatusUpdate', () => {
+describe('Experiment Status Update', () => {
     let clock;
 
-    beforeEach(() => {
-        // Create a fake clock to control the timing of cron jobs
-        clock = sinon.useFakeTimers(new Date('2022-01-01T10:00:00.000Z').getTime());
+    before(() => {
+        // Freeze time at a specific date and time for testing purposes
+        clock = sinon.useFakeTimers(new Date('2023-02-25T15:30:00Z'));
     });
 
-    afterEach(() => {
-        // Restore the original clock
+    after(() => {
+        // Restore the clock to its original state
         clock.restore();
     });
 
-    it('should update experiment status from "planned" to "active"', async () => {
-        // Mock the ExperimentRepository.findByQuery method
-        const mockFindByQuery = sinon.stub(ExperimentRepository, 'findByQuery').resolves([{
-            _id: 'experiment1',
-            status: 'planned',
-            duration: {
-                startTime: new Date('2022-01-01T10:10:00.000Z'),
-                endTime: new Date('2022-01-02T11:12:00.000Z'),
-            },
-        }]);
+    it('should update experiment status to active when start time is reached', async () => {
+        // Arrange
+        const experiments = [      {        _id: '1',        duration: {          startTime: new Date('2023-02-25T15:30:00Z'),          endTime: new Date('2023-02-25T15:33:00Z')        },        status: 'planned'      }    ];
+        sinon.stub(ExperimentRepository, 'find').resolves(experiments);
+        sinon.stub(ExperimentRepository, 'update').resolves();
 
-        // Mock the ExperimentRepository.update method
-        const mockUpdate = sinon.stub(ExperimentRepository, 'update').resolves({
-            _id: 'experiment1',
-            status: 'active',
-            duration: {
-                startTime: new Date('2022-01-01T00:00:00.000Z'),
-                endTime: new Date('2022-01-02T00:00:00.000Z'),
-            },
-        });
+        // Act
+        await experimentStatusUpdate();
 
-        // Run the experimentStatusUpdate cron job
-        await experimentStatusUpdate.run();
-
-        // Verify that the findByQuery method was called with the correct query
-        expect(mockFindByQuery.calledWith({
-            status: 'planned',
-            duration: {
-                startTime: {$lte: new Date('2022-01-01T00:00:00.000Z')},
-                endTime: {$gte: new Date('2022-01-01T00:00:00.000Z')},
-            },
-        })).to.be.true;
-
-        // Verify that the update method was called with the correct parameters
-        expect(mockUpdate.calledWith('experiment1', {status: 'active'})).to.be.true;
-
-        // Restore the original methods
-        mockFindByQuery.restore();
-        mockUpdate.restore();
+        // Assert
+        expect(ExperimentRepository.find.calledOnce).to.be.true;
+        expect(ExperimentRepository.update.calledOnceWith('1', { status: 'active' })).to.be.true;
+        console.log (expect);
     });
 
-    it('should update experiment status from "active" to "ended"', async () => {
-        // Mock the ExperimentRepository.findByQuery method
-        const mockFindByQuery = sinon.stub(ExperimentRepository, 'findByQuery').resolves([{
-            _id: 'experiment1',
-            status: 'active',
-            duration: {
-                startTime: new Date('2022-01-01T00:00:00.000Z'),
-                endTime: new Date('2022-01-02T00:00:00.000Z'),
-            },
-        }]);
+    it('should update experiment status to ended when end time is reached', async () => {
+        // Arrange
+        const experiments = [      {        _id: '2',        duration: {          startTime: new Date('2023-02-25T09:00:00Z'),          endTime: new Date('2023-02-25T10:00:00Z')        },        status: 'active'      }    ];
+        sinon.stub(ExperimentRepository, 'find').resolves(experiments);
+        sinon.stub(ExperimentRepository, 'update').resolves();
 
-        // Mock the ExperimentRepository.update method
-        const mockUpdate = sinon.stub(ExperimentRepository, 'update').resolves({
-            _id: 'experiment1',
-            status: 'ended',
-            duration: {
-                startTime: new Date('2022-01-01T00:00:00.000Z'),
-                endTime: new Date('2022-01-02T00:00:00.000Z'),
-            },
-        })
-    })
+        // Act
+        await experimentStatusUpdate();
+
+        // Assert
+        expect(ExperimentRepository.find.calledOnce).to.be.true;
+        expect(ExperimentRepository.update.calledOnceWith('2', { status: 'ended' })).to.be.true;
+    });
+
+    it('should not update experiment status when current time is outside experiment duration', async () => {
+        // Arrange
+        const experiments = [      {        _id: '3',        duration: {          startTime: new Date('2023-02-25T09:00:00Z'),          endTime: new Date('2023-02-25T10:00:00Z')        },        status: 'planned'      }    ];
+        sinon.stub(ExperimentRepository, 'find').resolves(experiments);
+        sinon.stub(ExperimentRepository, 'update').resolves();
+
+        // Act
+        await experimentStatusUpdate();
+
+        // Assert
+        expect(ExperimentRepository.find.calledOnce).to.be.true;
+        expect(ExperimentRepository.update.called).to.be.false;
+    });
 });
