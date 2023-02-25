@@ -4,6 +4,7 @@ require("express-async-errors");
 const express = require("express");
 const logger = require("morgan");
 const cors = require("cors");
+const bodyParser = require('body-parser')
 const fs = require("fs");
 const path = require("path");
 const cookieParser = require("cookie-parser");
@@ -17,8 +18,9 @@ const { testRouter } = require("./router/external.routes");
 const { userRouter } = require("./router/user.routes");
 const statsRouter = require("./router/stats.router");
 const {goalRouter} = require("./router/goal.router");
-const { experimentStatusUpdate } = require("./Service/cron.job");
+const {experimentStatusUpdate} = require("./Service/cron.job");
 
+experimentStatusUpdate();
 index.use(express.json());
 index.use(express.urlencoded({ extended: true }));
 index.use(
@@ -27,7 +29,7 @@ index.use(
   })
 );
 index.use(cookieParser());
-
+index.use(bodyParser.urlencoded({extended:false}))
 index.use(
   cors({
     origin: "http://localhost:3000",
@@ -36,7 +38,6 @@ index.use(
 );
 
 // Routes goes here!
-
 index.use("/test", testRouter);
 index.use("/user", userRouter);
 index.use("/experiments", experimentRouter);

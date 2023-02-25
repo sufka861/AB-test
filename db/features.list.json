@@ -1,0 +1,18 @@
+{
+  "featuresList" : [
+    "AB – Test",
+    "Feature Flag",
+    "Default attributes",
+    "Multiple custom attribute",
+    "One Goal support",
+    "Multiple Goal support",
+    "Default experiment start time",
+    "Custom experiment start time",
+    "Default traffic allocation",
+    "Custom traffic allocation",
+    "Inclusive Experiments",
+    "Exclusive Experiments",
+    "Support limited number of experiments",
+    "Support unlimited number of experiment"
+  ]
+}
