@@ -8,25 +8,10 @@ How It Works? You can create and run the AB test and make a features of features
 You can see the statistics of each experiment depending on the amount of participants while running and at the end of the project.
 The purpose of this project is to identify any change in the webpage to maximize or increase the result of the matter. An example can be identifying the clicks lesson for a banner ad.
 
-> **Build Status**
-
-> **Code Style**
-
-> **Features**
-> **API reference**
-
-
-
-> **Installation**
-
 > **Before you start**
 1. [x] Download the code from Git-Hub https://github.com/sufka861/AB-test.git
 2. [x] Cd to the working directory and start the server using the following command in the terminal - $node app.js
-3. [x] Open a browser page and go to https://ab-test-bvtg.onrender.com/
-4. [x] Make sure you have our .env file containing the sensitive info of our system account.
-5. [x] Open a browser page and go to https://ab-test-bvtg.onrender.com/
-6. [x] Full documentation of the API calls can be seen at: https://documenter.getpostman.com/view/24139741/2s8Z711C7C
-7. [x] Make sure to install npm packages as described in the package.json:
+3. [x] Make sure to install npm packages [npm install] as described in the package.json:
    8.[x] body-parser
    9.[x] bson
    10.[x] cookie-parser
@@ -48,25 +33,31 @@ The purpose of this project is to identify any change in the webpage to maximize
    21. [x] uuid
    22. [x] validate-date
    23. [x] winston
+24. [x] Open a browser page and go to https://ab-test-bvtg.onrender.com/
+25. [x] Make sure you have our .env file containing the sensitive info of our system account.
+26. [x] Open a browser page and go to https://ab-test-bvtg.onrender.com/
+27. [x] Full documentation of the API calls can be seen at: https://documenter.getpostman.com/view/24139741/2s8Z711C7C
 
-> **Features**
+
+> **Instructions**
 1. [x] Using the calls to the render website via Postman you can create and start AB test / Feature Flag experiments.
 2. [x] View lists of exist experiments and planned future experiments.
-3. [x] app.js – http – the entry point of the system
+3. [x] app.js  – the entry point of the system
 4. [x] Router folder – consists of a map of all the API points for both server and client
 5. [x] Controllers – direct the functionality of the system6.
-6. [x] Services – contain the business logic of the system.
+6. [x] Services – contain th business logic of the system.
 7. [x] Data Base – MongoDB.
 8. [x] Checkout Our Api Documentation : 
 9. [x] http calls logger - configured in the middleware directory, writes call logs inside logs folder, filename: http.log
 10.[x] error logs - configured in the middleware directory, writes call logs inside logs folder, filename: error.log. operates from the errorHandler middleware (info will follow)
 11.[x] error handler - consists of 3 parts:
-   - express-async-errors package - wraps the controllers in try/catch statement automatically (no implementation needed), and calls the next(error) function in the catch block with the error thrown. the next function will "fall" into the errorHandler.
-   - errorHandler - a function that is used at the end of the server that catches all the errors thrown in the controllers
-   - Custom Errors - in the errors' directory. Classes that extends Error class, with status and message to pass to the error handier at the end. More can be added if we need them.
+12.[x] express-async-errors package - wraps the controllers in try/catch statement automatically (no implementation needed), and calls the next(error) function in the catch block with the error thrown. the next function will "fall" into the errorHandler.
+13.[x] errorHandler - a function that is used at the end of the server that catches all the errors thrown in the controllers
+14.[x] Custom Errors - in the errors' directory. Classes that extends Error class, with status and message to pass to the error handier at the end. More can be added if we need them.
+15. [x] Test - contain all the tests , use [npm run test] to run all the test and check coverage and results.
 
 > **How to Use**
-* The system front end is done by the core team and will be fully integrated with the system on the next phase. The system can be checked by calls to the API as mentioned in the documentation can be done by the system end user. The following instructions regard the future implemented user interface.
+
 `Create AB Test Experiment:`
 1. Open Homepage.html.
 2. Go to "New Experiment"
