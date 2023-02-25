@@ -55,5 +55,7 @@ describe("createExperimentWithGoals", () => {
 
         expect(res.status.calledWith(200)).to.be.true;
         expect(res.status().send.calledWith(experiment)).to.be.true;
+        expect(res.status().send.calledWith(goals)).to.be.true;
+
     });
 });
