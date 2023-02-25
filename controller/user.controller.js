@@ -4,12 +4,9 @@ const {
   EntityNotFound,
 } = require("../errors/NotFound.errors");
 const { InvalidProperty } = require("../errors/validation.errors");
-const { bodyValidator } = require("../validators/body.validator");
 const { ServerUnableError } = require("../errors/internal.errors");
 
 const userRepository = require("../repositories/user.repository");
-
-const checkAttributes = (req, res) => {};
 
 const getUserByUuid = async (req, res) => {
   const uuid = getCookie(req, res);
@@ -49,11 +46,6 @@ const getUserExperiment = (user) => {
   return user.experiments;
 };
 
-const setCookie = () => {
-  const uuid = generateUuid();
-  res.cookie("uuid", uuid, { maxAge: 999999, httpOnly: true, path: "/" });
-};
-
 const getCookie = (req, res) => {
   return req.cookies.uuid ? req.cookies.uuid : false;
 };
@@ -67,10 +59,8 @@ const getAllUsers = async (req, res) => {
 };
 
 module.exports = {
-  checkAttributes,
   getAllUsers,
   getUserByUuid,
-  setCookie,
   getCookie,
   addUser,
   insertExperiment,

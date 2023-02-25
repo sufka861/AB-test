@@ -69,18 +69,19 @@ const experimentExistingUser = async (
         return res.status(200).json(exp.variant);
       }
     }
-    const newVariant = await doExperiment(experimentId, user.uuid, req);
+    const newVariant = await doExperiment(experimentId, user.uuid);
     return res.status(200).json(newVariant);
   } else {
     return res.status(200).json(experimentsList[0].variant);
   }
 };
 
-const doExperiment = async (experimentId, uuid, req) => {
+const doExperiment = async (experimentId, uuid) => {
   await ExperimentRepository.incCallCount(experimentId);
-  let variant = await checkExperimentTypeAndExecExperiment(experimentId, req);
+  let variant = await checkExperimentTypeAndExecExperiment(experimentId);
   const userExperiment = { experimentId, variant };
   const updatedUser = await insertExperiment(uuid, userExperiment);
+  if(!updatedUser) throw new ServerUnableError('insert experiment to user')
   return variant;
 };
 

@@ -117,11 +117,43 @@ const getVariantSuccessCount = async (req, res) => {
     })
 }
 
+const getActiveExperiments = async (req, res) => {
+
+    const month = req.params.month;
+    const year = req.params.year;
+    if (month > 12 || month < 1) throw new ValidationError.InvalidProperty("month");
+    const inputDate = new Date(year, month - 1, 1);
+    const currentDate = new Date();
+    if (inputDate > currentDate) throw new ValidationError.InvalidProperty("date can't be in the future");
+    const result = await ExperimentRepository.getActiveExperimentsByDate(month, year)
+    if (result === undefined || result === null) {
+        throw new ServerError.ServerUnableError("calculate active experiment by date");
+    } else {
+        res.status(200).send({
+            active_experiments: result
+        })
+    }
+}
+
+const getExperimentsAttributesDistribution = async (req, res) => {
+
+    result = await ExperimentRepository.getExperimentCountsByAttributes();
+    if (!result) {
+        throw new ServerError.ServerUnableError("calculate experiment attribute distribution ");
+    } else {
+        res.status(200).send({
+            attribute_distribution: result
+        })
+    }
+}
+
 
 module.exports = {
     getStatistics,
     getUsersStats,
     getReqPerAttribute,
     getTestsPerMonth,
-    getVariantSuccessCount
+    getVariantSuccessCount,
+    getActiveExperiments,
+    getExperimentsAttributesDistribution
 }
