@@ -13,11 +13,12 @@ const {
   MissingPropertyError,
   UserUnknown,
 } = require("../errors/validation.errors");
-const { EntityNotFound } = require("../errors/NotFound.errors");
-const { ExperimentNotActive } = require("../errors/BadRequest.errors");
+const { EntityNotFound, PropertyNotFound} = require("../errors/NotFound.errors");
+const { ExperimentNotActive, BodyNotSent} = require("../errors/BadRequest.errors");
 const {
   checkExperimentTypeAndExecExperiment,
 } = require("./../Service/route.logic.experiment");
+const {ServerUnableError} = require("../errors/internal.errors");
 
 const runTest = async (req, res, next) => {
   validateRun(req, req.body.experimentId, req.body.subscription);
@@ -97,7 +98,7 @@ const reportGoal = async (req, res) => {
   const user = await getUserByUuid(req, res);
   if (!user) throw new UserUnknown();
   const experimentsList = getUserExperiment(user);
-  for (exp of experimentsList) {
+  for (const exp of experimentsList) {
     if (exp.experimentId.toString() === experimentId) {
       const variant = [...exp.variant.keys()];
       const response = await GoalRepository.incVariantSuccessCount(
@@ -114,4 +115,30 @@ const reportGoal = async (req, res) => {
   });
 };
 
-module.exports = { runTest, reportGoal };
+const createExperimentWithGoals = async (req, res) => {
+  if (!bodyValidator(req)) throw new BodyNotSent();
+  const {experiment, goals} = req.body;
+  if (!experiment || !goals) throw new PropertyNotFound("Invalid request body for creating new experiment");
+  const newGoals =  await GoalRepository.createMany(goals);
+  if(!newGoals) throw new ServerUnableError("creating new goals")
+  experiment.goals = newGoals.map(goal => goal._id);
+  const newExperiment = await ExperimentRepository.create(experiment);
+  if (!newExperiment) throw ServerUnableError("Creating new experiment");
+  res.status(200).send(newExperiment);
+}
+
+const updateExperimentWithGoalsByExpID = async (req, res) => {
+  if (!req.params.experimentId) throw new PropertyNotFound("experimentId");
+  const experimentID = req.params.experimentId;
+  const {experiment,goals} = req.body;
+  if (!experiment || !goals) throw new PropertyNotFound("Invalid request body for editing experiment");
+  const updatedGoals = await Promise.all( goals.map(async ({_id, ...updatedGoalData}) => await GoalRepository.update(_id, updatedGoalData)));
+  if(!updatedGoals.every((goal) =>!!goal)) throw new ServerUnableError("updating goals");
+  const updatedExperiment = await ExperimentRepository.update(experimentID, experiment)
+  if (!updatedExperiment) throw new ServerUnableError("updateExperimentsByID")
+  res.status(200).json(updatedExperiment);
+}
+
+
+
+module.exports = { runTest, reportGoal, createExperimentWithGoals, updateExperimentWithGoalsByExpID};

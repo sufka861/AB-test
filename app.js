@@ -4,10 +4,11 @@ require("express-async-errors");
 const express = require("express");
 const logger = require("morgan");
 const cors = require("cors");
+const bodyParser = require('body-parser')
 const fs = require("fs");
 const path = require("path");
 const cookieParser = require("cookie-parser");
-const index = express();
+const app = express();
 const requestIp = require("request-ip");
 const { errorHandler } = require("./middleware/errorHandler.mw");
 const logPath = path.join(__dirname, "logs", "http.log");
@@ -17,33 +18,32 @@ const { testRouter } = require("./router/external.routes");
 const { userRouter } = require("./router/user.routes");
 const statsRouter = require("./router/stats.router");
 const {goalRouter} = require("./router/goal.router");
-const { experimentStatusUpdate } = require("./Service/cron.job");
+const {experimentStatusUpdate} = require("./Service/cron.job");
 
-index.use(express.json());
-index.use(express.urlencoded({ extended: true }));
-index.use(
+experimentStatusUpdate();
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(
   logger(":date --> :method :url :status :response-time ms", {
     stream: fs.createWriteStream(logPath, { flags: "a" }),
   })
 );
-index.use(cookieParser());
-
-index.use(
+app.use(cookieParser());
+app.use(bodyParser.urlencoded({extended:false}))
+app.use(
   cors({
     origin: "http://localhost:3000",
     credentials: true,
   })
 );
 
-// Routes goes here!
+app.use("/test", testRouter);
+app.use("/user", userRouter);
+app.use("/experiments", experimentRouter);
+app.use("/goal", goalRouter);
+app.use("/stats", statsRouter);
+app.use(errorHandler);
 
-index.use("/test", testRouter);
-index.use("/user", userRouter);
-index.use("/experiments", experimentRouter);
-index.use("/goal", goalRouter);
-index.use("/stats", statsRouter);
-index.use(errorHandler);
-
-index.listen(port, () => {
+app.listen(port, () => {
   console.log(`Server is listening on port ${port}...`);
 });
