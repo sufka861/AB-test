@@ -1,6 +1,5 @@
 const geoip = require("geoip-lite");
 const parser = require("ua-parser-js");
-const requestIp = require("request-ip");
 const {incAttributeReqCount} = require("../repositories/experiment.repository");
 const {PropertyNotFound} = require("../errors/NotFound.errors");
 const {ServerUnableError} = require("../errors/internal.errors");
