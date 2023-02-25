@@ -4,7 +4,7 @@ const {
   getAllUsers,
   checkAttributes,
   getUserByUuid,
-  setCookie,
+ 
   getCookie,
   addUser,
   insertExperiment,
@@ -16,9 +16,6 @@ userRouter.get("/:uuid", getUserByUuid);
 
 // Get experiment by experiment id
 userRouter.get("/experiment/:experimentId", getUserExperiment);
-
-// Set a cookie
-userRouter.get("/set-cookie", setCookie);
 
 // Get cookie values
 userRouter.get("/cookie", getCookie);
