@@ -67,7 +67,6 @@ const getExperimentsByDate = async (req, res) => {
   } else {
     throw new ServerUnableError("getExperimentsByDate");
   }
-  // res.status(200).json(result);
 };
 
 
@@ -96,6 +95,7 @@ const terminateExperiment = async (req, res) => {
   });
   if (!result)
     throw new ServerUnableError("Update experiment status to terminated");
+  res.status(200).json({message: 'terminated successfully'})
 };
 const removeGoalFromExperiment = async (req, res) => {
   if (!req.params.experimentId) throw new PropertyNotFound("experimentId");
