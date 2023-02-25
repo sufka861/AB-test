@@ -4,11 +4,11 @@ const ExperimentRepository = require("../repositories/experiment.repository");
 
 
 const experimentStatusUpdate =  ( ) => {
-    const job = cron.schedule("* * * * *", async () => {
+    const job = cron.schedule("0 8 * * *", async () => {
       
         console.log("doing cron job")
         const currentTime = new Date();
-        currentTime.setHours(currentTime.getHours() + 2);
+        currentTime.setHours(currentTime.getHours() + 3);
         const experiments = await ExperimentRepository.find();
         for (const experiment of experiments) {
             const start = new Date(experiment.duration.startTime);
