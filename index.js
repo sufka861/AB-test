@@ -17,11 +17,8 @@ const { experimentRouter } = require("./router/experiment.router");
 const { testRouter } = require("./router/external.routes");
 const { userRouter } = require("./router/user.routes");
 const statsRouter = require("./router/stats.router");
-const { goalRouter } = require("./router/goal.router");
-const { experimentStatusUpdate } = require("./Service/cron.job");
-
-const ExperimentRepository = require('./repositories/experiment.repository')
-const {log} = require("winston");
+const {goalRouter} = require("./router/goal.router");
+const {experimentStatusUpdate} = require("./Service/cron.job");
 
 experimentStatusUpdate();
 index.use(express.json());
@@ -48,5 +45,5 @@ index.use("/stats", statsRouter);
 index.use(errorHandler);
 
 index.listen(port, () => {
-    console.log(`Server is listening on port ${port}...`);
+  console.log(`Server is listening on port ${port}...`);
 });
