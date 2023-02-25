@@ -6,6 +6,7 @@ const abLogic = require("../../Service/AB.test.logic");
 const Util = require("../../Service/utils");
 const { checkExperimentTypeAndExecExperiment } = require("../../Service/route.logic.experiment");
 
+
 describe("checkExperimentTypeAndExecExperiment", function () {
     beforeEach(function () {
         sinon.stub(ExperimentStorage, "retrieve");
@@ -112,7 +113,22 @@ describe("checkExperimentTypeAndExecExperiment", function () {
         sinon.stub(abLogic, "ABcheckAttributes").returns({});
 
         // Act
-       // const result = await checkExperiment
+    //     const result = await checkExperiment
+    //     "test-experiment-id",
+    //         { userId: "test-user-id" }
+    // );
+
+// Assert
+        assert.deepEqual(result, {});
+        sinon.assert.calledOnceWithExactly(
+            ExperimentStorage.incCallCount,
+            "test-experiment-id"
+        );
+        sinon.assert.calledOnceWithExactly(
+            abLogic.ABcheckAttributes,
+            { userId: "test-user-id" },
+            experiment
+        );
 // Act
         const result = await checkExperimentTypeAndExecExperiment(
             "test-experiment-id",

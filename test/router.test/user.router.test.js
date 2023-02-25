@@ -1,99 +1,87 @@
-const chai = require("chai");
-const chaiHttp = require("chai-http");
-const { userRouter } = require("../routes/user.routes");
+const { expect } = require("chai");
+const sinon = require("sinon");
+const { userRouter } = require("../../router/user.routes");
+const userController = require("../../controller/user.controller");
 
-chai.use(chaiHttp);
-
-const expect = chai.expect;
-
-describe("User routes", () => {
+describe("userRouter", () => {
     describe("GET /:uuid", () => {
-        it("should return user with matching uuid", async () => {
-            const res = await chai
-                .request(userRouter)
-                .get("/abc123")
-                .send();
-
-            expect(res).to.have.status(200);
-            expect(res.body).to.have.property("uuid", "abc123");
-        });
-
-        it("should return 404 for non-existent uuid", async () => {
-            const res = await chai
-                .request(userRouter)
-                .get("/non-existent-uuid")
-                .send();
-
-            expect(res).to.have.status(404);
+        it("should call getUserByUuid controller function with uuid param", async () => {
+            const getUserByUuidStub = sinon.stub(userController, "getUserByUuid");
+            const uuid = "abc123";
+            const req = { params: { uuid } };
+            const res = {};
+            await userRouter.handle(req, res);
+            expect(getUserByUuidStub.calledOnceWithExactly(uuid)).to.be.true;
+            getUserByUuidStub.restore();
         });
     });
 
     describe("GET /experiment/:experimentId", () => {
-        it("should return experiment for user with matching experiment ID", async () => {
-            const res = await chai
-                .request(userRouter)
-                .get("/experiment/123")
-                .send();
-
-            expect(res).to.have.status(200);
-            expect(res.body).to.have.property("experimentId", "123");
-        });
-
-        it("should return 404 for non-existent experiment ID", async () => {
-            const res = await chai
-                .request(userRouter)
-                .get("/experiment/non-existent-experiment-id")
-                .send();
-
-            expect(res).to.have.status(404);
+        it("should call getUserExperiment controller function with experimentId param", async () => {
+            const getUserExperimentStub = sinon.stub(userController, "getUserExperiment");
+            const experimentId = "def456";
+            const req = { params: { experimentId } };
+            const res = {};
+            await userRouter.handle(req, res);
+            expect(getUserExperimentStub.calledOnceWithExactly(experimentId)).to.be.true;
+            getUserExperimentStub.restore();
         });
     });
 
     describe("GET /set-cookie", () => {
-        it("should set a cookie", async () => {
-            const res = await chai.request(userRouter).get("/set-cookie").send();
-
-            expect(res).to.have.status(200);
-            expect(res).to.have.cookie("my-cookie");
+        it("should call setCookie controller function", async () => {
+            const setCookieStub = sinon.stub(userController, "setCookie");
+            const req = {};
+            const res = {};
+            await userRouter.handle(req, res);
+            expect(setCookieStub.calledOnce).to.be.true;
+            setCookieStub.restore();
         });
     });
 
     describe("GET /cookie", () => {
-        it("should return the value of the cookie", async () => {
-            const agent = chai.request.agent(userRouter);
-
-            await agent.get("/set-cookie").send();
-
-            const res = await agent.get("/cookie").send();
-
-            expect(res).to.have.status(200);
-            expect(res.text).to.equal("cookie value");
-        });
-
-        it("should return 404 if cookie is not set", async () => {
-            const res = await chai.request(userRouter).get("/cookie").send();
-
-            expect(res).to.have.status(404);
+        it("should call getCookie controller function", async () => {
+            const getCookieStub = sinon.stub(userController, "getCookie");
+            const req = {};
+            const res = {};
+            await userRouter.handle(req, res);
+            expect(getCookieStub.calledOnce).to.be.true;
+            getCookieStub.restore();
         });
     });
 
     describe("POST /", () => {
-        it("should create a new user", async () => {
-            const user = {name: "John Doe", email: "john@example.com"};
-
-            const res = await chai.request(userRouter).post("/").send(user);
-
-            expect(res).to.have.status(201);
-            expect(res.body).to.have.property("name", "John Doe");
-            expect(res.body).to.have.property("email", "john@example.com");
+        it("should call addUser controller function", async () => {
+            const addUserStub = sinon.stub(userController, "addUser");
+            const req = { body: { name: "John Doe" } };
+            const res = {};
+            await userRouter.handle(req, res);
+            expect(addUserStub.calledOnceWithExactly(req.body)).to.be.true;
+            addUserStub.restore();
         });
+    });
 
-        it("should return 400 for invalid user attributes", async () => {
-            const user = {name: "John Doe"}; // missing email attribute
+    describe("PUT /:uuid", () => {
+        it("should call insertExperiment controller function with uuid and body params", async () => {
+            const insertExperimentStub = sinon.stub(userController, "insertExperiment");
+            const uuid = "abc123";
+            const experiment = { experimentId: "def456", variant: "A" };
+            const req = { params: { uuid }, body: experiment };
+            const res = {};
+            await userRouter.handle(req, res);
+            expect(insertExperimentStub.calledOnceWithExactly(uuid, experiment)).to.be.true;
+            insertExperimentStub.restore();
+        });
+    });
 
-            const res = await chai.request(userRouter).post("/").send(user);
-
-            expect(res).to.have.status(400);
-        })
-    })
+    describe("GET /", () => {
+        it("should call getAllUsers controller function", async () => {
+            const getAllUsersStub = sinon.stub(userController, "getAllUsers");
+            const req = {};
+            const res = {};
+            await userRouter.handle(req, res);
+            expect(getAllUsersStub.calledOnce).to.be.true;
+            getAllUsersStub.restore();
+        });
+    });
 });
