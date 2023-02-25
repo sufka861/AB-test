@@ -33,18 +33,22 @@ module.exports = new (class ExperimentsRepository extends MongoStorage {
         return this.Model.findById(id).populate({path: 'goals'});
     }
 
-    findByDate(year, month) {
-        if (validateDate(`${month}/01/${year}`)) {
-            const start = new Date(year, month, 1);
-            const end = new Date(year, month, 31);
-            return this.Model.countDocuments({
-                endTime: {
+    async findByDate(year, month) {
+        const adjustedMonth = Number(month) - 1;
+        if (validateDate(`${adjustedMonth}/01/${year}`)) {
+            const start = new Date(year, adjustedMonth, 1);
+            const end = new Date(year, adjustedMonth, 31);
+            const result = await this.Model.countDocuments({
+                 'duration.endTime': {
                     $gte: start,
                     $lte: end,
                 },
             }).populate({path: 'goals'});
+            return result;
         }
     }
+
+
 
 
     async incCallCount(id) {

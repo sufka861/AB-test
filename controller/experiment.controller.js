@@ -62,8 +62,12 @@ const getExperimentsByDate = async (req, res) => {
   const year = req.query.year;
   const month = req.query.month;
   const result = await ExperimentRepository.findByDate(year, month);
-  if (!result) throw new ServerUnableError("getExperimentsByDate");
-  res.status(200).json(result);
+  if(result === 0 || result) {
+    res.status(200).json({result})
+  } else {
+    throw new ServerUnableError("getExperimentsByDate");
+  }
+  // res.status(200).json(result);
 };
 
 
