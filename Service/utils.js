@@ -5,6 +5,7 @@ const {incAttributeReqCount} = require("../repositories/experiment.repository");
 const {PropertyNotFound} = require("../errors/NotFound.errors");
 const {ServerUnableError} = require("../errors/internal.errors");
 const {v4: uuidv4, validate: uuidValidator} = require("uuid");
+const _ = require('lodash');
 
 const getClientIP = (endUserReq) => {
     const result = "176.12.223.44";
@@ -41,16 +42,21 @@ const checkAttributes = (endUserReq, experiment, next) => {
     try {
         const geo = getLocation(getClientIP(endUserReq));
         const {browser, device} = getBrowserDevice(endUserReq);
+        const customAttributes = endUserReq.customAttributes;
         if (geo && browser && device) {
-            const result =
-                geo.country === experiment.testAttributes.location[0] &&
-                browser === experiment.testAttributes.browser[0] &&
-                device === experiment.testAttributes.device[0];
-            const customAttributes = endUserReq.customAttributes;
-            const attributes = {"location": geo.country, "browser": browser, "device": device, ...customAttributes};
+            const defAttResult =
+                geo.country === experiment.testAttributes.location.value &&
+                browser === experiment.testAttributes.browser.value &&
+                device === experiment.testAttributes.device.value;
+            let attributes = {"location": geo.country, "browser": browser, "device": device};
+            let customAttResult;
+            if (customAttributes) {
+                customAttResult = _.isEqual(customAttributes, experiment.customAttributes);
+                attributes = {...attributes, ...customAttributes};
+            }
             const attReqCountResult = incAttributeReqCount(experiment.experimentId, attributes);
-            // if (!attReqCountResult) throw new ServerUnableError("attReqCountResult");
-            return result;
+            if (!attReqCountResult) throw new ServerUnableError("attReqCountResult");
+            return (customAttributes ? (defAttResult && customAttResult) : defAttResult);
         } else return false;
     } catch (error) {
         next(error);
