@@ -137,7 +137,7 @@ const getActiveExperiments = async (req, res) => {
 
 const getExperimentsAttributesDistribution = async (req, res) => {
 
-    result = await ExperimentRepository.getExperimentCountsByAttributes();
+    const result = await ExperimentRepository.getExperimentCountsByAttributes();
     if (!result) {
         throw new ServerError.ServerUnableError("calculate experiment attribute distribution ");
     } else {
