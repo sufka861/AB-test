@@ -40,23 +40,25 @@ The purpose of this project is to identify any change in the webpage to maximize
 > **API reference**
 
  Full documentation of the API calls can be seen at: https://documenter.getpostman.com/view/24139741/2s8Z711C7C
-
-
-> **Instructions**
-1. [x] Using the calls to the render website via Postman you can create and start AB test / Feature Flag experiments.
-2. [x] View lists of exist experiments and planned future experiments.
-3. [x] app.js  – the entry point of the system
-4. [x] Router folder – consists of a map of all the API points for both server and client
-5. [x] Controllers – direct the functionality of the system6.
-6. [x] Services – contain th business logic of the system.
-7. [x] Data Base – MongoDB.
-8. [x] Checkout Our Api Documentation : 
 9. [x] http calls logger - configured in the middleware directory, writes call logs inside logs folder, filename: http.log
 10.[x] error logs - configured in the middleware directory, writes call logs inside logs folder, filename: error.log. operates from the errorHandler middleware (info will follow)
 11.[x] error handler - consists of 3 parts:
 12.[x] express-async-errors package - wraps the controllers in try/catch statement automatically (no implementation needed), and calls the next(error) function in the catch block with the error thrown. the next function will "fall" into the errorHandler.
 13.[x] errorHandler - a function that is used at the end of the server that catches all the errors thrown in the controllers
 14.[x] Custom Errors - in the errors' directory. Classes that extends Error class, with status and message to pass to the error handier at the end. More can be added if we need them.
+
+
+> **Instructions**
+1. [x] Using the calls to the render website via Postman you can create and start AB test / Feature Flag experiments.
+2. [x] View lists of exist experiments and planned future experiments.
+3. [x] app.js  – the entry point of the system
+4. [x] Router – consists of a map of all the API points for both server and client
+5. [x] Controllers – direct the functionality of the system6.
+6. [x] Services – contain th business logic of the system.
+7. [x] Data Base – MongoDB.
+8. [x] repositories .
+9. [x] middleware – contain all the error and logs functions.
+10.[x] models – contain the schemas  that connects to the database through mongoose.
 
 > **Tests**>
 
@@ -70,7 +72,6 @@ NOTE!pay attention to the account type -
  - exclusive - the account have the option to choose - Does each experiment stand by itself and only one experiment will appear for each.
  - Inclusive - This means that every customer has a lot of experiments
 And all the experiments together can be together for all the weird who sees them.
-
 `Create AB Test Experiment:`
 1. Open Homepage.html.
 2. Go to "New Experiment"
