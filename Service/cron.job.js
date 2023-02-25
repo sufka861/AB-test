@@ -1,7 +1,7 @@
 const cron = require("node-cron");
 const ExperimentRepository = require("../repositories/experiment.repository");
 const Experiment = require("../models/Experiment.model");
-const experimentStatusUpdate =  ( ) => {
+const experimentStatusUpdate = () => {
     const job = cron.schedule("0 8 * * *", async () => {
         const currentTime = new Date();
         currentTime.setHours(currentTime.getHours() + 2);
@@ -19,10 +19,10 @@ const experimentStatusUpdate =  ( ) => {
     })
 };
 
-          cron.schedule("0 0 1 * *", async () => {
-          await ExperimentRepository.resetMonthlyCallCount();
-         });
+cron.schedule("0 0 1 * *", async () => {
+    await ExperimentRepository.resetMonthlyCallCount();
+});
 
-     module.exports = {
-        experimentStatusUpdate,
-       }
+module.exports = {
+    experimentStatusUpdate,
+}
