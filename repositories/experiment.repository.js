@@ -39,7 +39,7 @@ module.exports = new (class ExperimentsRepository extends MongoStorage {
             const start = new Date(year, adjustedMonth, 1);
             const end = new Date(year, adjustedMonth, 31);
             const result = await this.Model.countDocuments({
-                 'duration.endTime': {
+                 endTime: {
                     $gte: start,
                     $lte: end,
                 },
