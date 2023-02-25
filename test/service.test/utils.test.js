@@ -15,7 +15,7 @@ const {
     checkAttributes,
 } = require("../../Service/utils");
 
-describe("89.139.22.219", () => {
+describe("176.12.223.44", () => {
     describe("getClientIP", () => {
         it("should return a string", () => {
             const result = getClientIP({});
@@ -40,7 +40,7 @@ describe("89.139.22.219", () => {
             const req = "176.12.223.44";
             sinon.stub(geoip, "lookup").returns({country: "US"});
             const result = getLocation(req);
-            expect(result).to.be.an("string");
+            expect(result).to.be.an("object");
             expect(result).to.have.property("country", "US");
             geoip.lookup.restore();
             console.log(result);
@@ -52,12 +52,12 @@ describe("89.139.22.219", () => {
             const req = { headers: { 'user-agent': 'Mozilla/5.0 (X11; CrOS x86_64 8172.45.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.64 Safari/537.36' } };
             const result = getBrowserDevice(req);
             expect(result).to.be.an("object");
-            expect(result).to.have.property("browser", "chrome");
+            expect(result).to.have.property("browser","Chrome");
             expect(result).to.have.property("device", "desktop");
         });
 
         it("should throw a ServerUnableError error if no result is found", () => {
-            const req = {};
+            const req = { };
             expect(() => getBrowserDevice(req)).to.throw(ServerUnableError);
         });
     });
@@ -112,7 +112,7 @@ describe('checkIfActive', () => {
 
 describe('checkAttributes', () => {
     it('should return true if all attributes match', () => {
-        const endUserReq = { headers: { 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36' } };
+        const endUserReq = { headers: { 'user-agent': 'Mozilla/5.0 (X11; CrOS x86_64 8172.45.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.64 Safari/537.36' } };
         const experiment = { testAttributes: { location: ['US'], browser: ['Chrome'], device: ['desktop'] } };
         const result = checkAttributes(endUserReq, experiment, () => {});
         expect(result).to.be.true;
@@ -126,6 +126,7 @@ describe('checkAttributes', () => {
     });
 
     it('should call next with error if any function throws an error', () => {
+        const location = "176.12.223.44";
         const endUserReq = { headers: { 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36' } };
         const experiment = { testAttributes: { location: ['US'], browser: ['Chrome'], device: ['desktop'] } };
         const next = (error) => { expect(error.message).to.equal('getClientIP is not defined'); };
