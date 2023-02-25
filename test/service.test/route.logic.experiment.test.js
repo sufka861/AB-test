@@ -18,10 +18,9 @@ describe("checkExperimentTypeAndExecExperiment", function () {
     });
 
     it("should return OFF for a feature flag experiment with traffic percentage of 0%", async function () {
-        // Arrange
         const experiment = {
-            _id: "test-experiment-id",
-            status: "running",
+            _id: "1020",
+            status: "active",
             type: "f-f",
             trafficPercentage: 0,
         };
@@ -29,20 +28,18 @@ describe("checkExperimentTypeAndExecExperiment", function () {
 
         // Act
         const result = await checkExperimentTypeAndExecExperiment(
-            "test-experiment-id",
-            { userId: "test-user-id" }
+            "1020",
+            { userId: "3040" }
         );
 
-        // Assert
         assert.deepEqual(result, { OFF: false });
         sinon.assert.notCalled(ExperimentStorage.incCallCount);
     });
 
     it("should return C for an A/B test experiment with traffic percentage of 0%", async function () {
-        // Arrange
         const experiment = {
-            _id: "test-experiment-id",
-            status: "running",
+            _id: "5040",
+            status: "active",
             type: "a-b",
             trafficPercentage: 0,
             variantsAB: {
@@ -55,20 +52,18 @@ describe("checkExperimentTypeAndExecExperiment", function () {
 
         // Act
         const result = await checkExperimentTypeAndExecExperiment(
-            "test-experiment-id",
-            { userId: "test-user-id" }
+            "5040",
+            { userId: "3040" }
         );
 
-        // Assert
         assert.deepEqual(result, { C: {} });
         sinon.assert.notCalled(ExperimentStorage.incCallCount);
     });
 
     it("should return OFF for a feature flag experiment with traffic percentage of 100%", async function () {
-        // Arrange
         const experiment = {
-            _id: "test-experiment-id",
-            status: "running",
+            _id: "6666",
+            status: "active",
             type: "f-f",
             trafficPercentage: 100,
         };
@@ -78,28 +73,27 @@ describe("checkExperimentTypeAndExecExperiment", function () {
 
         // Act
         const result = await checkExperimentTypeAndExecExperiment(
-            "test-experiment-id",
-            { userId: "test-user-id" }
+            "6666",
+            { userId: "3040" }
         );
 
         // Assert
         assert.deepEqual(result, {});
         sinon.assert.calledOnceWithExactly(
             ExperimentStorage.incCallCount,
-            "test-experiment-id"
+            "6666"
         );
         sinon.assert.calledOnceWithExactly(
             ffLogic.featureCheckAttributes,
-            { userId: "test-user-id" },
+            { userId: "3040" },
             experiment
         );
     });
 
     it("should return variant A for an A/B test experiment with traffic percentage of 100%", async function () {
-        // Arrange
         const experiment = {
-            _id: "test-experiment-id",
-            status: "running",
+            _id: "4567",
+            status: "active",
             type: "a-b",
             trafficPercentage: 100,
             variantsAB: {
@@ -112,33 +106,20 @@ describe("checkExperimentTypeAndExecExperiment", function () {
         sinon.stub(Util, "shouldAllow").returns(true);
         sinon.stub(abLogic, "ABcheckAttributes").returns({});
 
-        // Act
-    //     const result = await checkExperiment
-    //     "test-experiment-id",
-    //         { userId: "test-user-id" }
-    // );
+        const result = await checkExperimentTypeAndExecExperiment(
+            "4567",
+            { userId: "3040" }
+        );
 
-// Assert
         assert.deepEqual(result, {});
         sinon.assert.calledOnceWithExactly(
             ExperimentStorage.incCallCount,
-            "test-experiment-id"
+            "4567"
         );
         sinon.assert.calledOnceWithExactly(
             abLogic.ABcheckAttributes,
-            { userId: "test-user-id" },
+            { userId: "3040" },
             experiment
         );
-// Act
-        const result = await checkExperimentTypeAndExecExperiment(
-            "test-experiment-id",
-            { userId: "test-user-id" }
-        );
-
-// Assert
-        assert.deepEqual(result, { OFF: false });
-        sinon.assert.notCalled(ExperimentStorage.incCallCount);
-        sinon.assert.notCalled(ffLogic.featureCheckAttributes);
-        sinon.assert.notCalled(abLogic.ABcheckAttributes);
     });
 });

@@ -7,18 +7,18 @@ describe('ABcheckAttributes', () => {
 
     it('should return option A', () => {
         const endUserReq = {};
-        const experiment = { variantsAB: { A: { foo: 'red' }, B: { foo: 'blue' }, C: { foo: 'null' } } };
+        const experiment = { variantsAB: { A: 'red' , B:  'blue' , C:  'null'  } };
         const result = ABcheckAttributes(endUserReq, experiment);
-        expect(result).to.deep.equal({ A: { foo: 'red' } });
+        expect(result).to.deep.equal({ A: 'red'  });
         console.log("should return option A");
     });
 
     it('should return option B', () => {
         const endUserReq = {};
-        const experiment = { variantsAB: { A: { foo: 'red' }, B: { foo: 'blue' }, C: { foo: 'null' } } };
+        const experiment = { variantsAB: { A:  'red' }, B:  'blue' };
         const stub = sinon.stub(Math, 'random').returns(0.6);
         const result = ABcheckAttributes(endUserReq, experiment);
-        expect(result).to.deep.equal({ B: { foo: 'blue' } });
+        expect(result).to.deep.equal({ B: 'blue'  });
         stub.restore();
         console.log("should return option B");
     });
