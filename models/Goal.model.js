@@ -6,10 +6,6 @@ const goalSchema = new Schema(
                 type: String,
                 required: true
             },
-            key: {
-                type: String,
-                required: true,
-            },
             variantSuccessCount: {
                 type: Object,
                 properties: {

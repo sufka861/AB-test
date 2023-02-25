@@ -74,7 +74,7 @@ module.exports = new (class ExperimentsRepository extends MongoStorage {
   }
 
   async resetMonthlyCallCount() {
-    return await Experiment.updateMany({}, { $set: { monthlyCallCount: 0 } });
+    return await this.Model.updateMany({}, { $set: { monthlyCallCount: 0 } });
   }
 
 })();
