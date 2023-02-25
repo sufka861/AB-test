@@ -9,4 +9,5 @@ const returnByRatio = (optionA, optionB) => {
 
 module.exports = {
   ABcheckAttributes,
+  returnByRatio
 };
