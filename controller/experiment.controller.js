@@ -54,7 +54,6 @@ const getExperimentsByDate = async (req, res) => {
     res.status(200).json(result);
 }
 
-
 const updateExperimentsByID = async (req, res) => {
     if (!req.params.experimentId) throw new PropertyNotFound("experimentId");
     const experimentID = req.params.experimentId;
@@ -75,8 +74,7 @@ const addGoalToExperiment = async (req, res) => {
     if (!req.params.goalId) throw new PropertyNotFound("goalId");
     const result = await ExperimentRepository.addGoal(req.params.experimentId, req.params.goalId)
     if (!result) throw new ServerUnableError("addGoalToExperiment")
-    res.status(200).json(result);
-    
+    res.status(200).json(result);  
 }
 const terminateExperiment = async (req,res) => {
     if (!req.params.experimentId) throw new PropertyNotFound("experimentId");
@@ -90,7 +88,6 @@ const removeGoalFromExperiment = async (req, res) => {
     if (!result) throw new ServerUnableError("removeGoalToExperiment")
     res.status(200).json(result);
 }
-
 const allowChangeAttribute = async (req, res) => {
     if (!req.params.accountId) throw new PropertyNotFound("experimentId");
     const experiments = await ExperimentRepository.findByAttribute("accountId", req.params.accountId);

@@ -15,7 +15,6 @@ experimentRouter.get("/allowChangeAttribute/:accountId", experimentController.al
 experimentRouter.get('/features', experimentController.getFeaturesList);
 experimentRouter.get('/:experimentId', experimentController.getExperimentById);
 
-
 experimentRouter.put('/:experimentId', experimentController.updateExperimentsByID);
 experimentRouter.put('/:experimentId/:goalId', experimentController.addGoalToExperiment);
 experimentRouter.put('/terminate/:experimentId', experimentController.terminateExperiment);

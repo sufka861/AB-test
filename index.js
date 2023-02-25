@@ -30,7 +30,6 @@ index.use(
 );
 index.use(cookieParser());
 index.use(bodyParser.urlencoded({extended:false}))
-
 index.use(
   cors({
     origin: "http://localhost:3000",
