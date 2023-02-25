@@ -3,7 +3,6 @@ const ExperimentRepository = require("../repositories/experiment.repository");
 const Experiment = require("../models/Experiment.model");
 const experimentStatusUpdate =  ( ) => {
     const job = cron.schedule("0 8 * * *", async () => {
-        console.log("doing cron job")
         const currentTime = new Date();
         currentTime.setHours(currentTime.getHours() + 2);
         const experiments = await ExperimentRepository.find();
