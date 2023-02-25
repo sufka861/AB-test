@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "nyc mocha",
-    "dev": "nodemon -r newrelic index.js",
-    "start": "nodemon -r newrelic index.js"
+    "dev": "nodemon -r newrelic app.js",
+    "start": "nodemon -r newrelic app.js"
   },
   "author": "",
   "license": "ISC",
