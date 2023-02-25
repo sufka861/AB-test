@@ -38,15 +38,12 @@ index.use(
     })
 );
 
-// Routes goes here!
-
 index.use("/test", testRouter);
 index.use("/user", userRouter);
 index.use("/experiments", experimentRouter);
 index.use("/goal", goalRouter);
 index.use("/stats", statsRouter);
 index.use(errorHandler);
-
 
 index.listen(port, () => {
     console.log(`Server is listening on port ${port}...`);

@@ -76,9 +76,8 @@ const getReqPerAttribute = async (req, res) => {
     const experiment = await ExperimentRepository.retrieve(experimentId);
     if (!experiment) throw new NotFoundError.EntityNotFound(`experiment (${experimentId})`);
     res.status(200).send({
-        locations: experiment.test_attributes.location,
-        devices: experiment.test_attributes.device,
-        browsers: experiment.test_attributes.browser,
+        "testAttributes": experiment.testAttributes,
+        "customAttributes" : experiment.customAttributes
     });
 }
 

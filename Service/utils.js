@@ -1,7 +1,7 @@
 const geoip = require("geoip-lite");
 const parser = require("ua-parser-js");
 const requestIp = require("request-ip");
-const {incReqCount} = require("../repositories/experiment.repository");
+const {incAttributeReqCount} = require("../repositories/experiment.repository");
 const {PropertyNotFound} = require("../errors/NotFound.errors");
 const {ServerUnableError} = require("../errors/internal.errors");
 const {v4: uuidv4, validate: uuidValidator} = require("uuid");
@@ -46,10 +46,10 @@ const checkAttributes = (endUserReq, experiment, next) => {
                 geo.country === experiment.testAttributes.location[0] &&
                 browser === experiment.testAttributes.browser[0] &&
                 device === experiment.testAttributes.device[0];
-            //GET CUSTOM ATTRIBUTE
             const customAttributes = endUserReq.customAttributes;
-            const attributes = [geo.country, browser, device, ...customAttributes]
-            const incReq = incReqCount(experiment.experimentId, attributes);
+            const attributes = {"location": geo.country, "browser": browser, "device": device, ...customAttributes};
+            const attReqCountResult = incAttributeReqCount(experiment.experimentId, attributes);
+            if (!attReqCountResult) throw new ServerUnableError("attReqCountResult");
             return result;
         } else return false;
     } catch (error) {
