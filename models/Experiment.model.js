@@ -55,6 +55,7 @@ const experimentSchema = new Schema(
                 message: `{VALUE} is not a valid status.`,
             },
         },
+         // "monthlyCallCount": 0,
         duration: {
             type: Object,
             properties: {

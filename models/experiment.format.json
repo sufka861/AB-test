@@ -1,0 +1,72 @@
+{
+  "experiment": {
+    "name": "experiment test name", // required String
+    "accountId": "63b9ff3f28ce812bf358d0b5", //required ObjectId few exps per id
+    "type": "a-b", // "a-b" or "f-f" required
+    "trafficPercentage": 50, // Number 0 -100 required
+
+    "status": "planned", // "active", "ended", "terminated", "planned" required
+    "duration": {
+      "startTime": "2023-02-24T12:28:00.301Z", // Date
+      "endTime": "2023-02-24T12:30:00.301Z"  // Date
+    },
+    "testAttributes": { //Same
+      "location": [
+        {
+          "value": "IL"
+        }
+      ],
+      "device": [
+        {
+          "value": "mobile"
+        }, {
+          "value": "desktop"
+        }
+      ],
+      "browser": [
+        {
+          "value": "Chrome"
+        }
+      ]
+    },
+    "customAttributes": { //Same
+      "Color": [
+        {
+          "value": "Yellow",
+          "valueReqCount": 0
+        },
+        {
+          "value": "Red",
+          "valueReqCount": 0
+        }
+      ],
+      "Shape": [
+        {
+          "value": "circle",
+          "valueReqCount": 1
+        },
+        {
+          "value": "triangle",
+          "valueReqCount": 0
+        }
+      ]
+    },
+    "variantsAB": { // REQUIED IF type == "a-b"
+      "A": "Alternative1",
+      "B": "Alternative2",
+      "C": "Default"
+    },
+    "variantsFF": {
+      "ON": true,
+      "OFF": false
+    }
+  },
+  "goals": [
+    {
+      "name": "Goal name1"
+    },
+    {
+      "name": "Goal name2"
+    }
+  ]
+}
