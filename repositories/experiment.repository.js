@@ -121,7 +121,6 @@ module.exports = new (class ExperimentsRepository extends MongoStorage {
   async getActiveExperimentsByDate(month, year){
     const start = moment.utc([year, month - 1, 1]).startOf('month');
     const end = moment.utc([year, month - 1, 1]).endOf('month');
-    console.log(start.toDate(), end.toDate());
     try {
         const result = await this.Model.countDocuments({
           status: 'active',
