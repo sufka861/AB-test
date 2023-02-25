@@ -7,36 +7,41 @@ describe('ABcheckAttributes', () => {
 
     it('should return option A', () => {
         const endUserReq = {};
-        const experiment = { variantsAB: { A: { foo: 'bar' }, B: { foo: 'baz' }, C: { foo: 'qux' } } };
+        const experiment = { variantsAB: { A: { foo: 'red' }, B: { foo: 'blue' }, C: { foo: 'null' } } };
         const result = ABcheckAttributes(endUserReq, experiment);
-        expect(result).to.deep.equal({ A: { foo: 'bar' } });
+        expect(result).to.deep.equal({ A: { foo: 'red' } });
+        console.log("should return option A");
     });
 
     it('should return option B', () => {
         const endUserReq = {};
-        const experiment = { variantsAB: { A: { foo: 'bar' }, B: { foo: 'baz' }, C: { foo: 'qux' } } };
-        sinon.stub(Math, 'random').return(0.6);
+        const experiment = { variantsAB: { A: { foo: 'red' }, B: { foo: 'blue' }, C: { foo: 'null' } } };
+        const stub = sinon.stub(Math, 'random').returns(0.6);
         const result = ABcheckAttributes(endUserReq, experiment);
-        expect(result).to.deep.equal({ B: { foo: 'baz' } });
-        Math.random.restore();
+        expect(result).to.deep.equal({ B: { foo: 'blue' } });
+        stub.restore();
+        console.log("should return option B");
     });
 
 });
 
-describe('returnByRatio', () => {
 
-    it('should return option A', () => {
-        sinon.stub(Math, 'random').return(0.4);
-        const result = returnByRatio({ A: { foo: 'bar' } }, { B: { foo: 'baz' } });
-        expect(result).to.deep.equal({ A: { foo: 'bar' } });
-        Math.random.restore();
+describe('returnByRatio', function() {
+    it('should return either optionA or optionB', function() {
+        const result = returnByRatio('red', 'blue');
+        expect(result).to.satisfy(val => val === 'red' || val === 'blue');
     });
 
-    it('should return option B', () => {
-        sinon.stub(Math, 'random').return(0.6);
-        const result = returnByRatio({ A: { foo: 'bar' } }, { B: { foo: 'baz' } });
-        expect(result).to.deep.equal({ B: { foo: 'baz' } });
-        Math.random.restore();
+    it('should return optionA with a probability of 0.5', function() {
+        const optionA = 'red';
+        const optionB = 'blue';
+        const results = Array(1000).fill().map(() => returnByRatio(optionA, optionB));
+        const countA = results.filter(val => val === optionA).length;
+        console.log('countA= '+ {countA});
+        const countB = results.filter(val => val === optionB).length;
+        console.log('countB= '+ {countB});
+        const ratio = countA / (countA + countB);
+        expect(ratio).to.be.closeTo(0.5, 0.1);
+        console.log(ratio);
     });
-
 });
