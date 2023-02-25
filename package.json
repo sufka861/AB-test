@@ -4,9 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "nyc mocha",
-    "dev": "nodemon -r newrelic index.js",
-    "start": "nodemon -r newrelic index.js"
+    "test": "nyc mocha 'test/**/*.js' --recursive --check-coverage --lines 70  --timeout 60000 --exit",    "dev": "nodemon -r newrelic app.js",
+    "start": "nodemon -r newrelic app.js"
   },
   "author": "",
   "license": "ISC",
