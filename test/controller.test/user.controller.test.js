@@ -1,6 +1,4 @@
-// const { expect } = require("chai");
 const userRepository= require ("../../repositories/user.repository");
-
 const { v4: uuidv4, validate: uuidValidator } = require("uuid");
 const {
     PropertyNotFound,
