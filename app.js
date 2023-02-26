@@ -55,6 +55,9 @@ app.use("/goal", goalRouter);
 app.use("/stats", statsRouter);
 app.use(errorHandler);
 
-app.listen(port, () => {
-  console.log(`Server is listening on port ${port}...`);
-});
+
+  app.listen(port, () => {
+    console.log(`Server is listening on port ${port}...`);
+  });
+
+

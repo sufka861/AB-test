@@ -22,10 +22,9 @@ const {ServerUnableError} = require("../errors/internal.errors");
 
 const runTest = async (req, res, next) => {
   validateRun(req, req.body.experimentId, req.body.subscription);
-  const user = await getUserByUuid(req, res);
+  const user = await getUserByUuid(req.body.uuid);
   if (user)
     return experimentExistingUser(
-      req,
       res,
       user,
       req.body.experimentId,
@@ -43,20 +42,25 @@ const validateRun = async (req, experimentId, subscription) => {
 };
 
 const experimentNewUser = async (req, res, next, experimentId) => {
+  try {
+    // testAttributes, customAttributes, experimentId
   const experiment = await ExperimentRepository.retrieve(experimentId);
   if (!experiment) throw new EntityNotFound("experiment");
-  if (checkAttributes(req, experiment, next)) {
-    const newUser = await addUser(req, res);
+  if (checkAttributes(req.body.testAttributes, req.body.customAttributes, experiment, next)) {
+    const newUser = await addUser();
     res.cookie("uuid", newUser.uuid, { maxAge: 900000, httpOnly: true });
-    const variant = await doExperiment(experimentId, newUser.uuid, req);
+    const variant = await doExperiment(experimentId, newUser.uuid);
     res.status(200).json(variant);
   } else {
     res.status(200).json({ message: "user does not match attributes" });
   }
+  } catch (error) {
+    next(error);
+  }
+  
 };
 
 const experimentExistingUser = async (
-  req,
   res,
   user,
   experimentId,

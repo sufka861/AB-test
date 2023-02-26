@@ -10,6 +10,7 @@ const checkExperimentTypeAndExecExperiment = async (
   
 ) => {
   const experiment = await ExperimentStorage.retrieve(experimentID);
+  console.log(experiment);
   const { status, type } = experiment;
 
   if (Util.shouldAllow(experiment.trafficPercentage / 100)) {

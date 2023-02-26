@@ -37,27 +37,29 @@ const shouldAllow = (ratio) => ratio >= 1 - Math.random();
 const checkIfActive = (experiment) => experiment.status === "active";
 
 const compareAttributes = (experimentAttributes, userAttribute) => {
+    
     return experimentAttributes.reduce((acc, {value})=>{
         acc.push(value);
         return acc;
     }, []).includes(userAttribute);
 }
-const checkAttributes = (endUserReq, experiment, next) => {
+const checkAttributes = (testAttributes, customAttributes, experiment, next) => {
     try {
-        const location = endUserReq.testAttributes.location;
-        const browser = endUserReq.testAttributes.browser;
-        const device = endUserReq.testAttributes.device;
-        const customAttributes = endUserReq.customAttributes;
+        const location = testAttributes.location;
+        const browser = testAttributes.browser;
+        const device = testAttributes.device;
+        // const customAttributes = customAttributes;
         if (location && browser && device) {
             const defAttResult =
-                compareAttributes(experiment.testAttributes.location, endUserReq.testAttributes.location) &&
-                compareAttributes(experiment.testAttributes.browser, endUserReq.testAttributes.browser) &&
-                compareAttributes(experiment.testAttributes.device, endUserReq.testAttributes.device);
+                compareAttributes(experiment.testAttributes.location, testAttributes.location) &&
+                compareAttributes(experiment.testAttributes.browser, testAttributes.browser) &&
+                compareAttributes(experiment.testAttributes.device, testAttributes.device);
             let attributes = {"location": location, "browser": browser, "device": device};
             let customAttResult;
             if (customAttributes) {
                 customAttResult = Object.entries(customAttributes).every(([key, value]) => {
-                    return compareAttributes(experiment.customAttributes[key], value)
+                    // console.log(experiment.customAttributes.get(key))
+                    return compareAttributes(experiment.customAttributes.get(key), value)
                 })
                 attributes = {...attributes, ...customAttributes};
             }
