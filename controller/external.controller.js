@@ -131,15 +131,23 @@ const createExperimentWithGoals = async (req, res) => {
 }
 
 const updateExperimentWithGoalsByExpID = async (req, res) => {
-  if (!req.params.experimentId) throw new PropertyNotFound("experimentId");
-  const experimentID = req.params.experimentId;
-  const {experiment,goals} = req.body;
-  if (!experiment || !goals) throw new PropertyNotFound("Invalid request body for editing experiment");
-  const updatedGoals = await Promise.all( goals.map(async ({_id, ...updatedGoalData}) => await GoalRepository.update(_id, updatedGoalData)));
-  if(!updatedGoals.every((goal) =>!!goal)) throw new ServerUnableError("updating goals");
-  const updatedExperiment = await ExperimentRepository.update(experimentID, experiment)
-  if (!updatedExperiment) throw new ServerUnableError("updateExperimentsByID")
-  res.status(200).json(updatedExperiment);
+    if (!req.params.experimentId) throw new PropertyNotFound("experimentId");
+    const experimentID = req.params.experimentId;
+    let updatedExperiment;
+    const {experiment, goals} = req.body;
+    if (goals) {
+        const updatedGoals = await Promise.all(goals.map(async ({
+                                                                    _id,
+                                                                    ...updatedGoalData
+                                                                }) => await GoalRepository.update(_id, updatedGoalData)));
+        if (!updatedGoals.every((goal) => !!goal)) throw new ServerUnableError("updating goals");
+    }
+    if (experiment) {
+        updatedExperiment = await ExperimentRepository.update(experimentID, experiment)
+        if (!updatedExperiment) throw new ServerUnableError("updateExperimentsByID")
+    }
+    else updatedExperiment = await ExperimentRepository.retrieve(experimentID)
+    res.status(200).json( updatedExperiment );
 }
 
 
