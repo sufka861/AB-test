@@ -35,12 +35,12 @@ module.exports = new (class ExperimentsRepository extends MongoStorage {
         if (validateDate(`${month}/01/${year}`)) {
             const start = new Date(year, month - 1, 1);
             const end = new Date(year, month, 0);
-            const result = await this.Model.countDocuments({
+            const result = await this.Model.find().countDocuments({
                  'duration.startTime': {
                     $gte: start,
                     $lte: end,
                 },
-            });
+            }).find();
             return result;
         }
     }

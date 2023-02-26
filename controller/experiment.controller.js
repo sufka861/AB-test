@@ -62,12 +62,28 @@ const getExperimentsByDate = async (req, res) => {
   const year = req.query.year;
   const month = req.query.month;
   const result = await ExperimentRepository.findByDate(year, month);
-  if(result === 0 || result) {
-    res.status(200).json({result})
-  } else {
-    throw new ServerUnableError("getExperimentsByDate");
+  let activeCount = 0;
+  let endedCount = 0;
+  let plannedCount = 0;
+  let terminatedCount = 0;
+  for(const exp of result){
+    console.log(exp.status);
+    if(exp.status === 'active') activeCount++;
+    if(exp.status === 'planned') plannedCount++;
+    if(exp.status === 'terminated') terminatedCount++;
+    if(exp.status === 'ended') endedCount++;
   }
-};
+
+  const distResult = {
+    active: activeCount,
+    ended: endedCount,
+    terminated: terminatedCount,
+    planned: plannedCount
+  }
+
+    res.status(200).json(distResult);
+  }
+
 
 const deleteExperimentsByID = async (req, res) => {
   if (!req.params.experimentId) throw new PropertyNotFound("experimentId");
