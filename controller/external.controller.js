@@ -102,7 +102,7 @@ const reportGoal = async (req, res) => {
   const {variant} = user.experiments.find((exp) => exp.experimentId.toString() === experimentId )
   if (!variant)  throw new ServerUnableError(`couldn't load experiment ${experimentId} from user`)
   const response = await GoalRepository.incVariantSuccessCount(goalId, variant.keys().next().value);
-  res.status(200).send(true);
+  res.status(200).send(response.variantSuccessCount);
 
 };
 

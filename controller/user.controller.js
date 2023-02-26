@@ -8,12 +8,13 @@ const { ServerUnableError } = require("../errors/internal.errors");
 
 const userRepository = require("../repositories/user.repository");
 
-const getUserByUuid = async (uuid) => {
-  if (!uuid) return false;
+const getUserByUuidController = async (req,res) => {
+  const uuid = req.params.uuid;
   const [user] = await userRepository.retrieveByUuid(uuid);
   if (!user) throw new EntityNotFound("user");
-  return user;
-};
+  res.status(200).json(user);
+}
+
 
 const addUser = async (req, res) => {
   const uuid = generateUuid();
@@ -55,7 +56,7 @@ const getAllUsers = async (req, res) => {
 
 module.exports = {
   getAllUsers,
-  getUserByUuid,
+  getUserByUuidController,
   addUser,
   insertExperiment,
   getUserExperiment,
