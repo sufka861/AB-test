@@ -63,8 +63,10 @@ const getVariantSuccessCount = async (req, res) => {
 
 const getExperimentsCountByDate = async (req, res) => {
 
-    const month = req.params.month;
-    const year = req.params.year;
+    const month = parseInt(req.params.month);
+    const year = parseInt(req.params.year);
+    console.log(month, year);
+    if (isNaN(month) || isNaN(year)) throw new ValidationError.InvalidProperty("input")
     if (month > 12 || month < 1) throw new ValidationError.InvalidProperty("month");
     const inputDate = new Date(year, month - 1, 1);
     const currentDate = new Date();
