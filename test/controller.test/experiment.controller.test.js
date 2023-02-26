@@ -3,7 +3,7 @@ const sinon = require('sinon');
 const { PropertyNotFound, BodyNotSent } = require("../../errors/NotFound.errors");
 const { ServerUnableError } = require("../../errors/internal.errors");
 const ExperimentRepository = require ('../../repositories/experiment.repository');
-const {getAllExperiments,getExperimentById,getExperimentsByAccountId,getExperimentsAB} = require ("../../controller/experiment.controller");
+const {getAllExperiments,getExperimentById,getExperimentsByAccountId,getExperimentsAB,getExperimentsFF} = require ("../../controller/experiment.controller");
 
 
 describe('getAllExperiments', () => {
@@ -228,6 +228,61 @@ describe('getAllExperiments', () => {
             sinon.stub(ExperimentRepository, 'findByTwoAttributes').resolves(expectedResults);
 
             await getExperimentsAB(req, res);
+
+            sinon.assert.calledOnce(res.status);
+            sinon.assert.calledWith(res.status, 200);
+            sinon.assert.calledOnce(res.status().json);
+            sinon.assert.calledWith(res.status().json, expectedResults);
+        });
+    });
+
+    describe('getExperimentsFF', () => {
+        const req = {
+            params: {
+                accountId: '123'
+            }
+        };
+        const res = {
+            status: sinon.stub().returns({
+                json: sinon.stub()
+            })
+        };
+
+        afterEach(() => {
+            sinon.restore();
+        });
+
+        it('should throw PropertyNotFound error if accountId is not provided', async () => {
+            const reqWithoutAccountId = {
+                params: {}
+            };
+
+            try {
+                await getExperimentsFF(reqWithoutAccountId, res);
+                expect.fail('Should have thrown an error');
+            } catch (err) {
+                expect(err).to.be.an.instanceOf(PropertyNotFound);
+                expect(err.message).to.equal(`Property: ${'accountId'} not found...`);
+            }
+        });
+
+        it('should throw ServerUnableError if no results are found', async () => {
+            sinon.stub(ExperimentRepository, 'findByTwoAttributes').resolves(null);
+
+            try {
+                await getExperimentsFF(req, res);
+                expect.fail('Should have thrown an error');
+            } catch (err) {
+                expect(err).to.be.an.instanceOf(ServerUnableError);
+                expect(err.message).to.equal(`Unable to ${'getExperimentsFF'} due to internal server error...`);
+            }
+        });
+
+        it('should return the experiments with type "f-f" and the given accountId', async () => {
+            const expectedResults = [{ name: 'Experiment C' }, { name: 'Experiment D' }];
+            sinon.stub(ExperimentRepository, 'findByTwoAttributes').resolves(expectedResults);
+
+            await getExperimentsFF(req, res);
 
             sinon.assert.calledOnce(res.status);
             sinon.assert.calledWith(res.status, 200);
