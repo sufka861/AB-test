@@ -8,6 +8,5 @@ statsRouter.get('/reqPerAtt/:experimentId',statsController.getReqPerAttribute);
 statsRouter.get('/testsPerMonth/:accountId',statsController.getTestsPerMonth);
 statsRouter.get('/variantSuccessCount/:experimentId/:goalId',statsController.getVariantSuccessCount);
 statsRouter.get('/activeExperiments/:month/:year',statsController.getActiveExperiments);
-statsRouter.get('/:id',statsController.getStatistics);
 
 module.exports = statsRouter;
