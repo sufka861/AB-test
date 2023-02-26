@@ -1,8 +1,6 @@
 const MongoStorage = require("../db/mongo.storage");
 const validateDate = require("validate-date");
 const {mongoose} = require("mongoose");
-const {log} = require("winston");
-const {ServerUnableError} = require("../errors/internal.errors");
 const moment = require('moment');
 
 module.exports = new (class ExperimentsRepository extends MongoStorage {
@@ -34,22 +32,33 @@ module.exports = new (class ExperimentsRepository extends MongoStorage {
     }
 
     async findByDate(year, month) {
-        const adjustedMonth = Number(month) - 1;
-        if (validateDate(`${adjustedMonth}/01/${year}`)) {
-            const start = new Date(year, adjustedMonth, 1);
-            const end = new Date(year, adjustedMonth, 31);
-            const result = await this.Model.countDocuments({
-                 endTime: {
-                    $gte: start,
-                    $lte: end,
-                },
-            }).populate({path: 'goals'});
-            return result;
-        }
+        const pipeline = [
+          {
+            $match: {
+              'duration.startTime': {
+                $gte: new Date(year, month - 1, 1),
+                $lte: new Date(year, month, 0),
+              },
+            },
+          },
+          {
+            $group: {
+              _id: '$status',
+              count: { $sum: 1 },
+            },
+          },
+          {
+            $project: {
+              _id: 0,
+              status: '$_id',
+              count: 1,
+            },
+          },
+        ];
+      
+        const results = await this.Model.aggregate(pipeline);
+        return results;
     }
-
-
-
 
     async incCallCount(id) {
         return await this.update(id, {$inc: {callCount: 1, monthlyCallCount: 1}}).populate({path: 'goals'});
@@ -193,11 +202,6 @@ module.exports = new (class ExperimentsRepository extends MongoStorage {
     ]).exec();
     return { devices: result, locations: locationResult };
   }
-
-
-
-
-
-
-
 })();
+
+
