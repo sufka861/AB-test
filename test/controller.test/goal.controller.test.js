@@ -270,7 +270,8 @@ describe('Experiment endpoints', function () {
 
             expect(res.statusCode).to.equal(200);
             expect(res.data).to.equal(2);
-            expect(incGoalSuccessCountStub).to.be.an('1234');
+            expect(incGoalSuccessCountStub).to.be.calledWith('1234');
+
             incGoalSuccessCountStub.restore();
         });
 

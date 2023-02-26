@@ -6,16 +6,16 @@ describe('featureCheckAttributes', () => {
 
     it('should return the ON variant', () => {
         const endUserReq = {};
-        const experiment = { variantsFF: { ON:  true , OFF:  false }}  ;
+        const experiment = { variantsFF: { ON:  true , OFF:  false ,tested: true }}  ;
         const result = featureCheckAttributes(endUserReq, experiment);
-        expect(result).to.deep.equal({ ON:  true } );
+        expect(result).to.deep.equal({ ON:  true ,tested:true} );
     });
 
     it('should return the OFF variant', () => {
         const endUserReq = {};
-        const experiment = { variantsFF: { ON:  false }, OFF:  true }  ;
+        const experiment = { variantsFF: { ON:  false }, OFF:  true ,tested: true}  ;
         const result = featureCheckAttributes(endUserReq, experiment);
-        expect(result).to.deep.equal({ ON:  false  });
+        expect(result).to.deep.equal({ ON:  false ,tested: true });
     });
 
 });

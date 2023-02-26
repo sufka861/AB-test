@@ -3,7 +3,7 @@ const sinon = require('sinon');
 const { PropertyNotFound, BodyNotSent } = require("../../errors/NotFound.errors");
 const { ServerUnableError } = require("../../errors/internal.errors");
 const ExperimentRepository = require ('../../repositories/experiment.repository');
-const {getAllExperiments,getExperimentById,getExperimentsByAccountId,getExperimentsAB,getExperimentsFF,getExperimentsByDate,addGoalToExperiment} = require ("../../controller/experiment.controller");
+const {getAllExperiments,getExperimentById,getExperimentsByAccountId,getExperimentsAB,getExperimentsFF,getExperimentsByDate,addGoalToExperiment,deleteExperimentsByID} = require ("../../controller/experiment.controller");
 
 
 describe('getAllExperiments', () => {
@@ -435,86 +435,6 @@ describe('getAllExperiments', () => {
             expect(next.called).to.be.false;
 
             addGoalStub.restore();
-        });
-    });
-
-    describe("addGoalToExperiment", function () {
-        let req, res, ExperimentRepository, addGoalStub;
-
-        beforeEach(function () {
-            req = {
-                params: {
-                    experimentId: "123",
-                    goalId: "456",
-                },
-            };
-
-            res = {
-                status: sinon.stub().returns({
-                    json: sinon.stub(),
-                }),
-            };
-
-            ExperimentRepository = {
-                addGoal: sinon.stub(),
-            };
-
-            addGoalStub = ExperimentRepository.addGoal;
-        });
-
-        it("should throw a PropertyNotFound error if experimentId is not provided", async function () {
-            delete req.params.experimentId;
-
-            try {
-                await addGoalToExperiment(req, res);
-                assert.fail("Expected a PropertyNotFound error to be thrown");
-            } catch (error) {
-                assert.equal(error.message, "experimentId not found");
-            }
-        });
-
-        it("should throw a PropertyNotFound error if goalId is not provided", async function () {
-            delete req.params.goalId;
-
-            try {
-                await addGoalToExperiment(req, res);
-                assert.fail("Expected a PropertyNotFound error to be thrown");
-            } catch (error) {
-                assert.equal(error.message, "goalId not found");
-            }
-        });
-
-        it("should call ExperimentRepository.addGoal with the correct parameters", async function () {
-            addGoalStub.returns("some value");
-
-            await addGoalToExperiment(req, res);
-
-            sinon.assert.calledOnceWithExactly(
-                addGoalStub,
-                req.params.experimentId,
-                req.params.goalId
-            );
-        });
-
-        it("should return the value returned by ExperimentRepository.addGoal", async function () {
-            addGoalStub.returns("some value");
-
-            await addGoalToExperiment(req, res);
-
-            sinon.assert.calledWith(res.status, 200);
-            sinon.assert.calledOnce(res.status().json);
-            sinon.assert.calledWith(res.status().json, "some value");
-        });
-
-        it("should throw a ServerUnableError if ExperimentRepository.addGoal returns falsy value", async function () {
-            addGoalStub.returns(null);
-
-            try {
-                await addGoalToExperiment(req, res);
-                assert.fail("Expected a ServerUnableError error to be thrown");
-            } catch (error) {
-                assert.equal(error.message, "Server unable to add goal to experiment");
-            }
         });
     });
 

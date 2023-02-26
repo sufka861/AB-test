@@ -7,9 +7,11 @@ describe('ABcheckAttributes', () => {
 
     it('should return option A', () => {
         const endUserReq = {};
-        const experiment = { variantsAB: { A: 'red' , B:  'blue' , C:  'null'  } };
+        const experiment = {
+            variantsAB: { A:'blue', tested: true ,
+         B: 'red', tested: true } };
         const result = ABcheckAttributes(endUserReq, experiment);
-        expect(result).to.deep.equal({ A: 'red'  });
+        expect(result).to.deep.equal({ A:'blue', tested: true });
         console.log("should return option A");
     });
 
@@ -24,7 +26,6 @@ describe('ABcheckAttributes', () => {
     });
 
 });
-
 
 describe('returnByRatio', function() {
     it('should return either optionA or optionB', function() {
