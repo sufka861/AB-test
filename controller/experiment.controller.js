@@ -4,6 +4,7 @@ const { ServerUnableError } = require("../errors/internal.errors");
 const { bodyValidator } = require("../validators/body.validator");
 const { BodyNotSent } = require("../errors/BadRequest.errors");
 const { readFile } = require("fs/promises");
+const { lookupService } = require("dns");
 
 const getAllExperiments = async (req, res) => {
   const result = await ExperimentRepository.find();
@@ -62,23 +63,12 @@ const getExperimentsByDate = async (req, res) => {
   const year = req.query.year;
   const month = req.query.month;
   const result = await ExperimentRepository.findByDate(year, month);
-  let activeCount = 0;
-  let endedCount = 0;
-  let plannedCount = 0;
-  let terminatedCount = 0;
-  for(const exp of result){
-    console.log(exp.status);
-    if(exp.status === 'active') activeCount++;
-    if(exp.status === 'planned') plannedCount++;
-    if(exp.status === 'terminated') terminatedCount++;
-    if(exp.status === 'ended') endedCount++;
-  }
 
   const distResult = {
-    active: activeCount,
-    ended: endedCount,
-    terminated: terminatedCount,
-    planned: plannedCount
+    active: (result.find(obj => obj.status === "active"))?.count || 0,
+    ended: (result.find(obj => obj.status === "ended"))?.count || 0,
+    terminated: (result.find(obj => obj.status === "terminated"))?.count || 0,
+    planned: (result.find(obj => obj.status === "planned"))?.count || 0
   }
 
     res.status(200).json(distResult);
@@ -156,3 +146,4 @@ module.exports = {
   getFeaturesList,
   terminateExperiment,
 };
+
