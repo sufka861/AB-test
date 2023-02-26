@@ -1,0 +1,11 @@
+{
+  "testAttributes": {
+    "location" : "IL",
+    "device" : "mobile",
+    "browser" : "Chrome"
+  },
+  "customAttributes": {
+    "Color" : "Red",
+    "Shape" : "circle"
+  }
+}
