@@ -44,8 +44,6 @@ const compareAttributes = (experimentAttributes, userAttribute) => {
 }
 const checkAttributes = (endUserReq, experiment, next) => {
     try {
-        // const geo = getLocation(getClientIP(endUserReq));
-        // const {browser, device} = getBrowserDevice(endUserReq);
         const location = endUserReq.testAttributes.location;
         const browser = endUserReq.testAttributes.browser;
         const device = endUserReq.testAttributes.device;
