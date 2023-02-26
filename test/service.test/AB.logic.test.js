@@ -2,29 +2,45 @@ const chai = require('chai');
 const { ABcheckAttributes, returnByRatio } = require('../../Service/AB.test.logic');
 const expect = chai.expect;
 const sinon = require('sinon');
-
-describe('ABcheckAttributes', () => {
-
-    it('should return option A', () => {
-        const endUserReq = {};
+describe("ABcheckAttributes", () => {
+    it("should return an object with A and B properties", () => {
         const experiment = {
-            variantsAB: { A:'blue', tested: true ,
-         B: 'red', tested: true } };
-        const result = ABcheckAttributes(endUserReq, experiment);
-        expect(result).to.deep.equal({ A:'blue', tested: true });
-        console.log("should return option A");
+            variantsAB: {
+                A: "50",
+                B: "50",
+                C: "0",
+            },
+        };
+        const result = ABcheckAttributes(experiment);
+        expect(result).to.have.property('A: A, tested: true');
+        expect(result).to.have.property('B: 50, tested: true');
+        expect(result).to.not.have.property("C");
     });
 
-    it('should return option B', () => {
-        const endUserReq = {};
-        const experiment = { variantsAB: { A:  'red' }, B:  'blue' };
-        const stub = sinon.stub(Math, 'random').returns(0.6);
-        const result = ABcheckAttributes(endUserReq, experiment);
-        expect(result).to.deep.equal({ B: 'blue'  });
-        stub.restore();
-        console.log("should return option B");
-    });
+    it("should return an object with tested properties set to true", () => {
+        const experiment = {
+            variantsAB: {
+                A: 50,
+                B: 50,
+                C: 0,
+            },
+        };
+    const result = ABcheckAttributes(experiment);
+    expect(result).to.have.property('true');
+    expect(result).to.have.property( 'false');
+});
 
+it("should return the correct ratio of A to B", () => {
+    const experiment = {
+        variantsAB: {
+            A: 75,
+            B: 25,
+            C: 0,
+        },
+    };
+    const result = ABcheckAttributes(experiment);
+    expect(result.A / result.B).to.be.closeTo(3, 0.1);
+});
 });
 
 describe('returnByRatio', function() {

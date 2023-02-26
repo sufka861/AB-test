@@ -9,10 +9,8 @@ const expect = chai.expect;
 const { InvalidProperty, ServerUnableError } = require('../../errors/validation.errors');
 const sinon = require("sinon");
 const {
-    checkAttributes,
     getAllUsers,
     getUserByUuid,
-    setCookie,
     getCookie,
     addUser,
     insertExperiment,
@@ -44,14 +42,6 @@ describe("getUserByUuid", () => {
     });
 });
 
-// describe("setCookie", () => {
-//     it("should set a uuid cookie", () => {
-//         const res = {
-//             cookie: () => {},
-//         };
-//         setCookie({}, res);
-//     });
-// });
 
 describe("getCookie", () => {
     it("should return uuid cookie value if found", () => {
@@ -88,22 +78,18 @@ describe('User Controller', () => {
         });
 
         it('should create a new user and return the user object', async () => {
-            const uuid = 'test_uuid';
+            const uuid = '65y5y566';
             const user = { uuid };
             const newUser = { ...user, id: 1 };
-
             sinon.stub(global, 'generateUuid').returns(uuid);
             createUserStub.withArgs(user).returns(newUser);
-
             const result = await addUser(req, res);
-
             expect(result).to.deep.equal(newUser);
             expect(createUserStub.calledOnceWithExactly(user)).to.be.true;
         });
 
         it('should throw an InvalidProperty error if the generated uuid is invalid', async () => {
             sinon.stub(global, 'generateUuid').returns('invalid_uuid');
-
             try {
                 await addUser(req, res);
             } catch (error) {
@@ -115,7 +101,6 @@ describe('User Controller', () => {
         it('should throw a ServerUnableError error if the user creation fails', async () => {
             sinon.stub(global, 'generateUuid').returns('test_uuid');
             createUserStub.returns(null);
-
             try {
                 await addUser(req, res);
             } catch (error) {
@@ -204,4 +189,59 @@ describe("insertExperiment", () => {
             })
         })
     })
+    describe("User Routes", () => {
+        it("should return all users", async () => {
+            const res = await request(app).get("/users");
+            expect(res.status).to.equal(200);
+            expect(res.body).to.be.an("array");
+        });
+
+        it("should return a specific user by uuid", async () => {
+            const res = await request(app).get("/users/12345");
+            expect(res.status).to.equal(200);
+            expect(res.body).to.be.an("object");
+            expect(res.body).to.have.property("uuid", "12345");
+        });
+
+        it("should return an experiment for a user by experiment id", async () => {
+            const res = await request(app).get("/users/experiment/12345");
+            expect(res.status).to.equal(200);
+            expect(res.body).to.be.an("object");
+            expect(res.body).to.have.property("experimentId", "12345");
+        });
+
+        it("should create a new user", async () => {
+            const res = await request(app)
+                .post("/users")
+                .send({
+                    name: "John Doe",
+                    email: "john.doe@example.com",
+                    password: "password",
+                });
+            expect(res.status).to.equal(200);
+            expect(res.body).to.be.an("object");
+            expect(res.body).to.have.property("name", "John Doe");
+            expect(res.body).to.have.property("email", "john.doe@example.com");
+        });
+
+        it("should add an experiment to a user", async () => {
+            const res = await request(app)
+                .put("/users/12345")
+                .send({
+                    experimentId: "54321",
+                });
+            expect(res.status).to.equal(200);
+            expect(res.body).to.be.an("object");
+            expect(res.body).to.have.property("uuid", "12345");
+            expect(res.body).to.have.property("experimentId", "54321");
+        });
+
+        it("should return cookie values", async () => {
+            const res = await request(app).get("/users/cookie");
+            expect(res.status).to.equal(200);
+            expect(res.body).to.be.an("object");
+            expect(res.body).to.have.property("cookie");
+        });
+
+    });
 });

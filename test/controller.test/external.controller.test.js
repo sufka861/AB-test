@@ -8,9 +8,7 @@ const {PropertyNotFound, ServerUnableError, BodyNotSent,} = require("../../error
 describe("createExperimentWithGoals", () => {
 
     beforeEach(() => {
-        const req = { body: { experiment: {
-
-                },
+        const req = { body: { experiment: {},
                 goals: [] } };
         const res = {
             status: sinon.stub().returns({

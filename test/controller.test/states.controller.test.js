@@ -116,7 +116,6 @@ describe("getActiveExperiments", () => {
             },
         };
         const res = {};
-
         try {
             await getActiveExperiments(req, res);
         } catch (err) {
@@ -129,7 +128,6 @@ describe("getActiveExperiments", () => {
         const futureDate = new Date(Date.now() + 86400000);
         const month = futureDate.getMonth() + 1;
         const year = futureDate.getFullYear();
-
         try {
             await getActiveExperiments(month, year);
         } catch (err) {
@@ -147,7 +145,6 @@ describe("getActiveExperiments", () => {
         };
         const res = {};
         const repositoryStub = sinon.stub(ExperimentRepository, "getActiveExperimentsByDate").resolves(undefined);
-
         try {
             await getActiveExperiments(req, res);
         } catch (err) {
@@ -175,7 +172,6 @@ describe("getActiveExperiments", () => {
     //     repositoryStub.restore();
     // });
 
-
     describe('getExperimentsAttributesDistribution', function () {
         it('should return attribute distribution if successful', async function () {
             const expectedResult = [
@@ -189,7 +185,6 @@ describe("getActiveExperiments", () => {
                 send: sinon.stub()
             };
             const stub = sinon.stub(ExperimentRepository, 'getExperimentCountsByAttributes').resolves(expectedResult);
-
             await getExperimentsAttributesDistribution(mockReq, mockRes);
 
             expect(stub.calledOnce).to.be.true;

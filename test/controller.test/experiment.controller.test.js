@@ -8,15 +8,14 @@ const {getAllExperiments,getExperimentById,getExperimentsByAccountId,getExperime
 
 describe('getAllExperiments', () => {
     let req, res;
-
     beforeEach(() => {
         req = {};
         res = {
-            status: function(code) {
+            status: function (code) {
                 this.statusCode = code;
                 return this;
             },
-            json: function(data) {
+            json: function (data) {
                 this.data = data;
                 return this;
             }
@@ -24,19 +23,16 @@ describe('getAllExperiments', () => {
     });
 
     it('should return all experiments and send the result as response with a 200 status code', async () => {
-        const experiments = [{ id: '5505' }, { id: '78796' }];
+        const experiments = [{id: '5505'}, {id: '78796'}];
         const findStub = sinon.stub(ExperimentRepository, 'find').resolves(experiments);
-
         await getAllExperiments(req, res);
-
         expect(res.statusCode).to.equal(200);
         expect(res.data).to.deep.equal(experiments);
         expect(findStub).to.be.an;
-
         findStub.restore();
     });
 
-    it('should throw ServerUnableError if ExperimentRepository.find() returns falsy value', async () => {
+    it('should throw ServerUnableError if ExperimentRepository.find() returns false', async () => {
         const findStub = sinon.stub(ExperimentRepository, 'find').resolves(null);
 
         try {
@@ -51,15 +47,11 @@ describe('getAllExperiments', () => {
 
         findStub.restore();
     });
-
+});
     describe('getExperimentById', () => {
         let req, res;
-
         beforeEach(() => {
-            req = {
-                params: {
-                    experimentId: 'exp-1'
-                }
+            req = { params: {experimentId: '56577'}
             };
             res = {
                 status: function(code) {
@@ -74,11 +66,9 @@ describe('getAllExperiments', () => {
         });
 
         it('should return the experiment and send the result as response with a 200 status code', async () => {
-            const experiment = { id: '1234' };
+            const  experiment = '56577';
             const retrieveStub = sinon.stub(ExperimentRepository, 'retrieve').resolves(experiment);
-
             await getExperimentById(req, res);
-
             expect(res.statusCode).to.equal(200);
             expect(res.data).to.deep.equal(experiment);
             expect(retrieveStub).to.be.be.an(req.params.experimentId);
@@ -121,13 +111,8 @@ describe('getAllExperiments', () => {
 
     describe('getExperimentsByAccountId', () => {
         let req, res;
-
         beforeEach(() => {
-            req = {
-                params: {
-                    accountId: '68795'
-                }
-            };
+            req = { params: {accountId: '68795'}};
             res = {
                 status: function(code) {
                     this.statusCode = code;
@@ -164,7 +149,7 @@ describe('getAllExperiments', () => {
             }
         });
 
-        it('should throw ServerUnableError if ExperimentRepository.findByAttribute() returns falsy value', async () => {
+        it('should throw ServerUnableError if ExperimentRepository.findByAttribute() returns false', async () => {
             const findByAttributeStub = sinon.stub(ExperimentRepository, 'findByAttribute').resolves(null);
 
             try {
@@ -352,7 +337,8 @@ describe('getAllExperiments', () => {
             const res = { status: (code) => ({ json: (result) => ({ code, result }) }) };
             const deleteStub = sinon.stub(ExperimentRepository, "delete").returns("Deleted");
             const result = await deleteExperimentsByID(req, res);
-            expect(result).to.deep.equal({ code: 200, result: "Deleted" });
+            console.log(result);
+            expect(result).to.deep.equal({ code: 200, result: 'Deleted' });
             deleteStub.restore();
         });
 
@@ -374,7 +360,7 @@ describe('getAllExperiments', () => {
 
     describe('addGoalToExperiment', () => {
         it('should throw a PropertyNotFound error if experimentId is missing', async () => {
-            const req = { params: { goalId: '123' } };
+            const req = {params: {goalId: '123'}};
             const res = {};
             const next = sinon.stub();
 
@@ -389,7 +375,7 @@ describe('getAllExperiments', () => {
         });
 
         it('should throw a PropertyNotFound error if goalId is missing', async () => {
-            const req = { params: { experimentId: '123' } };
+            const req = {params: {experimentId: '123'}};
             const res = {};
             const next = sinon.stub();
 
@@ -404,7 +390,7 @@ describe('getAllExperiments', () => {
         });
 
         it('should throw a ServerUnableError error if ExperimentRepository.addGoal fails', async () => {
-            const req = { params: { experimentId: '123', goalId: '456' } };
+            const req = {params: {experimentId: '123', goalId: '456'}};
             const res = {};
             const next = sinon.stub();
             const addGoalStub = sinon.stub(ExperimentRepository, 'addGoal').resolves(null);
@@ -422,10 +408,10 @@ describe('getAllExperiments', () => {
         });
 
         it('should call res.status and res.json with the result returned by ExperimentRepository.addGoal', async () => {
-            const req = { params: { experimentId: '123', goalId: '456' } };
-            const res = { status: sinon.stub().returnsThis(), json: sinon.stub().returnsThis() };
+            const req = {params: {experimentId: '123', goalId: '456'}};
+            const res = {status: sinon.stub().returnsThis(), json: sinon.stub().returnsThis()};
             const next = sinon.stub();
-            const expectedResult = { id: '789', experimentId: '123', goalId: '456' };
+            const expectedResult = {id: '789', experimentId: '123', goalId: '456'};
             const addGoalStub = sinon.stub(ExperimentRepository, 'addGoal').resolves(expectedResult);
 
             await addGoalToExperiment(req, res, next);
@@ -438,4 +424,3 @@ describe('getAllExperiments', () => {
         });
     });
 
-});
