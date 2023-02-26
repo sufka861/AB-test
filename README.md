@@ -3,12 +3,17 @@
 
 **Welcome to our part in SAAS-System!**
 
-We are a team that is part of a SAAS-System. We are responsible for the logic of the system.
-You can create and run experimentAB and Feature Flag tests features according to the attributes you choose and the amount of traffic that will participate in the experiment.
+We are a team that is part of a SAAS-System The system was built by several teams, each team has a part for which it is 
+responsible for the system. We are responsible for the logic of the system.
+You can create and run experimentAB and Feature Flag tests  according to attributes you choose and the amount of traffic
+that will participate in the experiment,decide on the variants for the user,get access to the goals and to the call witch
+mad by each account and experiments.
 You can see the statistics of each experiment according to the number of participants during the run and at the end of the project.
 The purpose of this project is to identify any changes to the web page to maximize or increase the result of interest.
 
-> **Before you start**
+The client gets SDK to implement our code in their system and make calls to our API routes.
+
+ > **Before you start**
 1. [x] Download the code from Git-Hub https://github.com/sufka861/AB-test.git
 2. [x] Cd to the working directory and start the server using the following command in the terminal - $node app.js
 3. [x] Make sure to install all the dependencies  as described in the package.json [npm install].
@@ -128,10 +133,12 @@ NOTE: if you created AB test Experiment make sure you have 3 variants,if you cre
 4.  Make sure that from the beginning of the experiment to the end the variants values changed.
 
 `Exclusive Account:`
+
  The account have the option to choose - Does each experiment stand by itself and only one experiment
 will appear for each.
 
 `Inclusive Account:`
+
 This means that every customer has a lot of experiments
 And all the experiments together can be together for all the users who see them.
 
@@ -143,5 +150,6 @@ And all the experiments together can be together for all the users who see them.
 * Mohamad Aboria
 * Adva Apelboim
 * Ilai Azulay
+
 Wish you happy Experiments: DCS Growth Team
 
