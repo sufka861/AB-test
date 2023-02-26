@@ -1,0 +1,33 @@
+// request.body in getVariant
+
+{
+  "experimentId" : "mongoose ObjectId",
+  "subscription" : "subscription plan",
+  "testAttributes": {
+    "location": "location code",
+    "device": "device type",
+    "browser" : "browser type"
+  },
+  "customAttributes": {
+    "key" : "value"
+  },
+  "uuid":  "end user cookie uuid or null"
+
+}
+
+// request.body in reportGoal
+
+{
+  "experimentId" : "mongoose ObjectId",
+  "goalId":  "mongoose ObjectId",
+  "testAttributes": {
+    "location": "location code",
+    "device": "device type",
+    "browser" : "browser type"
+  },
+  "customAttributes": {
+    "key" : "value"
+  },
+  "uuid":  "end user cookie uuid or null"
+
+}
