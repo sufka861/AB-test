@@ -4,7 +4,7 @@ const {
   getAllUsers,
   checkAttributes,
   getUserByUuid,
- 
+
   getCookie,
   addUser,
   insertExperiment,
@@ -16,9 +16,6 @@ userRouter.get("/:uuid", getUserByUuid);
 
 // Get experiment by experiment id
 userRouter.get("/experiment/:experimentId", getUserExperiment);
-
-// Get cookie values
-userRouter.get("/cookie", getCookie);
 
 // Create new user
 userRouter.post("/", addUser);

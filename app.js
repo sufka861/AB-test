@@ -9,7 +9,6 @@ const fs = require("fs");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const app = express();
-const requestIp = require("request-ip");
 const { errorHandler } = require("./middleware/errorHandler.mw");
 const logPath = path.join(__dirname, "logs", "http.log");
 const port = process.env.PORT || 3000;
