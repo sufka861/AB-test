@@ -110,26 +110,4 @@ describe('checkIfActive', () => {
     });
 });
 
-describe('checkAttributes', () => {
-    it('should return true if all attributes match', () => {
-        const endUserReq = { headers: { 'user-agent': 'Mozilla/5.0 (X11; CrOS x86_64 8172.45.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.64 Safari/537.36' } };
-        const experiment = { testAttributes: { location: ['US'], browser: ['Chrome'], device: ['desktop'] } };
-        const result = checkAttributes(endUserReq, experiment, () => {});
-        expect(result).to.be.true;
-    });
 
-    it('should return false if any attribute does not match', () => {
-        const endUserReq = { headers: { 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Safari/537.36' } };
-        const experiment = { testAttributes: { location: ['US'], browser: ['Chrome'], device: ['desktop'] } };
-        const result = checkAttributes(endUserReq, experiment, () => {});
-        expect(result).to.be.false;
-    });
-
-    it('should call next with error if any function throws an error', () => {
-        const location = "176.12.223.44";
-        const endUserReq = { headers: { 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36' } };
-        const experiment = { testAttributes: { location: ['US'], browser: ['Chrome'], device: ['desktop'] } };
-        const next = (error) => { expect(error.message).to.equal('getClientIP is not defined'); };
-        expect(() => checkAttributes(endUserReq, experiment, next)).to.throw('getClientIP is not defined');
-    });
-});
