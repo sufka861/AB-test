@@ -7,7 +7,6 @@ const featureFlagExpType = "f-f";
 
 const checkExperimentTypeAndExecExperiment = async (
   experimentID,
-  
 ) => {
   const experiment = await ExperimentStorage.retrieve(experimentID);
   console.log(experiment);
@@ -19,7 +18,7 @@ const checkExperimentTypeAndExecExperiment = async (
         ? ffLogic.featureCheckAttributes
         : abLogic.ABcheckAttributes;
 
-    await ExperimentStorage.incCallCount(experiment._id);
+    // await ExperimentStorage.incCallCount(experiment._id);
     return experimentLogic(experiment);
   }
   return type === featureFlagExpType

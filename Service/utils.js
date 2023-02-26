@@ -54,17 +54,19 @@ const checkAttributes = (testAttributes, customAttributes, experiment, next) => 
                 compareAttributes(experiment.testAttributes.location, testAttributes.location) &&
                 compareAttributes(experiment.testAttributes.browser, testAttributes.browser) &&
                 compareAttributes(experiment.testAttributes.device, testAttributes.device);
+            
             let attributes = {"location": location, "browser": browser, "device": device};
             let customAttResult;
             if (customAttributes) {
                 customAttResult = Object.entries(customAttributes).every(([key, value]) => {
-                    // console.log(experiment.customAttributes.get(key))
-                    return compareAttributes(experiment.customAttributes.get(key), value)
-                })
+                    console.log(key, value);
+                    return compareAttributes(experiment.customAttributes.get(key), value);
+                });
+                
                 attributes = {...attributes, ...customAttributes};
             }
             const attReqCountResult = incAttributeReqCount(experiment.experimentId, attributes);
-            if (!attReqCountResult) throw new ServerUnableError("attReqCountResult");
+            // if (!attReqCountResult) throw new ServerUnableError("attReqCountResult");
             return (customAttributes ? (defAttResult && customAttResult) : defAttResult);
         } else return false;
     } catch (error) {
