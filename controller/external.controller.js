@@ -8,6 +8,7 @@ const { incVariantByGoalID } = require("./goal.controller");
 const { checkAttributes } = require("./../Service/utils");
 const { bodyValidator } = require("./../validators/body.validator");
 const ExperimentRepository = require("../repositories/experiment.repository");
+const UsersRepository = require('../repositories/user.repository')
 const GoalRepository = require("./../repositories/goal.repository");
 const {
   MissingPropertyError,
@@ -88,32 +89,21 @@ const doExperiment = async (experimentId, uuid) => {
 const checkIfExperimentIsActive = async (experimentId) => {
   const experiment = await ExperimentRepository.retrieve(experimentId);
   if (!experiment) throw new EntityNotFound("experiment");
-  if (experiment.status !== "active") return false;
-  return true;
+  return experiment.status === "active";
+
 };
 
 const reportGoal = async (req, res) => {
-  const { experimentId, goalId } = req.body;
+  const { experimentId, goalId, uuid} = req.body;
   if (!(await checkIfExperimentIsActive(experimentId)))
     throw new ExperimentNotActive(experimentId);
-  const user = await getUserByUuid(req, res);
+  const user = await UsersRepository.retrieveByUuid(uuid);
   if (!user) throw new UserUnknown();
-  const experimentsList = getUserExperiment(user);
-  for (const exp of experimentsList) {
-    if (exp.experimentId.toString() === experimentId) {
-      const variant = [...exp.variant.keys()];
-      const response = await GoalRepository.incVariantSuccessCount(
-        goalId,
-        variant[0]
-      );
-      return res.status(200).json({
-        variant_success_count: response.variantSuccessCount,
-      });
-    }
-  }
-  return res.status(200).json({
-    message: `current user is not a part of experiment: ${experimentId}`,
-  });
+  const {variant} = user.experiments.find((exp) => exp.experimentId.toString() === experimentId )
+  if (!variant)  throw new ServerUnableError(`couldn't load experiment ${experimentId} from user`)
+  const response = await GoalRepository.incVariantSuccessCount(goalId, variant);
+  res.status(200).send(true);
+
 };
 
 const createExperimentWithGoals = async (req, res) => {
