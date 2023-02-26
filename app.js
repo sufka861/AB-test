@@ -21,7 +21,6 @@ const {goalRouter} = require("./router/goal.router");
 const {experimentStatusUpdate} = require("./Service/cron.job");
 
 
-
 // const Logger = require('abtest-logger');
 //  const logger = new Logger("amqps://qdniwzza:a-yzSrHM7aPJ-ySEYMc7trjzvs00QJ5b@rattlesnake.rmq.cloudamqp.com/qdniwzza");
 //  const loggerMethods = async()=>{
