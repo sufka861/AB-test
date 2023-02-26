@@ -23,12 +23,12 @@ const {experimentStatusUpdate} = require("./Service/cron.job");
 
 
 // const Logger = require('abtest-logger');
-// const loggerr = new Logger("amqps://qdniwzza:a-yzSrHM7aPJ-ySEYMc7trjzvs00QJ5b@rattlesnake.rmq.cloudamqp.com/qdniwzza");
-// const logermethods = async()=>{
-//   await logger.info('inforamtion about the code')
-//   await logger.error('errors')
-//   await logger.debug('debug purposes')
-// }
+//  const logger = new Logger("amqps://qdniwzza:a-yzSrHM7aPJ-ySEYMc7trjzvs00QJ5b@rattlesnake.rmq.cloudamqp.com/qdniwzza");
+//  const loggerMethods = async()=>{
+//    await logger.info('inforamtion about the code')
+//    await logger.error('errors')
+//    await logger.debug('debug purposes')
+//  }
 
 
 experimentStatusUpdate();
