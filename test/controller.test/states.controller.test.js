@@ -1,298 +1,219 @@
-const chai = require('chai');
-const expect = chai.expect;
-const sinon = require('sinon');
+const { getTestsPerMonth,getReqPerAttribute,getActiveExperiments } = require('../../controller/stats.controller');
+const ValidationError = require('../../errors/validation.errors');
+const NotFoundError = require('../../errors/NotFound.errors');
+const ServerError = require('../../errors/internal.errors');
+const { expect } = require("chai");
+const sinon = require("sinon");
+const {getExperimentsAttributesDistribution }= require('../../controller/external.controller');
+const ExperimentRepository = require('../../repositories/experiment.repository');
 
-const ValidationError = require("../../errors/validation.errors");
-const NotFoundError = require("../../errors/NotFound.errors");
-const ServerError = require("../../errors/internal.errors");
-const ExperimentRepository = require("../../repositories/experiment.repository");
-const UserRepository = require("../../repositories/user.repository");
-const { getStatistics, getUsersStats } = require("../../controller/stats.controller");
+describe('getReqPerAttribute', () => {
+    let experimentId;
 
-describe("Stats controller - getStatistics", () => {
-    const experimentId = "6023f3d345281d5278dc6680";
-    const experiment = {
-        _id: experimentId,
-        type: "a-b",
-        variantSuccessCount: {
-            A: 100,
-            B: 200,
-            C: 300,
-        },
-        callCount: 600,
-    };
-
-    beforeEach(() => {
-        sinon.stub(ExperimentRepository, "retrieve").resolves(experiment);
+    before(async () => {
+        // create a test experiment to retrieve data from
+        const experiment = { testAttributes: ['attr1', 'attr2'], customAttributes: ['attr3'] };
+        const newExperiment = await ExperimentRepository.create(experiment);
+        const experimentId = newExperiment._id.toString();
     });
 
-    afterEach(() => {
-        sinon.restore();
+    after(async () => {
+        // delete the test experiment after the tests complete
+        await ExperimentRepository.delete(experimentId);
     });
 
-    it("should return correct statistics for A/B test", async () => {
-        const req = {params: {id: experimentId}};
-        const res = {
-            status: sinon.spy(),
-            send: sinon.spy(),
-        };
+    it('should return test and custom attributes for a valid experiment ID', async () => {
+        const req = { params: { experimentId: experimentId } };
+        const res = { status: (code) => ({ send: (data) => {} }) }; // mock response object
 
-        await getStatistics(req, res);
+        await getReqPerAttribute(req, res);
 
-        expect(res.status.calledWith(200)).to.be.true;
-        expect(res.send.calledWith({
-            A: "16.67",
-            B: "33.33",
-            C: "50.00",
-        })).to.be.true;
+        expect(res.status).to.have.been.calledWith(200);
+        expect(res.body).to.deep.equal({
+            testAttributes: ['device', 'chrome'],
+            customAttributes: ['attr3']
+        });
     });
 
-    it("should return correct statistics for feature flag test", async () => {
-        experiment.type = "f-f";
-        experiment.variantSuccessCount = {
-            ON: 400,
-            OFF: 200,
-        };
-
-        const req = {params: {id: experimentId}};
-        const res = {
-            status: sinon.spy(),
-            send: sinon.spy(),
-        };
-
-        await getStatistics(req, res);
-
-        expect(res.status.calledWith(200)).to.be.true;
-        expect(res.send.calledWith({
-            ON: "66.67",
-            OFF: "33.33",
-        })).to.be.true;
-    });
-
-    it("should throw a validation error when experiment ID is invalid", async () => {
-        const req = {params: {id: "invalid-id"}};
-        const res = {
-            status: sinon.spy(),
-            send: sinon.spy(),
-        };
+    it('should throw a MissingPropertyError for an invalid experiment ID', async () => {
+        const req = { params: { experimentId: 'invalid-id' } };
+        const res = { status: (code) => ({ send: (data) => {} }) }; // mock response object
 
         try {
-            await getStatistics(req, res);
-        } catch (error) {
-            expect(error).to.be.instanceOf(ValidationError.MissingPropertyError);
-            expect(error.message).to.equal("experiment ID is missing");
-            expect(res.status.calledWith(400)).to.be.true;
-            expect(res.send.calledWith({error: "experiment ID is missing"})).to.be.true;
+            await getReqPerAttribute(req, res);
+        } catch (err) {
+            expect(err).to.be.an.instanceOf(ValidationError.MissingPropertyError);
+            expect(err.message).to.equal('experiment ID');
+            expect(res.status).not.to.have.been.called; // response should not have been sent
         }
     });
 
-    it("should throw a not found error when experiment does not exist", async () => {
-        ExperimentRepository.retrieve.resolves(null);
-
-        const req = {params: {id: experimentId}};
-        const res = {
-            status: sinon.spy(),
-            send: sinon.spy(),
-        };
+    it('should throw an EntityNotFound error for a non-existent experiment ID', async () => {
+        const req = { params: { experimentId: 'non-existent-id' } };
+        const res = { status: (code) => ({ send: (data) => {} }) }; // mock response object
 
         try {
-            await getStatistics(req, res);
-        } catch (error) {
-            expect(error).to.be.instanceOf(NotFoundError.EntityNotFound);
-            expect(error.message).to.equal(`experiment (${experimentId}) not found`);
-            expect(res.status.calledWith(404)).to.be.true;
-            expect(res.send.calledWith({error: `experiment (${experimentId}) not found`})).to.be.true;
+            await getReqPerAttribute(req, res);
+        } catch (err) {
+            expect(err).to.be.an.instanceOf(NotFoundError.EntityNotFound);
+            expect(err.message).to.equal('experiment (non-existent-id)');
+            expect(res.status).not.to.have.been.called; // response should not have been sent
         }
     });
-
-    it("should throw a server error when experiment call count is missing", async () => {
-        experiment.callCount = null;
-
-        // const req = { params: { id: experimentId
-        //         beforeEach(() => {
-        //     retrieveStub = sinon.stub(ExperimentRepository, "retrieve");
-        // });
-
-        afterEach(() => {
-            retrieveStub.restore();
-        });
-
-        it("should return statistics when experiment is found", async () => {
-            const experiment = {
-                _id: experimentID,
-                type: "a-b",
-                callCount: 10,
-                variantSuccessCount: {A: 4, B: 6, C: 0},
-            };
-            retrieveStub.resolves(experiment);
-
-            const expectedResult = {
-                A: "40.00",
-                B: "60.00",
-                C: "0.00",
-            };
-
-            const req = {params: {id: experimentID}};
-            const res = {
-                status: sinon.spy(),
-                send: sinon.spy(),
-            };
-
-            await getStatistics(req, res);
-
-            expect(retrieveStub.calledOnceWithExactly(experimentID)).to.be.true;
-            expect(res.status.calledOnceWithExactly(200)).to.be.true;
-            expect(res.send.calledOnceWithExactly(expectedResult)).to.be.true;
-        });
-
-        it("should throw ValidationError when experiment id is invalid", async () => {
-            const req = {params: {id: "invalidId"}};
-            const res = {
-                status: sinon.spy(),
-                send: sinon.spy(),
-            };
-
-            try {
-                await getStatistics(req, res);
-            } catch (error) {
-                expect(error).to.be.an.instanceOf(ValidationError.MissingPropertyError);
-                expect(error.message).to.equal("experiment ID is required");
-                expect(retrieveStub.notCalled).to.be.true;
-                expect(res.status.notCalled).to.be.true;
-                expect(res.send.notCalled).to.be.true;
-            }
-        });
-
-        it("should throw NotFoundError when experiment is not found", async () => {
-            retrieveStub.resolves(null);
-
-            const req = {params: {id: experimentID}};
-            const res = {
-                status: sinon.spy(),
-                send: sinon.spy(),
-            };
-
-            try {
-                await getStatistics(req, res);
-            } catch (error) {
-                expect(error).to.be.an.instanceOf(NotFoundError.EntityNotFound);
-                expect(error.message).to.equal(`experiment (${experimentID}) not found`);
-                expect(retrieveStub.calledOnceWithExactly(experimentID)).to.be.true;
-                expect(res.status.notCalled).to.be.true;
-                expect(res.send.notCalled).to.be.true;
-            }
-        });
-
-        it("should throw ServerError when experiment call count is missing", async () => {
-            const experiment = {
-                _id: experimentID,
-                type: "a-b",
-                callCount: null,
-                variantSuccessCount: {A: 4, B: 6, C: 0},
-            };
-            retrieveStub.resolves(experiment);
-
-            const req = {params: {id: experimentID}};
-            const res = {
-                status: sinon.spy(),
-                send: sinon.spy(),
-            };
-
-            // try {
-            //     await getStatistics(req, res);
-            // } catch (error
-            //
-
-            const expectedResponse = {
-                A: "40.00",
-                B: "30.00",
-                C: "10.00",
-            };
-
-            // const req = { params: { id: experimentID } };
-            // const res = {
-            //     status: sinon.stub().returnsThis(),
-            //     send: sinon.stub(),
-            // };
-
-            await ExperimentController.getStatistics(req, res);
-
-            sinon.assert.calledWith(res.status, 200);
-            sinon.assert.calledWith(res.send, expectedResponse);
-
-            ExperimentRepository.retrieve.restore();
-        });
-
-        it("should return success percentages for ON and OFF variants when the experiment type is F-F", async () => {
-            const experimentID = "60e81de7734d1d62a77a7a1f";
-            const experiment = {
-                _id: experimentID,
-                type: "f-f",
-                callCount: 20,
-                variantSuccessCount: {ON: 8, OFF: 12},
-            };
-            sinon.stub(ExperimentRepository, "retrieve").resolves(experiment);
-
-            const expectedResponse = {
-                ON: "40.00",
-                OFF: "60.00",
-            };
-
-            const req = {params: {id: experimentID}};
-            const res = {
-                status: sinon.stub().returnsThis(),
-                send: sinon.stub(),
-            };
-
-            await ExperimentController.getStatistics(req, res);
-
-            sinon.assert.calledWith(res.status, 200);
-            sinon.assert.calledWith(res.send, expectedResponse);
-
-            ExperimentRepository.retrieve.restore();
-        });
-
-        it("should throw a validation error when experimentID is not a valid ObjectId", async () => {
-            const experimentID = "invalidId";
-            sinon.stub(ExperimentRepository, "retrieve").resolves(null);
-
-            const req = {params: {id: experimentID}};
-            const res = {
-                status: sinon.stub().returnsThis(),
-                send: sinon.stub(),
-            };
-
-            await assert.rejects(
-                async () => ExperimentController.getStatistics(req, res),
-                ValidationError.MissingPropertyError
-            );
-
-            sinon.assert.notCalled(res.status);
-            sinon.assert.notCalled(res.send);
-
-            ExperimentRepository.retrieve.restore();
-        });
-
-        it("should throw an entity not found error when the experiment does not exist", async () => {
-            const experimentID = "60e81de7734d1d62a77a7a1f";
-            sinon.stub(ExperimentRepository, "retrieve").resolves(null);
-
-            const req = {params: {id: experimentID}};
-            const res = {
-                status: sinon.stub().returnsThis(),
-                send: sinon.stub(),
-            };
-
-            await assert.rejects(
-                async () => ExperimentController.getStatistics(req, res),
-                NotFoundError.EntityNotFound
-            );
-
-            sinon.assert.notCalled(res.status);
-            sinon.assert.notCalled(res.send);
-
-            ExperimentRepository.retrieve.restore();
-        });
-
-    })
 });
+
+
+describe('getTestsPerMonth', () => {
+    it('should throw MissingPropertyError when accountId is missing', async () => {
+        const req = { params: {} };
+        const res = {};
+        try {
+            await getTestsPerMonth(req, res);
+        } catch (err) {
+            expect(err).to.be.an.instanceOf(ValidationError.MissingPropertyError);
+            expect(err.message).to.equal(`Property: ${'account ID'} is missing...`);
+        }
+    });
+
+    // it('should throw NotFoundError when account not found', async () => {
+    //     const req = { params: { accountId: 'invalidId' } };
+    //     const res = {};
+    //     const retrieveStub = sinon.stub(ExperimentRepository, 'getMonthlyCalls').returns(null);
+    //     try {
+    //         await getTestsPerMonth(req, res);
+    //     } catch (err) {
+    //         expect(err).to.be.an.instanceOf(NotFoundError.EntityNotFound);
+    //         expect(err.message).to.equal(`${'account ID'} not found...`);
+    //     } finally {
+    //         retrieveStub.restore();
+    //     }
+    // });
+
+
+    it('should return monthly Tests for account', async () => {
+        const req = { params: { accountId: '12234' } };
+        const accountID = req.params.accountId;
+        const res = {};
+        const expectedResult = { January: 100, February: 200, March: 150 };
+        const retrieveStub = sinon.stub(ExperimentRepository, 'getMonthlyCalls').returns(accountID);
+        console.log(req);
+        try {
+            await getTestsPerMonth(req, res);
+            expect(res.status).to.equal(200);
+            expect(res.body).to.deep.equal({ tests: expectedResult });
+        } finally {
+            retrieveStub.restore();
+        }
+    });
+});
+
+describe("getActiveExperiments", () => {
+    it("should throw an error for invalid month", async () => {
+        const req = {
+            params: {
+                month: 13,
+                year: 2022,
+            },
+        };
+        const res = {};
+        try {
+            await getActiveExperiments(req, res);
+        } catch (err) {
+            expect(err).to.be.an.instanceOf(ValidationError.InvalidProperty);
+            expect(err.message).to.equal(`Property: ${'month'} is not valid`);
+        }
+    });
+
+    it("should throw an error for future date", async () => {
+        const futureDate = new Date(Date.now() + 86400000);
+        const month = futureDate.getMonth() + 1;
+        const year = futureDate.getFullYear();
+        try {
+            await getActiveExperiments(month, year);
+        } catch (err) {
+            expect(err).to.be.an.instanceOf(ServerError.ServerUnableError);
+            expect(err.message).to.equal(`Unable to ${'calculate active experiment by date'} due to internal server error...`);
+        }
+    });
+
+    it("should throw a server error if ExperimentRepository returns undefined", async () => {
+        const req = {
+            params: {
+                month: 2,
+                year: 2022,
+            },
+        };
+        const res = {};
+        const repositoryStub = sinon.stub(ExperimentRepository, "getActiveExperimentsByDate").resolves(undefined);
+        try {
+            await getActiveExperiments(req, res);
+        } catch (err) {
+            expect(err).to.be.an.instanceOf(ServerError.ServerUnableError);
+            expect(err.message).to.equal("calculate active experiment by date");
+        } finally {
+            repositoryStub.restore();
+        }
+    });
+
+    // it("should return active experiments", async () => {
+    //
+    //     const id = '1234';
+    //     const req = {params: {id}};
+    //     const res = {status: sinon.stub().returnsThis(), send: sinon.stub()};
+    //     };
+    //     const expectedExperiments = [{ id: "exp1" }, { id: "exp2" }];
+    //     const repositoryStub = sinon.stub(ExperimentRepository, "getActiveExperimentsByDate").resolves(expectedExperiments);
+    //
+    //     await getActiveExperiments(req, res);
+    //
+    //     expect(res.status.calledOnceWithExactly(200)).to.be.true;
+    //     expect(res.send.calledOnceWithExactly({ active_experiments: expectedExperiments })).to.be.true;
+    //
+    //     repositoryStub.restore();
+    // });
+
+    describe('getExperimentsAttributesDistribution', function () {
+        it('should return attribute distribution if successful', async function () {
+            const expectedResult = [
+                {_id: {testAttribute: 'color'}, count: 5},
+                {_id: {testAttribute: 'size'}, count: 3},
+                {_id: {testAttribute: 'text'}, count: 2}
+            ];
+            const mockReq = {};
+            const mockRes = {
+                status: sinon.stub().returnsThis(),
+                send: sinon.stub()
+            };
+            const stub = sinon.stub(ExperimentRepository, 'getExperimentCountsByAttributes').resolves(expectedResult);
+            await getExperimentsAttributesDistribution(mockReq, mockRes);
+
+            expect(stub.calledOnce).to.be.true;
+            expect(mockRes.status.calledWith(200)).to.be.true;
+            expect(mockRes.send.calledWith({attribute_distribution: expectedResult})).to.be.true;
+
+            stub.restore();
+        });
+
+        it('should throw a server error if there is an error getting the attribute distribution', async function () {
+            const mockReq = {};
+            const mockRes = {
+                status: sinon.stub().returnsThis(),
+                send: sinon.stub()
+            };
+            const stub = sinon.stub(ExperimentRepository, 'getExperimentCountsByAttributes').resolves(null);
+
+            try {
+                await getExperimentsAttributesDistribution(mockReq, mockRes);
+            } catch (error) {
+                expect(stub.calledOnce).to.be.true;
+                expect(mockRes.status.calledWith(500)).to.be.true;
+                expect(mockRes.send.calledWith({error: 'Server unable to calculate experiment attribute distribution'})).to.be.true;
+            }
+
+            stub.restore();
+        })
+    })
+
+});
+
+
