@@ -4,6 +4,7 @@ const { ServerUnableError } = require("../errors/internal.errors");
 const { bodyValidator } = require("../validators/body.validator");
 const { BodyNotSent } = require("../errors/BadRequest.errors");
 const { readFile } = require("fs/promises");
+const { lookupService } = require("dns");
 
 const getAllExperiments = async (req, res) => {
   const result = await ExperimentRepository.find();
@@ -62,12 +63,17 @@ const getExperimentsByDate = async (req, res) => {
   const year = req.query.year;
   const month = req.query.month;
   const result = await ExperimentRepository.findByDate(year, month);
-  if(result === 0 || result) {
-    res.status(200).json({result})
-  } else {
-    throw new ServerUnableError("getExperimentsByDate");
+
+  const distResult = {
+    active: (result.find(obj => obj.status === "active"))?.count || 0,
+    ended: (result.find(obj => obj.status === "ended"))?.count || 0,
+    terminated: (result.find(obj => obj.status === "terminated"))?.count || 0,
+    planned: (result.find(obj => obj.status === "planned"))?.count || 0
   }
-};
+
+    res.status(200).json(distResult);
+  }
+
 
 const deleteExperimentsByID = async (req, res) => {
   if (!req.params.experimentId) throw new PropertyNotFound("experimentId");
@@ -140,3 +146,4 @@ module.exports = {
   getFeaturesList,
   terminateExperiment,
 };
+
