@@ -29,19 +29,13 @@ Full documentation of the API calls can be seen at: https://documenter.getpostma
 6. [x] Services – contain the business logic of the system.
 7. [x] Data Base – MongoDB.
 8. [x] repositories .
-9. [x] middleware – contain all the error and logs functions.
+9. [x] middleware – contain all the error logs - writes call logs inside logs.
+    - http calls logger - configured in the middleware directory, writes call logs inside logs folder, filename: http.log
+    - error handler - consists of 3 parts:
+      - express-async-errors package - wraps the controllers in try/catch statement automatically (no implementation needed), and calls the next(error) function in the catch block with the error thrown. the next function will "fall" into the errorHandler.
+      - errorHandler - a function that is used at the end of the server that catches all the errors thrown in the controllers
+      - Custom Errors - in the errors' directory. Classes that extends Error class, with status and message to pass to the error handier at the end. More can be added if we need them.
 10.[x] models – contain the schemas  that connects to the database through mongoose.
-
-> **Features**
-Below are the existing features in the system for which we were responsible:
-> 
-
-9. [x] http calls logger - configured in the middleware directory, writes call logs inside logs folder, filename: http.log
-10.[x] error logs - configured in the middleware directory, writes call logs inside logs folder, filename: error.log. operates from the errorHandler middleware (info will follow)
-11.[x] error handler - consists of 3 parts:
-12.[x] express-async-errors package - wraps the controllers in try/catch statement automatically (no implementation needed), and calls the next(error) function in the catch block with the error thrown. the next function will "fall" into the errorHandler.
-13.[x] errorHandler - a function that is used at the end of the server that catches all the errors thrown in the controllers
-14.[x] Custom Errors - in the errors' directory. Classes that extends Error class, with status and message to pass to the error handier at the end. More can be added if we need them.
 
 > **Tests**
 
@@ -134,19 +128,12 @@ NOTE: if you created AB test Experiment make sure you have 3 variants,if you cre
 4.  Make sure that from the beginning of the experiment to the end the variants values changed.
 
 `Exclusive Account:`
- the account have the option to choose - Does each experiment stand by itself and only one experiment will appear for each.
+ The account have the option to choose - Does each experiment stand by itself and only one experiment
+will appear for each.
 
 `Inclusive Account:`
-
-- Inclusive - This means that every customer has a lot of experiments
-  And all the experiments together can be together for all the weird who sees them.
-
-`Error Handling:`
-
-1. All errors that might occur on server side are directed to an error handling function.
-2. console.error function is redirected to write to log file
-3. Special 404 page will show and redirect back to home page if the router is given a wrong path.
-4. 404 page is server side rendered.
+This means that every customer has a lot of experiments
+And all the experiments together can be together for all the users who see them.
 
 > **Group members 😇**
 
