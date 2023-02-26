@@ -36,6 +36,12 @@ const shouldAllow = (ratio) => ratio >= 1 - Math.random();
 
 const checkIfActive = (experiment) => experiment.status === "active";
 
+const compareAttributes = (experimentAttributes, userAttribute) => {
+    return experimentAttributes.reduce((acc, {value})=>{
+        acc.push(value);
+        return acc;
+    }, []).includes(userAttribute);
+}
 const checkAttributes = (endUserReq, experiment, next) => {
     try {
         const geo = getLocation(getClientIP(endUserReq));
@@ -43,13 +49,27 @@ const checkAttributes = (endUserReq, experiment, next) => {
         const customAttributes = endUserReq.customAttributes;
         if (geo && browser && device) {
             const defAttResult =
-                geo.country === experiment.testAttributes.location.value &&
-                browser === experiment.testAttributes.browser.value &&
-                device === experiment.testAttributes.device.value;
+                compareAttributes(experiment.testAttributes.location, endUserReq.testAttributes.location) &&
+                compareAttributes(experiment.testAttributes.browser, endUserReq.testAttributes.browser) &&
+                compareAttributes(experiment.testAttributes.device, endUserReq.testAttributes.device);
             let attributes = {"location": geo.country, "browser": browser, "device": device};
             let customAttResult;
+            // USER REQ
+            // {
+            //     color: "red"
+            // }
+
+            // experiment customAttr
+            // {
+            //     color: [{value: red}, {value: green}],
+            //     shape: [{value: circle}, {value: triangle}],
+
+            // }
             if (customAttributes) {
-                customAttResult = Object.values(customAttributes).includes(experiment.customAttributes)
+                Object.entries(customAttributes).every(([key, value]) => {
+                    return compareAttributes(experiment.customAttributes[key], value)
+                })
+                // customAttResult = Object.values(customAttributes).includes(experiment.customAttributes)
                 attributes = {...attributes, ...customAttributes};
             }
             const attReqCountResult = incAttributeReqCount(experiment.experimentId, attributes);
