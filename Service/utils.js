@@ -1,33 +1,17 @@
-const geoip = require("geoip-lite");
-const parser = require("ua-parser-js");
+
 const {incAttributeReqCount} = require("../repositories/experiment.repository");
-const {PropertyNotFound} = require("../errors/NotFound.errors");
+const {PropertyNotFound, EntityNotFound} = require("../errors/NotFound.errors");
 const {ServerUnableError} = require("../errors/internal.errors");
 const {v4: uuidv4, validate: uuidValidator} = require("uuid");
+const userRepository = require("../repositories/user.repository");
 
-const getClientIP = (endUserReq) => {
-    const result = "176.12.223.44";
-    if (!result) throw new ServerUnableError("getClientIP");
-    return result;
+
+const getUserByUuid = async (uuid) => {
+    if (!uuid) return false;
+    const [user] = await userRepository.retrieveByUuid(uuid);
+    if (!user) throw new EntityNotFound("user");
+    return user;
 };
-
-const getLocation = (req) => {
-    if (!req) throw new PropertyNotFound("getlocation");
-    const result = geoip.lookup(req);
-    if (!result) throw new ServerUnableError("getClientIP");
-    return result;
-};
-
-const getBrowserDevice = (req) => {
-    const userAgentInfo = parser(req.headers["user-agent"]);
-    const result = {
-        browser: userAgentInfo.browser.name,
-        device: userAgentInfo.device.type || "desktop",
-    };
-    if (!result) throw new ServerUnableError("getBrowserDevice");
-    return result;
-};
-
 const generateUuid = () => {
     return uuidv4();
 };
