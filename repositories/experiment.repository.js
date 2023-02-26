@@ -95,12 +95,7 @@ module.exports = new (class ExperimentsRepository extends MongoStorage {
                         return acc;
                     }, []) } }]
         }
-        
-        try {
           return await this.updateMany(filter, update, options);
-        } catch (error) {
-          console.log(error);
-        }
     }
 
     async getCallCount(id) {

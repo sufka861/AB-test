@@ -9,14 +9,13 @@ const { ServerUnableError } = require("../errors/internal.errors");
 const userRepository = require("../repositories/user.repository");
 
 const getUserByUuid = async (uuid) => {
-  // const uuid = getCookie(req, res);
   if (!uuid) return false;
   const [user] = await userRepository.retrieveByUuid(uuid);
   if (!user) throw new EntityNotFound("user");
   return user;
 };
 
-const addUser = async () => {
+const addUser = async (next) => {
   try{
   const uuid = generateUuid();
   if (!uuidValidator(uuid)) throw new InvalidProperty("uuid");
@@ -25,7 +24,7 @@ const addUser = async () => {
   if (!newUser) throw new ServerUnableError("create");
   return newUser;
   } catch(error) {
-    console.log(error);
+    next(error)
   }
 };
 

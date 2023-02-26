@@ -59,14 +59,13 @@ const checkAttributes = (testAttributes, customAttributes, experiment, next) => 
             let customAttResult;
             if (customAttributes) {
                 customAttResult = Object.entries(customAttributes).every(([key, value]) => {
-                    console.log(key, value);
                     return compareAttributes(experiment.customAttributes.get(key), value);
                 });
                 
                 attributes = {...attributes, ...customAttributes};
             }
             const attReqCountResult = incAttributeReqCount(experiment.experimentId, attributes);
-            // if (!attReqCountResult) throw new ServerUnableError("attReqCountResult");
+            if (!attReqCountResult) throw new ServerUnableError("attReqCountResult");
             return (customAttributes ? (defAttResult && customAttResult) : defAttResult);
         } else return false;
     } catch (error) {

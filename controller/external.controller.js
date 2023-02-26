@@ -21,38 +21,40 @@ const {
 const {ServerUnableError} = require("../errors/internal.errors");
 
 const runTest = async (req, res, next) => {
-  // validateRun(req, req.body.experimentId, req.body.subscription);
+  validateRun(req, next);
   const user = await getUserByUuid(req.body.uuid);
   if (user){
-  console.log('user')
     return experimentExistingUser(
       res,
       user,
       req.body.experimentId,
-      req.body.subscription
+      req.body.subscription,
+      req.body.inclusive
     );
   } else {
-    console.log('not user');
     return experimentNewUser(req, res, next, req.body.experimentId);
   }
 };
 
-// const validateRun = async (req, experimentId, subscription) => {
-//   bodyValidator(req);
-//   if (!experimentId) throw new MissingPropertyError("experiment id");
-//   if (!subscription) throw new MissingPropertyError("subscription");
-//   if (!(await checkIfExperimentIsActive(experimentId)))
-//     throw new ExperimentNotActive(experimentId);
-// };
+const validateRun = async (req, next) => {
+  try {
+    bodyValidator(req);
+  if (!req.body.experimentId) throw new MissingPropertyError("experimentId");
+  if(!req.body.testAttributes) throw new MissingPropertyError("test attributes")
+  if (!(await checkIfExperimentIsActive(req.body.experimentId)))
+    throw new ExperimentNotActive(req.body.experimentId);
+  } catch (error) {
+    next(error)
+  }
+  
+};
 
 const experimentNewUser = async (req, res, next, experimentId) => {
   try {
-    // testAttributes, customAttributes, experimentId
     const experiment = await ExperimentRepository.retrieve(experimentId);
-    console.log(experiment);
     if (!experiment) throw new EntityNotFound("experiment");
     if (checkAttributes(req.body.testAttributes, req.body.customAttributes, experiment, next)) {
-      const newUser = await addUser();
+      const newUser = await addUser(next);
       res.cookie("uuid", newUser.uuid, { maxAge: 900000, httpOnly: true });
       const variant = await doExperiment(experimentId, newUser.uuid);
       res.status(200).json(variant);
@@ -70,10 +72,10 @@ const experimentExistingUser = async (
   res,
   user,
   experimentId,
-  subscription
+  inclusive
 ) => {
   const experimentsList = getUserExperiment(user);
-  if (!(subscription === "premium")) {
+  if (inclusive) {
     for (const exp of experimentsList) {
       if (exp.experimentId.toString() === experimentId) {
         return res.status(200).json(exp.variant);
@@ -96,7 +98,7 @@ const doExperiment = async (experimentId, uuid) => {
 };
 
 const checkIfExperimentIsActive = async (experimentId) => {
-  const experiment = await ExperimentRepository.retrieve(experimentId);
+    const experiment = await ExperimentRepository.retrieve(experimentId);
   if (!experiment) throw new EntityNotFound("experiment");
   if (experiment.status !== "active") return false;
   return true;
