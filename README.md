@@ -54,7 +54,7 @@ The purpose of this project is to identify any change in the webpage to maximize
 3. [x] app.js  – the entry point of the system
 4. [x] Router – consists of a map of all the API points for both server and client
 5. [x] Controllers – direct the functionality of the system6.
-6. [x] Services – contain th business logic of the system.
+6. [x] Services – contain the business logic of the system.
 7. [x] Data Base – MongoDB.
 8. [x] repositories .
 9. [x] middleware – contain all the error and logs functions.

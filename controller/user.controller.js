@@ -65,4 +65,5 @@ module.exports = {
   addUser,
   insertExperiment,
   getUserExperiment,
+  generateUuid
 };

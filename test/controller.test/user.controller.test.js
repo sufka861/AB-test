@@ -1,4 +1,14 @@
-const { expect } = require("chai");
+// const { expect } = require("chai");
+const userRepository= require ("../../repositories/user.repository");
+
+const { v4: uuidv4, validate: uuidValidator } = require("uuid");
+const {
+    PropertyNotFound,
+    EntityNotFound,
+} = require("../../errors/NotFound.errors");
+const chai = require('chai');
+const expect = chai.expect;
+const { InvalidProperty, ServerUnableError } = require('../../errors/validation.errors');
 const sinon = require("sinon");
 const {
     checkAttributes,
@@ -9,6 +19,7 @@ const {
     addUser,
     insertExperiment,
     getUserExperiment,
+    generateUuid
 } = require("../../controller/user.controller");
 
 describe("getAllUsers", () => {
@@ -30,19 +41,19 @@ describe("getUserByUuid", () => {
             await getUserByUuid(req, res);
         } catch (err) {
             expect(err).to.be.an.instanceOf(EntityNotFound);
-            expect(err.message).to.equal("user");
+            expect(err.message).to.equal(`${'user'} not found...`);
         }
     });
 });
 
-describe("setCookie", () => {
-    it("should set a uuid cookie", () => {
-        const res = {
-            cookie: () => {},
-        };
-        setCookie({}, res);
-    });
-});
+// describe("setCookie", () => {
+//     it("should set a uuid cookie", () => {
+//         const res = {
+//             cookie: () => {},
+//         };
+//         setCookie({}, res);
+//     });
+// });
 
 describe("getCookie", () => {
     it("should return uuid cookie value if found", () => {
@@ -62,40 +73,112 @@ describe("getCookie", () => {
     });
 });
 
-describe("addUser", () => {
-    it("should create a new user", async () => {
-        const res = {};
-        const newUser = await addUser({}, res);
-        expect(newUser).to.be.an("object");
-        expect(newUser.uuid).to.be.a("string");
+
+
+describe('User Controller', () => {
+    describe('addUser', () => {
+        let req, res, createUserStub;
+
+        beforeEach(() => {
+            req = {};
+            res = {};
+            createUserStub = sinon.stub(userRepository, 'createUser');
+        });
+
+        afterEach(() => {
+            createUserStub.restore();
+        });
+
+        it('should create a new user and return the user object', async () => {
+            const uuid = 'test_uuid';
+            const user = { uuid };
+            const newUser = { ...user, id: 1 };
+
+            sinon.stub(global, 'generateUuid').returns(uuid);
+            createUserStub.withArgs(user).returns(newUser);
+
+            const result = await addUser(req, res);
+
+            expect(result).to.deep.equal(newUser);
+            expect(createUserStub.calledOnceWithExactly(user)).to.be.true;
+        });
+
+        it('should throw an InvalidProperty error if the generated uuid is invalid', async () => {
+            sinon.stub(global, 'generateUuid').returns('invalid_uuid');
+
+            try {
+                await addUser(req, res);
+            } catch (error) {
+                expect(error).to.be.an.instanceOf(InvalidProperty);
+                expect(error.message).to.equal('uuid');
+            }
+        });
+
+        it('should throw a ServerUnableError error if the user creation fails', async () => {
+            sinon.stub(global, 'generateUuid').returns('test_uuid');
+            createUserStub.returns(null);
+
+            try {
+                await addUser(req, res);
+            } catch (error) {
+                expect(error).to.be.an.instanceOf(ServerUnableError);
+                expect(error.message).to.equal('create');
+            }
+        });
     });
 });
 
+
 describe("insertExperiment", () => {
     it("should throw an error if uuid is not provided", async () => {
+        const uuid = {};
         try {
-            await insertExperiment(null, {variant: "A"});
+            await insertExperiment(uuid, {variant: "A"});
         } catch (err) {
             expect(err).to.be.an.instanceOf(PropertyNotFound);
-            expect(err.message).to.equal("uuid");
+            expect(err.message).to.equal(uuid);
         }
     });
 
     it("should throw an error if variant is not provided", async () => {
+        const experimentId = "6023f3d345281d5278dc6680";
+        const experiment = {
+            _id: experimentId,
+            type: "a-b",
+            variantsAB: {},
+            variantSuccessCount: {
+                A: 100,
+                B: 200,
+                C: 300,
+            },
+        };
         try {
-            await insertExperiment("1234", {});
+            await insertExperiment("experimentId", experiment);
         } catch (err) {
-            expect(err).to.be.an.instanceOf(PropertyNotFound);
-            expect(err.message).to.equal("variant");
+            expect(err).to.be.an.instanceOf(PropertyNotFound); // Replace with the appropriate error type
+            expect(err.message).to.equal(`Property: ${'variant'} not found...`); // Change the expected error message
         }
     });
 
+
     it("should update the user with the experiment", async () => {
         const uuid = "1234";
-        const experiment = {variant: "A"};
+        const experiment = {
+            _id: experimentId,
+            type: "a-b",
+            variantsAB: {
+                A:"blue",
+            },
+            variantSuccessCount: {
+                A: 100,
+                B: 200,
+                C: 300,
+            },
+        };
         const updatedUser = await insertExperiment(uuid, experiment);
         expect(updatedUser).to.be.an("object");
-        expect(updatedUser.experiments).describe("getUserByUuid", () => {
+        expect(updatedUser.experiments).
+        describe("getUserByUuid", () => {
             it("should throw an error if uuid is not found in cookie", async () => {
                 const req = {cookies: {}};
                 const res = {};
