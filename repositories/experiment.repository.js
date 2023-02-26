@@ -1,8 +1,6 @@
 const MongoStorage = require("../db/mongo.storage");
 const validateDate = require("validate-date");
 const {mongoose} = require("mongoose");
-const {log} = require("winston");
-const {ServerUnableError} = require("../errors/internal.errors");
 const moment = require('moment');
 
 module.exports = new (class ExperimentsRepository extends MongoStorage {
@@ -34,22 +32,18 @@ module.exports = new (class ExperimentsRepository extends MongoStorage {
     }
 
     async findByDate(year, month) {
-        const adjustedMonth = Number(month) - 1;
-        if (validateDate(`${adjustedMonth}/01/${year}`)) {
-            const start = new Date(year, adjustedMonth, 1);
-            const end = new Date(year, adjustedMonth, 31);
+        if (validateDate(`${month}/01/${year}`)) {
+            const start = new Date(year, month - 1, 1);
+            const end = new Date(year, month, 0);
             const result = await this.Model.countDocuments({
-                 endTime: {
+                 'duration.startTime': {
                     $gte: start,
                     $lte: end,
                 },
-            }).populate({path: 'goals'});
+            });
             return result;
         }
     }
-
-
-
 
     async incCallCount(id) {
         return await this.update(id, {$inc: {callCount: 1, monthlyCallCount: 1}}).populate({path: 'goals'});
@@ -193,11 +187,6 @@ module.exports = new (class ExperimentsRepository extends MongoStorage {
     ]).exec();
     return { devices: result, locations: locationResult };
   }
-
-
-
-
-
-
-
 })();
+
+
