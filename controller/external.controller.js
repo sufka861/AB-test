@@ -97,11 +97,11 @@ const reportGoal = async (req, res) => {
   const { experimentId, goalId, uuid} = req.body;
   if (!(await checkIfExperimentIsActive(experimentId)))
     throw new ExperimentNotActive(experimentId);
-  const user = await UsersRepository.retrieveByUuid(uuid);
+  const [user] = await UsersRepository.retrieveByUuid(uuid);
   if (!user) throw new UserUnknown();
   const {variant} = user.experiments.find((exp) => exp.experimentId.toString() === experimentId )
   if (!variant)  throw new ServerUnableError(`couldn't load experiment ${experimentId} from user`)
-  const response = await GoalRepository.incVariantSuccessCount(goalId, variant);
+  const response = await GoalRepository.incVariantSuccessCount(goalId, variant.keys().next().value);
   res.status(200).send(true);
 
 };
