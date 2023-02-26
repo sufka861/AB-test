@@ -67,4 +67,5 @@ module.exports = class MongoStorage {
     updateMany(filter,update,options) {
         return this.Model.updateMany(filter, update, options)
     }
+
 };

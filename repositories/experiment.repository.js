@@ -122,11 +122,11 @@ module.exports = new (class ExperimentsRepository extends MongoStorage {
     return await this.Model.updateMany({}, { $set: { monthlyCallCount: 0 } });
   }
 
-  async getActiveExperimentsByDate(month, year){
+  async getExperimentsCountByDate(month, year){
     const start = moment.utc([year, month - 1, 1]).startOf('month');
     const end = moment.utc([year, month - 1, 1]).endOf('month');
     try {
-        const result = await this.Model.countDocuments({
+        const activeResult = await this.Model.countDocuments({
           status: 'active',
           'duration.startTime': { $lte: end.toDate() },
           $or: [
@@ -134,7 +134,31 @@ module.exports = new (class ExperimentsRepository extends MongoStorage {
             { 'duration.endTime': { $type: 'null' } },
           ],
         });
-        return result;
+        const endedResult = await this.Model.countDocuments({
+            status: 'ended',
+            'duration.startTime': { $lte: end.toDate() },
+            $or: [
+                { 'duration.endTime': { $gte: start.toDate() } },
+                { 'duration.endTime': { $type: 'null' } },
+            ],
+        });
+        const terminatedResult = await this.Model.countDocuments({
+            status: 'terminated',
+            'duration.startTime': { $lte: end.toDate() },
+            $or: [
+                { 'duration.endTime': { $gte: start.toDate() } },
+                { 'duration.endTime': { $type: 'null' } },
+            ],
+        });
+        const plannedResult = await this.Model.countDocuments({
+            status: 'planned',
+            'duration.startTime': { $lte: end.toDate() },
+            $or: [
+                { 'duration.endTime': { $gte: start.toDate() } },
+                { 'duration.endTime': { $type: 'null' } },
+            ],
+        });
+        return {active: activeResult, ended: endedResult, terminated: terminatedResult, planned: plannedResult};
     } catch {
     return null
     }
@@ -147,16 +171,14 @@ module.exports = new (class ExperimentsRepository extends MongoStorage {
       },
       {
         $group: {
-          _id: {
-            device: "$testAttributes.device"
-          },
+          _id: "$testAttributes.device.value",
           count: { $sum: 1 }
         }
       },
       {
         $project: {
           _id: 0,
-          device: "$_id.device",
+          device: "$_id",
           count: 1
         }
       },
@@ -172,16 +194,14 @@ module.exports = new (class ExperimentsRepository extends MongoStorage {
       },
       {
         $group: {
-          _id: {
-            location: "$testAttributes.location"
-          },
+          _id: "$testAttributes.location.value",
           count: { $sum: 1 }
         }
       },
       {
         $project: {
           _id: 0,
-          location: "$_id.location",
+          location: "$_id",
           count: 1
         }
       },
@@ -193,11 +213,5 @@ module.exports = new (class ExperimentsRepository extends MongoStorage {
     ]).exec();
     return { devices: result, locations: locationResult };
   }
-
-
-
-
-
-
 
 })();
