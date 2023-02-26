@@ -63,12 +63,13 @@ const getVariantSuccessCount = async (req, res) => {
 
 const getExperimentsCountByDate = async (req, res) => {
 
-    const month = req.params.month;
-    const year = req.params.year;
+    const month = parseInt(req.params.month);
+    const year = parseInt(req.params.year);
+    const validateMonth = parseInt(req.params.month);
+    const validateYear = parseInt(req.params.year);
+    if (isNaN(validateMonth) || isNaN(validateYear)) throw new ValidationError.InvalidProperty("input")
     if (month > 12 || month < 1) throw new ValidationError.InvalidProperty("month");
     const inputDate = new Date(year, month - 1, 1);
-    const currentDate = new Date();
-    if (inputDate > currentDate) throw new ValidationError.InvalidProperty("date can't be in the future");
     const result = await ExperimentRepository.getExperimentsCountByDate(month, year)
     if (result === undefined || result === null) {
         throw new ServerError.ServerUnableError("calculate active experiment by date");

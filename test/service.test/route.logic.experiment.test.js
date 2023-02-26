@@ -71,22 +71,10 @@ describe("checkExperimentTypeAndExecExperiment", function () {
         sinon.stub(Util, "shouldAllow").returns(true);
         sinon.stub(ffLogic, "featureCheckAttributes").returns({});
 
-        // Act
-        const result = await checkExperimentTypeAndExecExperiment(
-            "6666",
-            { userId: "3040" }
-        );
-
-        // Assert
+        const result = await checkExperimentTypeAndExecExperiment("6666", { userId: "3040" });
         assert.deepEqual(result, {});
-        sinon.assert.calledOnceWithExactly(
-            ExperimentStorage.incCallCount,
-            "6666"
-        );
-        sinon.assert.calledOnceWithExactly(
-            ffLogic.featureCheckAttributes,
-            { userId: "3040" },
-            experiment
+        sinon.assert.calledOnceWithExactly(ExperimentStorage.incCallCount, "6666");
+        sinon.assert.calledOnceWithExactly(ffLogic.featureCheckAttributes, { userId: "3040" }, experiment
         );
     });
 
@@ -101,6 +89,7 @@ describe("checkExperimentTypeAndExecExperiment", function () {
                 B: {},
                 C: {},
             },
+
         };
         ExperimentStorage.retrieve.resolves(experiment);
         sinon.stub(Util, "shouldAllow").returns(true);
@@ -112,14 +101,8 @@ describe("checkExperimentTypeAndExecExperiment", function () {
         );
 
         assert.deepEqual(result, {});
-        sinon.assert.calledOnceWithExactly(
-            ExperimentStorage.incCallCount,
-            "4567"
-        );
-        sinon.assert.calledOnceWithExactly(
-            abLogic.ABcheckAttributes,
-            { userId: "3040" },
-            experiment
+        sinon.assert.calledOnceWithExactly(ExperimentStorage.incCallCount, "4567");
+        sinon.assert.calledOnceWithExactly(abLogic.ABcheckAttributes, { userId: "3040" }, experiment
         );
     });
 });

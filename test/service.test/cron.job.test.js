@@ -16,12 +16,11 @@ describe('Experiment Status Update', () => {
     });
 
     it('should update experiment status to active when start time is reached', async () => {
-        const experiments = [      {        _id: '1',        duration: {          startTime: new Date('2023-02-25T15:30:00Z'),          endTime: new Date('2023-02-25T15:33:00Z')        },        status: 'planned'      }    ];
+        const experiments = [{_id: '1',duration: {startTime: new Date('2023-02-25T15:30:00Z'),          endTime: new Date('2023-02-25T15:33:00Z')        },        status: 'planned'      }    ];
         sinon.stub(ExperimentRepository, 'find').resolves(experiments);
         sinon.stub(ExperimentRepository, 'update').resolves();
 
         await experimentStatusUpdate();
-
         expect(ExperimentRepository.find.calledOnce).to.be.true;
         expect(ExperimentRepository.update.calledOnceWith('1', { status: 'active' })).to.be.true;
         console.log (expect);
@@ -41,8 +40,8 @@ describe('Experiment Status Update', () => {
     });
 
     it('should not update experiment status when current time is outside experiment duration', async () => {
-        // Arrange
-        const experiments = [{ _id: '3',duration: {startTime: new Date('2023-02-25T09:00:00Z'),endTime: new Date('2023-02-25T10:00:00Z')
+        const experiments = [{ _id: '3',duration: {startTime: new Date('2023-02-25T09:00:00Z')
+                ,endTime: new Date('2023-02-25T10:00:00Z')
             },status: 'planned'}];
         sinon.stub(ExperimentRepository, 'find').resolves(experiments);
         sinon.stub(ExperimentRepository, 'update').resolves();

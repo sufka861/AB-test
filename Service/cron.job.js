@@ -1,6 +1,6 @@
 const cron = require("node-cron");
 const ExperimentRepository = require("../repositories/experiment.repository");
-const Experiment = require("../models/Experiment.model");
+
 const experimentStatusUpdate = () => {
     const job = cron.schedule("0 8 * * *", async () => {
         const currentTime = new Date();

@@ -3,18 +3,14 @@ const sinon = require("sinon");
 const {createExperimentWithGoals} = require ("../../controller/external.controller");
 const ExperimentRepository = require("../../repositories/experiment.repository");
 const GoalRepository = require("../../repositories/goal.repository");
-const {
-    PropertyNotFound,
-    ServerUnableError,
-    BodyNotSent,
-} = require("../../errors/internal.errors");
+const {PropertyNotFound, ServerUnableError, BodyNotSent,} = require("../../errors/internal.errors");
 
 describe("createExperimentWithGoals", () => {
-    let req, res, next;
 
     beforeEach(() => {
-        req = { body: { experiment: {}, goals: [] } };
-        res = {
+        const req = { body: { experiment: {},
+                goals: [] } };
+        const res = {
             status: sinon.stub().returns({
                 send: sinon.spy(),
             }),
@@ -27,7 +23,7 @@ describe("createExperimentWithGoals", () => {
     });
 
     it("should throw an error if no request body is sent", async () => {
-        req.body = {};
+        const {experiment, goals} = req.body;
         await createExperimentWithGoals(req, res, next);
         expect(next.calledWithInstanceOf(BodyNotSent)).to.be.true;
     });
@@ -55,5 +51,7 @@ describe("createExperimentWithGoals", () => {
 
         expect(res.status.calledWith(200)).to.be.true;
         expect(res.status().send.calledWith(experiment)).to.be.true;
+        expect(res.status().send.calledWith(goals)).to.be.true;
+
     });
 });
