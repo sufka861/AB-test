@@ -1,4 +1,3 @@
-
 # Growth-Team 🙂
 
 **Welcome to our part in SAAS-System!**
@@ -18,7 +17,7 @@ The client gets SDK to implement our code in their system and make calls to our 
 2. [x] Cd to the working directory and start the server using the following command in the terminal - $node app.js
 3. [x] Make sure to install all the dependencies  as described in the package.json [npm install].
 4. [x] Make sure you have our .env file containing the sensitive info of our system account.
-5. [x] You can check our systm by using the UI - Open a browser page and go to https://core-team-final-assignment.onrender.com
+5. [x] You can check our system by using the UI - Open a browser page and go to https://core-team-final-assignment.onrender.com
 
 > **API reference**
 
