@@ -32,23 +32,12 @@ module.exports = new (class ExperimentsRepository extends MongoStorage {
     }
 
     async findByDate(year, month) {
-        // if (validateDate(`${month}/01/${year}`)) {
-        //     const start = new Date(year, month - 1, 1);
-        //     const end = new Date(year, month, 0);
-        //     const result = await this.Model.find().countDocuments({
-        //          'duration.startTime': {
-        //             $gte: start,
-        //             $lte: end,
-        //         },
-        //     }).find();
-        //     return result;
-        // }
         const pipeline = [
           {
             $match: {
               'duration.startTime': {
                 $gte: new Date(year, month - 1, 1),
-                $lte: new Date(year, month, 0, 23, 59, 59, 999),
+                $lte: new Date(year, month, 0),
               },
             },
           },
