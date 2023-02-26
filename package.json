@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "nyc mocha 'test/**/*.js' --recursive --check-coverage --lines 70  --timeout 60000 --exit",
+    "test": "nyc mocha 'test/**/*.js' --recursive --check-coverage --lines 70  --timeout 60000 --exit",    "dev": "nodemon -r newrelic app.js",
     "dev": "nodemon -r newrelic app.js",
     "start": "node -r newrelic app.js"
   },
