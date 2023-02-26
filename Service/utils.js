@@ -67,4 +67,8 @@ module.exports = {
     checkAttributes,
     checkIfActive,
     generateUuid,
+    getLocation,
+    getClientIP,
+    getBrowserDevice
+
 };
