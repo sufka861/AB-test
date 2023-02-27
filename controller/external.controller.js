@@ -27,7 +27,6 @@ const runTest = async (req, res, next) => {
       res,
       user,
       req.body.experimentId,
-      req.body.subscription,
       req.body.inclusive
     );
   } else {
