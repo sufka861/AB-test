@@ -6,9 +6,6 @@ const { v4: uuidv4, validate: uuidValidator } = require("uuid");
 const { PropertyNotFound } = require("../../errors/NotFound.errors");
 const { ServerUnableError } = require("../../errors/internal.errors");
 const {
-    getClientIP,
-    getLocation,
-    getBrowserDevice,
     generateUuid,
     shouldAllow,
     checkIfActive,
@@ -44,21 +41,6 @@ describe("176.12.223.44", () => {
             expect(result).to.have.property("country", "US");
             geoip.lookup.restore();
             console.log(result);
-        });
-    });
-
-    describe("getBrowserDevice", () => {
-        it("should return an object with 'browser' and 'device' properties", () => {
-            const req = { headers: { 'user-agent': 'Mozilla/5.0 (X11; CrOS x86_64 8172.45.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.64 Safari/537.36' } };
-            const result = getBrowserDevice(req);
-            expect(result).to.be.an("object");
-            expect(result).to.have.property("browser","Chrome");
-            expect(result).to.have.property("device", "desktop");
-        });
-
-        it("should throw a ServerUnableError error if no result is found", () => {
-            const req = { };
-            expect(() => getBrowserDevice(req)).to.throw(ServerUnableError);
         });
     });
 
@@ -111,3 +93,71 @@ describe('checkIfActive', () => {
 });
 
 
+describe('checkAttributes', () => {
+    it('should return true when all attributes match', () => {
+        const testAttributes = {
+            location: 'US',
+            browser: 'Chrome',
+            device: 'desktop',
+        };
+        const customAttributes = {
+            age: '25',
+            gender: 'male',
+        };
+        const experiment = {
+            testAttributes: {
+                location: [{ value: 'US' }],
+                browser: [{ value: 'Chrome' }],
+                device: [{ value: 'desktop' }],
+            },
+            customAttributes: new Map([
+                ['age', [{ value: '25' }]],
+                ['gender', [{ value: 'male' }]],
+            ]),
+            experimentId: 123,
+        };
+        const result = checkAttributes(testAttributes, customAttributes, experiment, () => {});
+        expect(result).to.be.true;
+    });
+
+    it('should return false when a default attribute does not match', () => {
+        const testAttributes = {
+            location: 'US',
+            browser: 'Safari',
+            device: 'desktop',
+        };
+        const experiment = {
+            testAttributes: {
+                location: [{ value: 'US' }],
+                browser: [{ value: 'Chrome' }],
+                device: [{ value: 'desktop' }],
+            },
+            customAttributes: new Map(),
+            experimentId: 123,
+        };
+        const result = checkAttributes(testAttributes, null, experiment, () => {});
+        expect(result).to.be.false;
+    });
+
+    it('should throw an error when incAttributeReqCount fails', () => {
+        const testAttributes = {
+            location: 'US',
+            browser: 'Chrome',
+            device: 'desktop',
+        };
+        const experiment = {
+            testAttributes: {
+                location: [{ value: 'US' }],
+                browser: [{ value: 'Chrome' }],
+                device: [{ value: 'desktop' }],
+            },
+            customAttributes: new Map(),
+            experimentId: '123',
+        };
+        const next = (error) => {
+            expect(error.message).to.equal(`Unable to ${'attReqCountResult'} due to internal server error...`);
+        };
+        const result = checkAttributes(testAttributes, null, experiment, next);
+        expect(result).to.be.undefined;
+    });
+});

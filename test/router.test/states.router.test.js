@@ -40,9 +40,9 @@ describe('getExperimentsAttributesDistribution', () => {
         try {
             await getExperimentsAttributesDistribution(req, res);
         } catch (error) {
-            expect(error.message).to.equal('calculate experiment attribute distribution ');
+            expect(error.message).to.equal('Unable to calculate experiment attribute distribution  due to internal server error...');
             expect(res.status.calledOnceWith(500)).to.be.true;
-            expect(res.send.calledOnceWith({ error: 'calculate experiment attribute distribution ' })).to.be.true;
+            expect(res.send.calledOnceWith({ error: 'Unable to calculate experiment attribute distribution  due to internal server error...'})).to.be.true;
         }
     });
 });

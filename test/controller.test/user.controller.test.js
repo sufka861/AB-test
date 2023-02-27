@@ -99,7 +99,7 @@ describe('User Controller', () => {
         });
 
         it('should throw a ServerUnableError error if the user creation fails', async () => {
-            sinon.stub(global, 'generateUuid').returns('test_uuid');
+            sinon.stub(global, 'generateUuid').returns('u684h5b');
             createUserStub.returns(null);
             try {
                 await addUser(req, res);
@@ -138,8 +138,8 @@ describe("insertExperiment", () => {
         try {
             await insertExperiment("experimentId", experiment);
         } catch (err) {
-            expect(err).to.be.an.instanceOf(PropertyNotFound); // Replace with the appropriate error type
-            expect(err.message).to.equal(`Property: ${'variant'} not found...`); // Change the expected error message
+            expect(err).to.be.an.instanceOf(PropertyNotFound);
+            expect(err.message).to.equal(`Property: ${'variant'} not found...`);
         }
     });
 
@@ -197,7 +197,7 @@ describe("insertExperiment", () => {
         });
 
         it("should return a specific user by uuid", async () => {
-            const res = await request(app).get("/users/12345");
+            const res = await (app).get("/users/12345");
             expect(res.status).to.equal(200);
             expect(res.body).to.be.an("object");
             expect(res.body).to.have.property("uuid", "12345");

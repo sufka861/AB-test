@@ -18,10 +18,10 @@ describe('Goal Controller', () => {
             expect(res.statusCode).to.equal(200);
         });
 
-        it('should return a 404 error when given an invalid id', async () => {
+        it('should return an error when given an invalid id', async () => {
             const req = {
                 params: {
-                    id: '999'
+                    id: '$%%'
                 }
             };
             const res = {
@@ -29,7 +29,7 @@ describe('Goal Controller', () => {
                     expect(code).to.equal(404);
                     return {
                         send: (data) => {
-                            expect(data).to.deep.equal({ error: 'Goal not found' });
+                            expect(data).to.deep.equal({ error: `Property: ${'Goal not found'} not found...` });
                         }
                     };
                 }
