@@ -58,7 +58,8 @@ const experimentNewUser = async (req, res, next, experimentId) => {
       res.status(200).json({...variant, uuid: newUser.uuid});
     }
     else {
-      res.status(200).json({ message: "user does not match attributes" });
+      const variant = experiment.type === "a-b" ? experiment.variantsAB.C : experiment.variantsFF.OFF
+      res.status(200).json({ variant: variant, tested: false });
     }
   } catch (error) {
     next(error);
