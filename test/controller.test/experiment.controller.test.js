@@ -280,7 +280,10 @@ describe('getAllExperiments', () => {
     describe('getExperimentsByDate', () => {
         it('should throw PropertyNotFound error if year or month not provided', async () => {
             const req = {
-                query: {}
+                query: {
+                    month: '',
+                    year:'2000'
+                }
             };
             const res = {
                 status: sinon.stub().returnsThis(),
