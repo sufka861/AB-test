@@ -413,13 +413,10 @@ describe('getAllExperiments', () => {
             const next = sinon.stub();
             const expectedResult = {id: '789', experimentId: '123', goalId: '456'};
             const addGoalStub = sinon.stub(ExperimentRepository, 'addGoal').resolves(expectedResult);
-
             await addGoalToExperiment(req, res, next);
-
             expect(res.status.calledWith(200)).to.be.true;
             expect(res.json.calledWith(expectedResult)).to.be.true;
             expect(next.called).to.be.false;
-
             addGoalStub.restore();
         });
     });

@@ -6,7 +6,6 @@ const GoalRepository = require("../../repositories/goal.repository");
 const {PropertyNotFound, ServerUnableError, BodyNotSent,} = require("../../errors/internal.errors");
 
 describe("createExperimentWithGoals", () => {
-
     beforeEach(() => {
         const req = { body: { experiment: {},
                 goals: [] } };
@@ -17,7 +16,6 @@ describe("createExperimentWithGoals", () => {
         };
         next = sinon.spy();
     });
-
     afterEach(() => {
         sinon.restore();
     });
@@ -43,12 +41,9 @@ describe("createExperimentWithGoals", () => {
     it("should create new goals and a new experiment", async () => {
         const goals = [{ name: "goal 1" }, { name: "goal 2" }];
         const experiment = { name: "experiment 1" };
-
         sinon.stub(GoalRepository, "createMany").resolves(goals);
         sinon.stub(ExperimentRepository, "create").resolves(experiment);
-
         await createExperimentWithGoals(req, res, next);
-
         expect(res.status.calledWith(200)).to.be.true;
         expect(res.status().send.calledWith(experiment)).to.be.true;
         expect(res.status().send.calledWith(goals)).to.be.true;

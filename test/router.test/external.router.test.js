@@ -10,9 +10,7 @@ describe('Test Router', () => {
             const req = { body: { testConfig: {} } };
             const res = { send: sinon.stub() };
             const next = sinon.stub();
-
             sinon.replace(runTest, 'runTest', runTestStub);
-
             return testRouter(req, res, next).then(() => {
                 expect(runTestStub.calledOnceWith(req.body.testConfig)).to.be.true;
                 expect(res.send.calledOnceWith('test results')).to.be.true;
