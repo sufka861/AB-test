@@ -55,7 +55,7 @@ const experimentNewUser = async (req, res, next, experimentId) => {
       const newUser = await addUser(next);
       res.cookie("uuid", newUser.uuid, { maxAge: 900000, httpOnly: true });
       const variant = await doExperiment(experimentId, newUser.uuid);
-      res.status(200).json({...variant, uuid: newUser.uuid});
+      res.status(200).json({...variant, uuid: newUser.uuid, tested : false});
     }
     else {
       const variant = experiment.type === "a-b" ? experiment.variantsAB.C : experiment.variantsFF.OFF
