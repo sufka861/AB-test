@@ -67,7 +67,6 @@ const getExperimentsCountByDate = async (req, res) => {
     const year = parseInt(req.params.year);
     const validateMonth = parseInt(req.params.month);
     const validateYear = parseInt(req.params.year);
-    console.log(month, year);
     if (isNaN(validateMonth) || isNaN(validateYear)) throw new ValidationError.InvalidProperty("input")
     if (month > 12 || month < 1) throw new ValidationError.InvalidProperty("month");
     const inputDate = new Date(year, month - 1, 1);
@@ -101,5 +100,4 @@ module.exports = {
     getVariantSuccessCount,
     getExperimentsCountByDate,
     getExperimentsAttributesDistribution
-
 }

@@ -1,11 +1,11 @@
 const MongoStorage = require("../db/mongo.storage");
-const validateDate = require("validate-date");
 const {mongoose} = require("mongoose");
 const moment = require('moment');
 
 module.exports = new (class ExperimentsRepository extends MongoStorage {
     constructor() {
         super("experiment");
+        this.incAttributeReqCount = this.incAttributeReqCount.bind(this);
     }
 
     find() {
@@ -65,9 +65,9 @@ module.exports = new (class ExperimentsRepository extends MongoStorage {
     }
 
     async incAttributeReqCount(id, attributes) {
-
-        const filter = {_id: id, $or: Object.entries(attributes).reduce((acc, [key,val]) =>{
-
+        
+         const filter = {_id: id, $or: Object.entries(attributes).reduce((acc, [key,val]) =>{
+          
                 if (['location', 'device', 'browser'].includes(key)) {
 
                     acc.push({[`testAttributes.${key}`]: { $elemMatch: { value: val } }})
@@ -76,7 +76,6 @@ module.exports = new (class ExperimentsRepository extends MongoStorage {
                 }
                 return acc;
             },[{}])};
-
 
         const update = {
             $inc: Object.entries(attributes).reduce((acc, [key, value]) => {
@@ -95,10 +94,7 @@ module.exports = new (class ExperimentsRepository extends MongoStorage {
                         return acc;
                     }, []) } }]
         }
-
-
-        return await this.updateMany(filter, update, options);
-
+          return await this.updateMany(filter, update, options);
     }
 
     async getCallCount(id) {

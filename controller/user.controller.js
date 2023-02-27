@@ -16,13 +16,17 @@ const getUserByUuidController = async (req,res) => {
 }
 
 
-const addUser = async (req, res) => {
+const addUser = async (next) => {
+  try{
   const uuid = generateUuid();
   if (!uuidValidator(uuid)) throw new InvalidProperty("uuid");
   const user = { uuid };
   const newUser = await userRepository.createUser(user);
   if (!newUser) throw new ServerUnableError("create");
   return newUser;
+  } catch(error) {
+    next(error)
+  }
 };
 
 const insertExperiment = async (uuid, experiment) => {

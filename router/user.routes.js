@@ -2,7 +2,6 @@ const { Router } = require("express");
 const userRouter = new Router();
 const {
   getAllUsers,
-  getUserByUuid,
   getUserByUuidController,
   addUser,
   insertExperiment,

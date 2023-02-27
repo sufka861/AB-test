@@ -1,5 +1,4 @@
 const MongoStorage = require("../db/mongo.storage");
-const {mongoose} = require("mongoose");
 
 module.exports = new (class UsersRepository extends MongoStorage {
   constructor() {

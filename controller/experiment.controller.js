@@ -1,10 +1,7 @@
 const ExperimentRepository = require("../repositories/experiment.repository");
 const { PropertyNotFound } = require("../errors/NotFound.errors");
 const { ServerUnableError } = require("../errors/internal.errors");
-const { bodyValidator } = require("../validators/body.validator");
-const { BodyNotSent } = require("../errors/BadRequest.errors");
 const { readFile } = require("fs/promises");
-const { lookupService } = require("dns");
 
 const getAllExperiments = async (req, res) => {
   const result = await ExperimentRepository.find();
