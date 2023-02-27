@@ -45,7 +45,7 @@ const validateRun = async (req, next) => {
   } catch (error) {
     next(error)
   }
-  
+
 };
 
 const experimentNewUser = async (req, res, next, experimentId) => {
@@ -56,15 +56,15 @@ const experimentNewUser = async (req, res, next, experimentId) => {
       const newUser = await addUser(next);
       res.cookie("uuid", newUser.uuid, { maxAge: 900000, httpOnly: true });
       const variant = await doExperiment(experimentId, newUser.uuid);
-      res.status(200).json(variant);
-    } 
+      res.status(200).json({...variant, uuid: newUser.uuid});
+    }
     else {
       res.status(200).json({ message: "user does not match attributes" });
     }
   } catch (error) {
     next(error);
   }
-  
+
 };
 
 const experimentExistingUser = async (
