@@ -280,7 +280,10 @@ describe('getAllExperiments', () => {
     describe('getExperimentsByDate', () => {
         it('should throw PropertyNotFound error if year or month not provided', async () => {
             const req = {
-                query: {}
+                query: {
+                    month: '',
+                    year:'2000'
+                }
             };
             const res = {
                 status: sinon.stub().returnsThis(),
@@ -413,13 +416,10 @@ describe('getAllExperiments', () => {
             const next = sinon.stub();
             const expectedResult = {id: '789', experimentId: '123', goalId: '456'};
             const addGoalStub = sinon.stub(ExperimentRepository, 'addGoal').resolves(expectedResult);
-
             await addGoalToExperiment(req, res, next);
-
             expect(res.status.calledWith(200)).to.be.true;
             expect(res.json.calledWith(expectedResult)).to.be.true;
             expect(next.called).to.be.false;
-
             addGoalStub.restore();
         });
     });
