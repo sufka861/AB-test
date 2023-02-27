@@ -5,8 +5,9 @@ module.exports = new (class GoalRepository extends MongoStorage {
     super("goal");
   }
 
-  getGoalSuccessCountById(goalId) {
-    return this.retrieve(goalId)?.successCount ?? null;
+  async getGoalSuccessCountById(goalId) {
+    const goal =  await this.retrieve(goalId)
+    return goal.variantSuccessCount;
   }
 
   incGoalSuccessCount(goalId) {
