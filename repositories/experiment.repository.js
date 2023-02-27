@@ -1,12 +1,11 @@
 const MongoStorage = require("../db/mongo.storage");
-const validateDate = require("validate-date");
 const {mongoose} = require("mongoose");
-const {log} = require("winston");
-const {ServerUnableError} = require("../errors/internal.errors");
+const moment = require('moment');
 
 module.exports = new (class ExperimentsRepository extends MongoStorage {
     constructor() {
         super("experiment");
+        this.incAttributeReqCount = this.incAttributeReqCount.bind(this);
     }
 
     find() {
@@ -32,28 +31,43 @@ module.exports = new (class ExperimentsRepository extends MongoStorage {
         return this.Model.findById(id).populate({path: 'goals'});
     }
 
-    findByDate(year, month) {
-        if (validateDate(`${month}/01/${year}`)) {
-            const start = new Date(year, month, 1);
-            const end = new Date(year, month, 31);
-            return this.Model.countDocuments({
-                endTime: {
-                    $gte: start,
-                    $lte: end,
-                },
-            }).populate({path: 'goals'});
-        }
-    }
+    async findByDate(year, month) {
+        const pipeline = [
+          {
+            $match: {
+              'duration.startTime': {
+                $gte: new Date(year, month - 1, 1),
+                $lte: new Date(year, month, 0),
+              },
+            },
+          },
+          {
+            $group: {
+              _id: '$status',
+              count: { $sum: 1 },
+            },
+          },
+          {
+            $project: {
+              _id: 0,
+              status: '$_id',
+              count: 1,
+            },
+          },
+        ];
 
+        const results = await this.Model.aggregate(pipeline);
+        return results;
+    }
 
     async incCallCount(id) {
         return await this.update(id, {$inc: {callCount: 1, monthlyCallCount: 1}}).populate({path: 'goals'});
     }
 
     async incAttributeReqCount(id, attributes) {
-
-        const filter = {_id: id, $or: Object.entries(attributes).reduce((acc, [key,val]) =>{
-
+        
+         const filter = {_id: id, $or: Object.entries(attributes).reduce((acc, [key,val]) =>{
+          
                 if (['location', 'device', 'browser'].includes(key)) {
 
                     acc.push({[`testAttributes.${key}`]: { $elemMatch: { value: val } }})
@@ -62,7 +76,6 @@ module.exports = new (class ExperimentsRepository extends MongoStorage {
                 }
                 return acc;
             },[{}])};
-
 
         const update = {
             $inc: Object.entries(attributes).reduce((acc, [key, value]) => {
@@ -81,10 +94,7 @@ module.exports = new (class ExperimentsRepository extends MongoStorage {
                         return acc;
                     }, []) } }]
         }
-
-
-        return await this.updateMany(filter, update, options);
-
+          return await this.updateMany(filter, update, options);
     }
 
     async getCallCount(id) {
@@ -113,8 +123,102 @@ module.exports = new (class ExperimentsRepository extends MongoStorage {
         ])
     }
 
-    async resetMonthlyCallCount() {
-        return await ExperimentsRepository.updateMany({}, {$set: {monthlyCallCount: 0}});
+  async resetMonthlyCallCount() {
+    return await this.Model.updateMany({}, { $set: { monthlyCallCount: 0 } });
+  }
+
+  async getExperimentsCountByDate(month, year){
+    const start = moment.utc([year, month - 1, 1]).startOf('month');
+    const end = moment.utc([year, month - 1, 1]).endOf('month');
+    try {
+        const activeResult = await this.Model.countDocuments({
+          status: 'active',
+          'duration.startTime': { $lte: end.toDate() },
+          $or: [
+            { 'duration.endTime': { $gte: start.toDate() } },
+            { 'duration.endTime': { $type: 'null' } },
+          ],
+        });
+        const endedResult = await this.Model.countDocuments({
+            status: 'ended',
+            'duration.startTime': { $lte: end.toDate() },
+            $or: [
+                { 'duration.endTime': { $gte: start.toDate() } },
+                { 'duration.endTime': { $type: 'null' } },
+            ],
+        });
+        const terminatedResult = await this.Model.countDocuments({
+            status: 'terminated',
+            'duration.startTime': { $lte: end.toDate() },
+            $or: [
+                { 'duration.endTime': { $gte: start.toDate() } },
+                { 'duration.endTime': { $type: 'null' } },
+            ],
+        });
+        const plannedResult = await this.Model.countDocuments({
+            status: 'planned',
+            'duration.startTime': { $lte: end.toDate() },
+            $or: [
+                { 'duration.endTime': { $gte: start.toDate() } },
+                { 'duration.endTime': { $type: 'null' } },
+            ],
+        });
+        return {active: activeResult, ended: endedResult, terminated: terminatedResult, planned: plannedResult};
+    } catch {
+    return null
     }
+  }
+
+  async getExperimentCountsByAttributes() {
+    const result = await this.Model.aggregate([
+      {
+        $unwind: "$testAttributes.device"
+      },
+      {
+        $group: {
+          _id: "$testAttributes.device.value",
+          count: { $sum: 1 }
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          device: "$_id",
+          count: 1
+        }
+      },
+      {
+        $sort: {
+          device: 1
+        }
+      }
+    ]).exec();
+    const locationResult = await this.Model.aggregate([
+      {
+        $unwind: "$testAttributes.location"
+      },
+      {
+        $group: {
+          _id: "$testAttributes.location.value",
+          count: { $sum: 1 }
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          location: "$_id",
+          count: 1
+        }
+      },
+      {
+        $sort: {
+          location: 1
+        }
+      }
+    ]).exec();
+    return { devices: result, locations: locationResult };
+  }
 
 })();
+
+

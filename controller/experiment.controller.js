@@ -1,8 +1,6 @@
 const ExperimentRepository = require("../repositories/experiment.repository");
 const { PropertyNotFound } = require("../errors/NotFound.errors");
 const { ServerUnableError } = require("../errors/internal.errors");
-const { bodyValidator } = require("../validators/body.validator");
-const { BodyNotSent } = require("../errors/BadRequest.errors");
 const { readFile } = require("fs/promises");
 
 const getAllExperiments = async (req, res) => {
@@ -62,17 +60,17 @@ const getExperimentsByDate = async (req, res) => {
   const year = req.query.year;
   const month = req.query.month;
   const result = await ExperimentRepository.findByDate(year, month);
-  if (!result) throw new ServerUnableError("getExperimentsByDate");
-  res.status(200).json(result);
-};
 
-const updateExperimentsByID = async (req, res) => {
-  if (!req.params.experimentId) throw new PropertyNotFound("experimentId");
-  const experimentID = req.params.experimentId;
-  const result = await ExperimentRepository.update(experimentID, req.body);
-  if (!result) throw new ServerUnableError("updateExperimentsByID");
-  res.status(200).json(result);
-};
+  const distResult = {
+    active: (result.find(obj => obj.status === "active"))?.count || 0,
+    ended: (result.find(obj => obj.status === "ended"))?.count || 0,
+    terminated: (result.find(obj => obj.status === "terminated"))?.count || 0,
+    planned: (result.find(obj => obj.status === "planned"))?.count || 0
+  }
+
+    res.status(200).json(distResult);
+  }
+
 
 const deleteExperimentsByID = async (req, res) => {
   if (!req.params.experimentId) throw new PropertyNotFound("experimentId");
@@ -98,6 +96,7 @@ const terminateExperiment = async (req, res) => {
   });
   if (!result)
     throw new ServerUnableError("Update experiment status to terminated");
+  res.status(200).json({message: 'terminated successfully'})
 };
 const removeGoalFromExperiment = async (req, res) => {
   if (!req.params.experimentId) throw new PropertyNotFound("experimentId");
@@ -137,7 +136,6 @@ module.exports = {
   getExperimentsAB,
   getExperimentsFF,
   getExperimentsByDate,
-  updateExperimentsByID,
   deleteExperimentsByID,
   addGoalToExperiment,
   removeGoalFromExperiment,
@@ -145,3 +143,4 @@ module.exports = {
   getFeaturesList,
   terminateExperiment,
 };
+

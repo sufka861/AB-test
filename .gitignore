@@ -5,3 +5,5 @@ http.log
 .idea
 testRouter
 newrelic_agent.log
+.nyc_output
+SDK

@@ -2,7 +2,6 @@ const ExperimentRepository = require('../repositories/experiment.repository');
 const GoalRepository = require('../repositories/goal.repository')
 const {PropertyNotFound} = require("../errors/NotFound.errors");
 const {ServerUnableError} = require("../errors/internal.errors");
-const {bodyValidator} = require("../validators/body.validator");
 const {BodyNotSent} = require("../errors/BadRequest.errors");
 
 module.exports = {

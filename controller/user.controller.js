@@ -4,28 +4,29 @@ const {
   EntityNotFound,
 } = require("../errors/NotFound.errors");
 const { InvalidProperty } = require("../errors/validation.errors");
-const { bodyValidator } = require("../validators/body.validator");
 const { ServerUnableError } = require("../errors/internal.errors");
 
 const userRepository = require("../repositories/user.repository");
 
-const checkAttributes = (req, res) => {};
-
-const getUserByUuid = async (req, res) => {
-  const uuid = getCookie(req, res);
-  if (!uuid) return false;
+const getUserByUuidController = async (req,res) => {
+  const uuid = req.params.uuid;
   const [user] = await userRepository.retrieveByUuid(uuid);
   if (!user) throw new EntityNotFound("user");
-  return user;
-};
+  res.status(200).json(user);
+}
 
-const addUser = async (req, res) => {
+
+const addUser = async (next) => {
+  try{
   const uuid = generateUuid();
   if (!uuidValidator(uuid)) throw new InvalidProperty("uuid");
   const user = { uuid };
   const newUser = await userRepository.createUser(user);
   if (!newUser) throw new ServerUnableError("create");
   return newUser;
+  } catch(error) {
+    next(error)
+  }
 };
 
 const insertExperiment = async (uuid, experiment) => {
@@ -38,8 +39,7 @@ const insertExperiment = async (uuid, experiment) => {
     user.experiments = [];
   }
   user.experiments.push(experiment);
-  const updatedUser = await userRepository.updateUser(user._id, user);
-  return updatedUser;
+  return await userRepository.updateUser(user._id, user);
 };
 
 const getUserExperiment = (user) => {
@@ -49,14 +49,6 @@ const getUserExperiment = (user) => {
   return user.experiments;
 };
 
-const setCookie = () => {
-  const uuid = generateUuid();
-  res.cookie("uuid", uuid, { maxAge: 999999, httpOnly: true, path: "/" });
-};
-
-const getCookie = (req, res) => {
-  return req.cookies.uuid ? req.cookies.uuid : false;
-};
 
 const generateUuid = () => {
   return uuidv4();
@@ -67,12 +59,10 @@ const getAllUsers = async (req, res) => {
 };
 
 module.exports = {
-  checkAttributes,
   getAllUsers,
-  getUserByUuid,
-  setCookie,
-  getCookie,
+  getUserByUuidController,
   addUser,
   insertExperiment,
   getUserExperiment,
+  generateUuid
 };

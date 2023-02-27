@@ -6,68 +6,12 @@ const UserRepository = require("../repositories/user.repository");
 const GoalRepository = require("../repositories/goal.repository")
 const {mongoose} = require("mongoose");
 
-const userPercentageVariantByExperiment = async (experimentID, variant) => {
-    return (await UserRepository.numUsersByExperimentIdAndVariant(experimentID, variant) / await UserRepository.numUsersByExperimentId(experimentID)) * 100;
-}
-
-const calculateSuccessPercentage = (successCount, callCount) => {
-    return (successCount / callCount * 100).toFixed(2);
-}
-
-const getStatistics = async (req, res) => {
-    const experimentID = req.params.id;
-    if (!mongoose.isValidObjectId(experimentID)) throw new ValidationError.MissingPropertyError("experiment ID");
-
-    const experiment = await ExperimentRepository.retrieve(experimentID);
-    if (!experiment) throw new NotFoundError.EntityNotFound(`experiment (${experimentID})`);
-    if (!experiment.callCount) throw new ServerError.ServerUnableError("calculate experiment call count");
-
-    let result;
-    switch (experiment.type) {
-        case "a-b":
-            result = {
-                A: calculateSuccessPercentage(experiment.variantSuccessCount.A, experiment.callCount),
-                B: calculateSuccessPercentage(experiment.variantSuccessCount.B, experiment.callCount),
-                C: calculateSuccessPercentage(experiment.variantSuccessCount.C, experiment.callCount),
-            };
-            break;
-        case "f-f":
-            result = {
-                ON: calculateSuccessPercentage(experiment.variantSuccessCount.ON, experiment.callCount),
-                OFF: calculateSuccessPercentage(experiment.variantSuccessCount.OFF, experiment.callCount)
-            };
-            break;
-        default:
-            throw new ValidationError.InvalidProperty(`experiment type in experiment (${experimentID})`);
-    }
-
-    res.status(200).send(result);
-}
-
 const getUsersStats = async (req, res) => {
-
     const experimentID = req.params.id;
     if (!mongoose.isValidObjectId(experimentID)) throw new ValidationError.MissingPropertyError("experiment ID");
-    const experiment = await ExperimentRepository.retrieve(experimentID);
-    if (!experiment) throw new NotFoundError.EntityNotFound(`experiment (${experimentID})`);
-
-    switch (experiment.type) {
-        case "a-b" :
-            res.status(200).send({
-                A: userPercentageVariantByExperiment(experimentID, "A"),
-                B: userPercentageVariantByExperiment(experimentID, "B"),
-                C: userPercentageVariantByExperiment(experimentID, "C")
-            });
-            break;
-        case "f-f":
-            res.status(200).send({
-                ON: userPercentageVariantByExperiment(experimentID, "ON"),
-                OFF: userPercentageVariantByExperiment(experimentID, "OFF")
-            })
-            break;
-        default:
-            throw new ValidationError.InvalidProperty(`experiment type in experiment (${experimentID})`);
-    }
+    const result = await UserRepository.getExperimentStats(req.params.id);
+    if (!result) throw new NotFoundError.EntityNotFound(`user with experiment (${experimentID})`);
+    res.status(200).send({result});
 }
 
 const getReqPerAttribute = async (req, res) => {
@@ -99,13 +43,13 @@ const getVariantSuccessCount = async (req, res) => {
     if (!mongoose.isValidObjectId(goalID)) throw new ValidationError.MissingPropertyError("goal ID");
     if (!mongoose.isValidObjectId(experimentID)) throw new ValidationError.MissingPropertyError("experiment ID");
     const result = await GoalRepository.getVariantSuccessCount(goalID);
-    const callCount = await ExperimentRepository.getCallCount(experimentID);
+    let callCount = await ExperimentRepository.getCallCount(experimentID);
     if (callCount === 0)
         callCount = 1;
     if (!result) {
         throw new ServerError.ServerUnableError("calculate variant success count");
     }
-    console.log(result)
+
     result.A && (result.A /= callCount);
     result.B && (result.B /= callCount);
     result.C && (result.C /= callCount);
@@ -117,11 +61,43 @@ const getVariantSuccessCount = async (req, res) => {
     })
 }
 
+const getExperimentsCountByDate = async (req, res) => {
+
+    const month = parseInt(req.params.month);
+    const year = parseInt(req.params.year);
+    const validateMonth = parseInt(req.params.month);
+    const validateYear = parseInt(req.params.year);
+    if (isNaN(validateMonth) || isNaN(validateYear)) throw new ValidationError.InvalidProperty("input")
+    if (month > 12 || month < 1) throw new ValidationError.InvalidProperty("month");
+    const inputDate = new Date(year, month - 1, 1);
+    const result = await ExperimentRepository.getExperimentsCountByDate(month, year)
+    if (result === undefined || result === null) {
+        throw new ServerError.ServerUnableError("calculate active experiment by date");
+    } else {
+        res.status(200).send({
+            activeExperiments: result
+        })
+    }
+}
+
+const getExperimentsAttributesDistribution = async (req, res) => {
+
+    const result = await ExperimentRepository.getExperimentCountsByAttributes();
+    if (!result) {
+        throw new ServerError.ServerUnableError("calculate experiment attribute distribution ");
+    } else {
+        res.status(200).send({
+            attribute_distribution: result
+        })
+    }
+}
+
 
 module.exports = {
-    getStatistics,
     getUsersStats,
     getReqPerAttribute,
     getTestsPerMonth,
-    getVariantSuccessCount
+    getVariantSuccessCount,
+    getExperimentsCountByDate,
+    getExperimentsAttributesDistribution
 }
